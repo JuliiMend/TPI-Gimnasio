@@ -26,4 +26,4 @@ Teniendo en cuenta este modelo, las funcionalidades a implementar son las siguie
 10. Reporte de Mantenimiento de Máquinas *(Fechas de inicio, fin esperado y fin real)*
 11. Listado de Histórico de Sueldos *(Solo lectura/listado)*
 
-![Modelo de Dominio] <img width="1763" height="997" alt="MD TPI-Gimnasio" src="https://github.com/user-attachments/assets/52d98d33-294a-4609-83d3-ef545a903fce" />
+Modelo de Dominio <img width="1763" height="997" alt="MD TPI-Gimnasio" src="https://github.com/user-attachments/assets/52d98d33-294a-4609-83d3-ef545a903fce" />
