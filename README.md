@@ -8,7 +8,7 @@ Los planes de entrenamiento incluyen distintos **Tipos de Actividad** (denominac
 
 La dirección del gimnasio crea las **Clases** para cada actividad, a las que se les asigna un **Turno** (días y horarios) y un cupo definido. Cada Clase tiene asignado un **Profesor** a cargo.
 
-Los Socios se inscriben a las diferentes Clases. Al hacerlo, el sistema deberá registrar los datos de dicha inscripción y solo permitirá inscripciones a Clases que no tengan el cupo agotado. Por otro lado, el gimnasio controla su infraestructura mediante el registro de **Máquinas y Materiales**, llevando adelante una épica de mantenimiento preventivo y correctivo.
+Los Socios se inscriben a las diferentes Clases. Al hacerlo, el sistema deberá registrar los datos de dicha inscripción y solo permitirá inscripciones a Clases que no tengan el cupo agotado. Por otro lado, el gimnasio controla su infraestructura mediante el registro de **Máquinas y Materiales**, llevando adelante una registro de mantenimiento de cada máquina.
 
 ## Funcionalidades a implementar
 
@@ -26,4 +26,4 @@ Teniendo en cuenta este modelo, las funcionalidades a implementar son las siguie
 10. Reporte de Mantenimiento de Máquinas *(Fechas de inicio, fin esperado y fin real)*
 11. Listado de Histórico de Sueldos *(Solo lectura/listado)*
 
-Modelo de Dominio <img width="1763" height="997" alt="MD TPI-Gimnasio" src="https://github.com/user-attachments/assets/52d98d33-294a-4609-83d3-ef545a903fce" />
+## Modelo de Dominio <img width="1763" height="997" alt="MD TPI-Gimnasio" src="https://github.com/user-attachments/assets/52d98d33-294a-4609-83d3-ef545a903fce" />
