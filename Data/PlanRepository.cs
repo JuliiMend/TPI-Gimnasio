@@ -12,12 +12,12 @@ namespace Data
     {
         public List<Plan> ObtenerTodos()
         {
-            throw new NotImplementedException();
+            return DatosEnMemoria.Planes;
         }
 
         public Plan? ObtenerPorId(int id)
         {
-            throw new NotImplementedException();
+            return DatosEnMemoria.Planes.FirstOrDefault(p => p.IdPlan == id);
         }
     }
 }

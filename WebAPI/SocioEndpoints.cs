@@ -8,31 +8,30 @@ namespace WebAPI
         public static void MapSocioEndpoints(this IEndpointRouteBuilder app)
         {
             var grupo = app.MapGroup("/api/socios");
-
             grupo.MapGet("/", ([AsParameters] SocioCriteriaDTO criterios, ISocioService socioService) =>
             {
                 return Results.Ok(socioService.ObtenerTodos(criterios));
             });
 
-            grupo.MapGet("/{id}", (int id, ISocioService socioService) =>
+            grupo.MapGet("/{id}",(int id, ISocioService socioService) =>
             {
                 var socio = socioService.ObtenerPorId(id);
                 return socio is null ? Results.NotFound() : Results.Ok(socio);
             });
 
-            grupo.MapPost("/", (SocioDTO socio, ISocioService socioService) =>
+            grupo.MapPost("/",(SocioCreaActualizaDTO socio, ISocioService socioService) =>
             {
                 socioService.Agregar(socio);
                 return Results.Created($"/api/socios/{socio.IdPersona}", socio);
             });
 
-            grupo.MapPut("/{id}", (int id, SocioDTO socio, ISocioService socioService) =>
+            grupo.MapPut("/{id}",(int id, SocioCreaActualizaDTO socio, ISocioService socioService) =>
             {
                 socioService.Actualizar(id, socio);
                 return Results.NoContent();
             });
 
-            grupo.MapDelete("/{id}", (int id, ISocioService socioService) =>
+            grupo.MapDelete("/{id}",(int id, ISocioService socioService) =>
             {
                 socioService.Eliminar(id);
                 return Results.NoContent();

@@ -8,7 +8,6 @@ namespace WebAPI
         public static void MapPlanEndpoints(this IEndpointRouteBuilder app)
         {
             var grupo = app.MapGroup("/api/planes");
-
             grupo.MapGet("/", (IPlanService planService) =>
             {
                 return Results.Ok(planService.ObtenerTodos());

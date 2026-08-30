@@ -23,5 +23,4 @@ app.UseSwaggerUI();
 // Mapeamos los Endpoints usando los archivos estáticos
 app.MapPlanEndpoints();
 app.MapSocioEndpoints();
-
 app.Run();
