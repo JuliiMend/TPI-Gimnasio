@@ -29,7 +29,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Mapeamos los Endpoints usando los archivos est·ticos
+// Mapeamos los Endpoints usando los archivos est√°ticos
 app.MapPlanEndpoints();
 app.MapSocioEndpoints();
 app.MapTurnoEndpoints();
