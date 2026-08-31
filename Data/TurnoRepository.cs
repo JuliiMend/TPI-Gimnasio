@@ -1,31 +1,30 @@
-﻿using Data;
-using Domain.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Model;
 
 namespace Data
 {
-    public class SocioRepository : ISocioRepository
-    { 
-        public List<Socio> ObtenerTodos(SocioCriteria criterios)
+    public class TurnoRepository : ITurnoRepository
+    {
+        public List<Turno> ObtenerTodos()
         {
             throw new NotImplementedException();
         }
 
-        public Socio? ObtenerPorId(int id)
+        public Turno? ObtenerPorId(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Agregar(Socio socio)
+        public void Agregar(Turno turno)
         {
             throw new NotImplementedException();
         }
 
-        public void Actualizar(Socio socio)
+        public void Actualizar(Turno turno)
         {
             throw new NotImplementedException();
         }

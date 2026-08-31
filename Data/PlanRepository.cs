@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Model;
 
-
 namespace Data
 {
     public class PlanRepository : IPlanRepository
