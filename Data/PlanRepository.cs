@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Data;
+using Domain.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Model;
+
 
 namespace Data
 {
@@ -11,12 +13,11 @@ namespace Data
     {
         public List<Plan> ObtenerTodos()
         {
-            return DatosEnMemoria.Planes;
+            throw new NotImplementedException();
         }
-
         public Plan? ObtenerPorId(int id)
         {
-            return DatosEnMemoria.Planes.FirstOrDefault(p => p.IdPlan == id);
+            throw new NotImplementedException();
         }
     }
 }
