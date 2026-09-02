@@ -22,7 +22,7 @@ namespace Application.Services
             return _profesorRepository.ObtenerTodos()
                 .Select(p => new ProfesorDTO
                 {
-                    IdPersona = p.IdPersona,
+                    IdPersona = p.PersonaId,
                     Dni = p.Dni,
                     Nombre = p.Nombre,
                     Apellido = p.Apellido,
@@ -40,7 +40,7 @@ namespace Application.Services
             }
             return new ProfesorDTO
             {
-                IdPersona = profesor.IdPersona,
+                IdPersona = profesor.PersonaId,
                 Dni = profesor.Dni,
                 Nombre = profesor.Nombre,
                 Apellido = profesor.Apellido,
@@ -68,7 +68,7 @@ namespace Application.Services
         {
             var profesor = new Profesor
             {
-                IdPersona = id, 
+                PersonaId = id, 
                 Dni = profesorDto.Dni,
                 Nombre = profesorDto.Nombre,
                 Apellido = profesorDto.Apellido,

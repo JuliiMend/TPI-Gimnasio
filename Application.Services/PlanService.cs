@@ -21,7 +21,7 @@ namespace Application.Services
 
             return planes.Select(p => new PlanDTO
             {
-                IdPlan = p.IdPlan,
+                IdPlan = p.PlanId,
                 Nombre = p.Nombre,
                 Tipo = p.Tipo,
                 Precio = p.Precio
@@ -39,7 +39,7 @@ namespace Application.Services
 
             return new PlanDTO
             {
-                IdPlan = plan.IdPlan,
+                IdPlan = plan.PlanId,
                 Nombre = plan.Nombre,
                 Tipo = plan.Tipo,
                 Precio = plan.Precio
