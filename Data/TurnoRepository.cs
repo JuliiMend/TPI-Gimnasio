@@ -1,37 +1,52 @@
-﻿using System;
+﻿using Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Domain.Model;
 
 namespace Data
 {
     public class TurnoRepository : ITurnoRepository
     {
-        public List<Turno> ObtenerTodos()
+        private readonly GimnasioContext _context;
+
+        public TurnoRepository(GimnasioContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Turno? ObtenerPorId(int id)
+        public async Task<List<Turno>> ObtenerTodosAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Turnos.ToListAsync();
         }
 
-        public void Agregar(Turno turno)
+        public async Task<Turno?> ObtenerPorIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Turnos
+                .FirstOrDefaultAsync(t => t.IdTurno == id);
         }
 
-        public void Actualizar(Turno turno)
+        public async Task AgregarAsync(Turno turno)
         {
-            throw new NotImplementedException();
+            await _context.Turnos.AddAsync(turno);
+            await _context.SaveChangesAsync();
         }
 
-        public void Eliminar(int id)
+        public async Task ActualizarAsync(Turno turno)
         {
-            throw new NotImplementedException();
+            _context.Turnos.Update(turno);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EliminarAsync(int id)
+        {
+            Turno? turno = await _context.Turnos
+                .FirstOrDefaultAsync(t => t.IdTurno == id);
+
+            if (turno != null)
+            {
+                _context.Turnos.Remove(turno);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

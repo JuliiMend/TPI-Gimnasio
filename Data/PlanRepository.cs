@@ -1,23 +1,28 @@
-﻿using Data;
-using Domain.Model;
-using System;
+﻿using Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 
 namespace Data
 {
     public class PlanRepository : IPlanRepository
     {
-        public List<Plan> ObtenerTodos()
+        private readonly GimnasioContext _context;
+
+        public PlanRepository(GimnasioContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
-        public Plan? ObtenerPorId(int id)
+
+        public async Task<List<Plan>> ObtenerTodosAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Planes.ToListAsync();
+        }
+
+        public async Task<Plan?> ObtenerPorIdAsync(int id)
+        {
+            return await _context.Planes
+                .FirstOrDefaultAsync(p => p.IdPlan == id);
         }
     }
 }

@@ -12,32 +12,33 @@ namespace WebAPI
         {
             var grupo = app.MapGroup("/api/turnos");
 
-            grupo.MapGet("/", (ITurnoService turnoService) =>
+            grupo.MapGet("/", async (ITurnoService turnoService) =>
             {
-                return Results.Ok(turnoService.ObtenerTodos());
+                var turnos = await turnoService.ObtenerTodosAsync();
+                return Results.Ok(turnos);
             });
 
-            grupo.MapGet("/{id}", (int id, ITurnoService turnoService) =>
+            grupo.MapGet("/{id}", async (int id, ITurnoService turnoService) =>
             {
-                var turno = turnoService.ObtenerPorId(id);
+                var turno = await turnoService.ObtenerPorIdAsync(id);
                 return turno is null ? Results.NotFound() : Results.Ok(turno);
             });
 
-            grupo.MapPost("/", (TurnoCreaActualizaDTO dto, ITurnoService turnoService) =>
+            grupo.MapPost("/", async (TurnoCreaActualizaDTO dto, ITurnoService turnoService) =>
             {
-                turnoService.Agregar(dto);
+                await turnoService.AgregarAsync(dto);
                 return Results.Ok("Turno creado con éxito");
             });
 
-            grupo.MapPut("/{id}", (int id, TurnoCreaActualizaDTO dto, ITurnoService turnoService) =>
+            grupo.MapPut("/{id}", async (int id, TurnoCreaActualizaDTO dto, ITurnoService turnoService) =>
             {
-                turnoService.Actualizar(id, dto);
+                await turnoService.ActualizarAsync(id, dto);
                 return Results.Ok("Turno actualizado con éxito");
             });
 
-            grupo.MapDelete("/{id}", (int id, ITurnoService turnoService) =>
+            grupo.MapDelete("/{id}", async (int id, ITurnoService turnoService) =>
             {
-                turnoService.Eliminar(id);
+                await turnoService.EliminarAsync(id);
                 return Results.Ok("Turno eliminado con éxito");
             });
         }

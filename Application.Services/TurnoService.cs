@@ -1,10 +1,9 @@
-﻿using Application.Services;
-using Data;
+﻿using Data;
 using Domain.Model;
 using DTOs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -17,25 +16,28 @@ namespace Application.Services
             _turnoRepository = turnoRepository;
         }
 
-        public List<TurnoDTO> ObtenerTodos()
+        public async Task<List<TurnoDTO>> ObtenerTodosAsync()
         {
-            return _turnoRepository.ObtenerTodos()
-                .Select(t => new TurnoDTO
-                {
-                    IdTurno = t.IdTurno,
-                    DiaSemana = t.DiaSemana,
-                    HoraDesde = t.HoraDesde,
-                    HoraHasta = t.HoraHasta
-                }).ToList();
+            var turnos = await _turnoRepository.ObtenerTodosAsync();
+
+            return turnos.Select(t => new TurnoDTO
+            {
+                IdTurno = t.IdTurno,
+                DiaSemana = t.DiaSemana,
+                HoraDesde = t.HoraDesde,
+                HoraHasta = t.HoraHasta
+            }).ToList();
         }
 
-        public TurnoDTO? ObtenerPorId(int id)
+        public async Task<TurnoDTO?> ObtenerPorIdAsync(int id)
         {
-            var turno = _turnoRepository.ObtenerPorId(id);
+            var turno = await _turnoRepository.ObtenerPorIdAsync(id);
+
             if (turno == null)
             {
                 return null;
             }
+
             return new TurnoDTO
             {
                 IdTurno = turno.IdTurno,
@@ -45,7 +47,7 @@ namespace Application.Services
             };
         }
 
-        public void Agregar(TurnoCreaActualizaDTO turnoDto)
+        public async Task AgregarAsync(TurnoCreaActualizaDTO turnoDto)
         {
             var turno = new Turno
             {
@@ -53,10 +55,11 @@ namespace Application.Services
                 HoraDesde = turnoDto.HoraDesde,
                 HoraHasta = turnoDto.HoraHasta
             };
-            _turnoRepository.Agregar(turno);
+
+            await _turnoRepository.AgregarAsync(turno);
         }
 
-        public void Actualizar(int id, TurnoCreaActualizaDTO turnoDto)
+        public async Task ActualizarAsync(int id, TurnoCreaActualizaDTO turnoDto)
         {
             var turno = new Turno
             {
@@ -65,12 +68,13 @@ namespace Application.Services
                 HoraDesde = turnoDto.HoraDesde,
                 HoraHasta = turnoDto.HoraHasta
             };
-            _turnoRepository.Actualizar(turno);
+
+            await _turnoRepository.ActualizarAsync(turno);
         }
 
-        public void Eliminar(int id)
+        public async Task EliminarAsync(int id)
         {
-            _turnoRepository.Eliminar(id);
+            await _turnoRepository.EliminarAsync(id);
         }
     }
 }

@@ -8,14 +8,16 @@ namespace WebAPI
         public static void MapPlanEndpoints(this IEndpointRouteBuilder app)
         {
             var grupo = app.MapGroup("/api/planes");
-            grupo.MapGet("/", (IPlanService planService) =>
+
+            grupo.MapGet("/", async (IPlanService planService) =>
             {
-                return Results.Ok(planService.ObtenerTodos());
+                var planes = await planService.ObtenerTodosAsync();
+                return Results.Ok(planes);
             });
 
-            grupo.MapGet("/{id}", (int id, IPlanService planService) =>
+            grupo.MapGet("/{id}", async (int id, IPlanService planService) =>
             {
-                var plan = planService.ObtenerPorId(id);
+                var plan = await planService.ObtenerPorIdAsync(id);
                 return plan is null ? Results.NotFound() : Results.Ok(plan);
             });
         }
