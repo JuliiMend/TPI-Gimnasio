@@ -1,5 +1,8 @@
 ﻿using Application.Services;
 using DTOs;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace WebAPI
 {
@@ -8,32 +11,34 @@ namespace WebAPI
         public static void MapSocioEndpoints(this IEndpointRouteBuilder app)
         {
             var grupo = app.MapGroup("/api/socios");
-            grupo.MapGet("/", ([AsParameters] SocioCriteriaDTO criterios, ISocioService socioService) =>
+
+            grupo.MapGet("/", async ([AsParameters] SocioCriteriaDTO criterios, ISocioService socioService) =>
             {
-                return Results.Ok(socioService.ObtenerTodos(criterios));
+                var socios = await socioService.ObtenerTodosAsync(criterios);
+                return Results.Ok(socios);
             });
 
-            grupo.MapGet("/{id}",(int id, ISocioService socioService) =>
+            grupo.MapGet("/{id}", async (int id, ISocioService socioService) =>
             {
-                var socio = socioService.ObtenerPorId(id);
+                var socio = await socioService.ObtenerPorIdAsync(id);
                 return socio is null ? Results.NotFound() : Results.Ok(socio);
             });
 
-            grupo.MapPost("/",(SocioCreaActualizaDTO socio, ISocioService socioService) =>
+            grupo.MapPost("/", async (SocioCreaActualizaDTO socio, ISocioService socioService) =>
             {
-                socioService.Agregar(socio);
+                await socioService.AgregarAsync(socio);
                 return Results.Created($"/api/socios/{socio.IdPersona}", socio);
             });
 
-            grupo.MapPut("/{id}",(int id, SocioCreaActualizaDTO socio, ISocioService socioService) =>
+            grupo.MapPut("/{id}", async (int id, SocioCreaActualizaDTO socio, ISocioService socioService) =>
             {
-                socioService.Actualizar(id, socio);
+                await socioService.ActualizarAsync(id, socio);
                 return Results.NoContent();
             });
 
-            grupo.MapDelete("/{id}",(int id, ISocioService socioService) =>
+            grupo.MapDelete("/{id}", async (int id, ISocioService socioService) =>
             {
-                socioService.Eliminar(id);
+                await socioService.EliminarAsync(id);
                 return Results.NoContent();
             });
         }

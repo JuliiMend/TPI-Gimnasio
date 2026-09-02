@@ -9,10 +9,10 @@ namespace Data
 {
     public interface IProfesorRepository
     {
-        List<Profesor> ObtenerTodos();
-        Profesor? ObtenerPorId(int id);
-        void Agregar(Profesor profesor);
-        void Actualizar(Profesor profesor);
-        void Eliminar(int id);
+        Task<List<Profesor>> ObtenerTodosAsync();
+        Task<Profesor?> ObtenerPorIdAsync(int id);
+        Task AgregarAsync(Profesor profesor);
+        Task ActualizarAsync(Profesor profesor);
+        Task EliminarAsync(int id);
     }
 }

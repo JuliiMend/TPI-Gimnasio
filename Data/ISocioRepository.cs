@@ -5,15 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Model;
 
-
 namespace Data
 {
     public interface ISocioRepository
     {
-        List<Socio> ObtenerTodos(SocioCriteria criterios);
-        Socio? ObtenerPorId(int id);
-        void Agregar(Socio socio);
-        void Actualizar(Socio socio);
-        void Eliminar(int id);
+        Task<List<Socio>> ObtenerTodosAsync(SocioCriteria criterios);
+        Task<Socio?> ObtenerPorIdAsync(int id);
+        Task AgregarAsync(Socio socio);
+        Task ActualizarAsync(Socio socio);
+        Task EliminarAsync(int id);
     }
 }

@@ -16,6 +16,7 @@ namespace Data
         public DbSet<Profesor> Profesores { get; set; }
         public DbSet<Plan> Planes { get; set; }
         public DbSet<Turno> Turnos { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
     }
 }

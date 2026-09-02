@@ -9,10 +9,10 @@ namespace Application.Services
 {
     public interface IProfesorService
     {
-        List<ProfesorDTO> ObtenerTodos();
-        ProfesorDTO? ObtenerPorId(int id);
-        void Agregar(ProfesorCreaActualizaDTO profesorDto);
-        void Actualizar(int id, ProfesorCreaActualizaDTO profesorDto);
-        void Eliminar(int id);
+        Task<List<ProfesorDTO>> ObtenerTodosAsync();
+        Task<ProfesorDTO?> ObtenerPorIdAsync(int id);
+        Task AgregarAsync(ProfesorCreaActualizaDTO profesorDto);
+        Task ActualizarAsync(int id, ProfesorCreaActualizaDTO profesorDto);
+        Task EliminarAsync(int id);
     }
 }
