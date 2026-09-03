@@ -1,38 +1,52 @@
-﻿using System;
+﻿using Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Domain.Model;
-
 
 namespace Data
 {
     public class ProfesorRepository : IProfesorRepository
     {
-        public List<Profesor> ObtenerTodos()
+        private readonly GimnasioContext _context;
+
+        public ProfesorRepository(GimnasioContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Profesor? ObtenerPorId(int id)
+        public async Task<List<Profesor>> ObtenerTodosAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Profesores.ToListAsync();
         }
 
-        public void Agregar(Profesor profesor)
+        public async Task<Profesor?> ObtenerPorIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Profesores
+                .FirstOrDefaultAsync(p => p.IdPersona == id);
         }
 
-        public void Actualizar(Profesor profesor)
+        public async Task AgregarAsync(Profesor profesor)
         {
-            throw new NotImplementedException();
+            await _context.Profesores.AddAsync(profesor);
+            await _context.SaveChangesAsync();
         }
 
-        public void Eliminar(int id)
+        public async Task ActualizarAsync(Profesor profesor)
         {
-            throw new NotImplementedException();
+            _context.Profesores.Update(profesor);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EliminarAsync(int id)
+        {
+            Profesor? profesor = await _context.Profesores
+                .FirstOrDefaultAsync(p => p.IdPersona == id);
+
+            if (profesor != null)
+            {
+                _context.Profesores.Remove(profesor);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

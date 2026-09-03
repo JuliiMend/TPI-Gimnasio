@@ -5,34 +5,77 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
     public class SocioRepository : ISocioRepository
-    { 
-        public List<Socio> ObtenerTodos(SocioCriteria criterios)
+    {
+        private readonly GimnasioContext _context;
+
+        public SocioRepository(GimnasioContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Socio? ObtenerPorId(int id)
+        public async Task<List<Socio>> ObtenerTodosAsync(SocioCriteria criterios)
         {
-            throw new NotImplementedException();
+            var query = _context.Socios.AsQueryable();
+
+            if (criterios != null)
+            {
+                if (!string.IsNullOrWhiteSpace(criterios.Nombre))
+                {
+                    query = query.Where(s => s.Nombre.Contains(criterios.Nombre));
+                }
+
+                if (!string.IsNullOrWhiteSpace(criterios.Apellido))
+                {
+                    query = query.Where(s => s.Apellido.Contains(criterios.Apellido));
+                }
+
+                if (!string.IsNullOrWhiteSpace(criterios.Dni))
+                {
+                    query = query.Where(s => s.Dni.Contains(criterios.Dni));
+                }
+
+                if (criterios.IdPlan.HasValue)
+                {
+                    query = query.Where(s => s.IdPlan == criterios.IdPlan.Value);
+                }
+            }
+
+            return await query.ToListAsync();
         }
 
-        public void Agregar(Socio socio)
+        public async Task<Socio?> ObtenerPorIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Socios
+                .FirstOrDefaultAsync(s => s.IdPersona == id);
         }
 
-        public void Actualizar(Socio socio)
+        public async Task AgregarAsync(Socio socio)
         {
-            throw new NotImplementedException();
+            await _context.Socios.AddAsync(socio);
+            await _context.SaveChangesAsync();
         }
 
-        public void Eliminar(int id)
+        public async Task ActualizarAsync(Socio socio)
         {
-            throw new NotImplementedException();
+            _context.Socios.Update(socio);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EliminarAsync(int id)
+        {
+            Socio? socio = await _context.Socios
+                .FirstOrDefaultAsync(s => s.IdPersona == id);
+
+            if (socio != null)
+            {
+                _context.Socios.Remove(socio);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
