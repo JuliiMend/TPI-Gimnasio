@@ -12,7 +12,7 @@ namespace Domain.Model
     public class Socio : Persona
     {
         public DateTime FechaAlta { get; set; }
-        public DateTime FechaBaja { get; set; }
+        public DateTime? FechaBaja { get; set; }
         public int IdPlan { get; set; }
         public Plan? Plan { get; set; }
     }

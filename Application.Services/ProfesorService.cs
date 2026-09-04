@@ -2,9 +2,9 @@
 using Data;
 using Domain.Model;
 using DTOs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -23,7 +23,7 @@ namespace Application.Services
 
             return profesores.Select(p => new ProfesorDTO
             {
-                IdPersona = p.IdPersona,
+                IdPersona = p.PersonaId,
                 Dni = p.Dni,
                 Nombre = p.Nombre,
                 Apellido = p.Apellido,
@@ -43,7 +43,7 @@ namespace Application.Services
 
             return new ProfesorDTO
             {
-                IdPersona = profesor.IdPersona,
+                IdPersona = profesor.PersonaId,
                 Dni = profesor.Dni,
                 Nombre = profesor.Nombre,
                 Apellido = profesor.Apellido,
@@ -72,7 +72,7 @@ namespace Application.Services
         {
             var profesor = new Profesor
             {
-                IdPersona = id,
+                PersonaId = id,
                 Dni = profesorDto.Dni,
                 Nombre = profesorDto.Nombre,
                 Apellido = profesorDto.Apellido,

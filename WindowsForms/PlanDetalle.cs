@@ -16,5 +16,10 @@ namespace WindowsFormsApp
         {
             InitializeComponent();
         }
+
+        private void PlanDetalle_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -39,9 +39,9 @@ namespace Data
                     query = query.Where(s => s.Dni.Contains(criterios.Dni));
                 }
 
-                if (criterios.IdPlan.HasValue)
+                if (criterios.IdPlan > 0)
                 {
-                    query = query.Where(s => s.IdPlan == criterios.IdPlan.Value);
+                    query = query.Where(s => s.IdPlan == criterios.IdPlan);
                 }
             }
 
@@ -51,7 +51,7 @@ namespace Data
         public async Task<Socio?> ObtenerPorIdAsync(int id)
         {
             return await _context.Socios
-                .FirstOrDefaultAsync(s => s.IdPersona == id);
+                .FirstOrDefaultAsync(s => s.PersonaId == id);
         }
 
         public async Task AgregarAsync(Socio socio)
@@ -69,7 +69,7 @@ namespace Data
         public async Task EliminarAsync(int id)
         {
             Socio? socio = await _context.Socios
-                .FirstOrDefaultAsync(s => s.IdPersona == id);
+                .FirstOrDefaultAsync(s => s.PersonaId == id);
 
             if (socio != null)
             {

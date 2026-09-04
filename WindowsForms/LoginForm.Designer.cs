@@ -36,7 +36,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Name = "LoginForm";
-            Text = "Form1";
+            Text = "Login";
             Load += LoginForm_Load;
             ResumeLayout(false);
         }

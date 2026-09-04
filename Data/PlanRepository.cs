@@ -22,7 +22,7 @@ namespace Data
         public async Task<Plan?> ObtenerPorIdAsync(int id)
         {
             return await _context.Planes
-                .FirstOrDefaultAsync(p => p.IdPlan == id);
+                .FirstOrDefaultAsync(p => p.PlanId == id);
         }
     }
 }

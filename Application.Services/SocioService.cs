@@ -31,7 +31,7 @@ namespace Application.Services
 
             return socios.Select(s => new SocioMostrarDTO
             {
-                IdPersona = s.IdPersona,
+                IdPersona = s.PersonaId,
                 Dni = s.Dni,
                 Nombre = s.Nombre,
                 Apellido = s.Apellido,
@@ -52,7 +52,7 @@ namespace Application.Services
 
             return new SocioMostrarDTO
             {
-                IdPersona = socio.IdPersona,
+                IdPersona = socio.PersonaId,
                 Dni = socio.Dni,
                 Nombre = socio.Nombre,
                 Apellido = socio.Apellido,
@@ -66,7 +66,6 @@ namespace Application.Services
         {
             var socio = new Socio
             {
-                IdPersona = socioDto.IdPersona,
                 Dni = socioDto.Dni,
                 Nombre = socioDto.Nombre,
                 Apellido = socioDto.Apellido,
@@ -87,7 +86,7 @@ namespace Application.Services
         {
             var socio = new Socio
             {
-                IdPersona = id,
+                PersonaId = id, 
                 Dni = socioDto.Dni,
                 Nombre = socioDto.Nombre,
                 Apellido = socioDto.Apellido,

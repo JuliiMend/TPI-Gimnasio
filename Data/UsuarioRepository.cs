@@ -25,7 +25,7 @@ namespace Data
         public async Task<Usuario?> ObtenerPorIdAsync(int id)
         {
             return await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.UsuarioId == id);
         }
 
         public async Task<Usuario?> ObtenerPorUsernameAsync(string username)

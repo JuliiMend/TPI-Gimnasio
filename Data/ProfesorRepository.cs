@@ -22,7 +22,7 @@ namespace Data
         public async Task<Profesor?> ObtenerPorIdAsync(int id)
         {
             return await _context.Profesores
-                .FirstOrDefaultAsync(p => p.IdPersona == id);
+                .FirstOrDefaultAsync(p => p.PersonaId == id);
         }
 
         public async Task AgregarAsync(Profesor profesor)
@@ -40,7 +40,7 @@ namespace Data
         public async Task EliminarAsync(int id)
         {
             Profesor? profesor = await _context.Profesores
-                .FirstOrDefaultAsync(p => p.IdPersona == id);
+                .FirstOrDefaultAsync(p => p.PersonaId == id);
 
             if (profesor != null)
             {

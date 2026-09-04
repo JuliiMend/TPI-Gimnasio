@@ -8,7 +8,7 @@ namespace Domain.Model
 {
     public class Plan
     {
-        public int IdPlan { get; set; }
+        public int PlanId { get; set; }
         public string Nombre { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;
         public decimal Precio { get; set; }
