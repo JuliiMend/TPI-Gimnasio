@@ -2,9 +2,9 @@
 using Data;
 using Domain.Model;
 using DTOs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -17,27 +17,30 @@ namespace Application.Services
             _profesorRepository = profesorRepository;
         }
 
-        public List<ProfesorDTO> ObtenerTodos()
+        public async Task<List<ProfesorDTO>> ObtenerTodosAsync()
         {
-            return _profesorRepository.ObtenerTodos()
-                .Select(p => new ProfesorDTO
-                {
-                    IdPersona = p.PersonaId,
-                    Dni = p.Dni,
-                    Nombre = p.Nombre,
-                    Apellido = p.Apellido,
-                    Email = p.Email,
-                    Cargo = p.Cargo
-                }).ToList();
+            var profesores = await _profesorRepository.ObtenerTodosAsync();
+
+            return profesores.Select(p => new ProfesorDTO
+            {
+                IdPersona = p.PersonaId,
+                Dni = p.Dni,
+                Nombre = p.Nombre,
+                Apellido = p.Apellido,
+                Email = p.Email,
+                Cargo = p.Cargo
+            }).ToList();
         }
 
-        public ProfesorDTO? ObtenerPorId(int id)
+        public async Task<ProfesorDTO?> ObtenerPorIdAsync(int id)
         {
-            var profesor = _profesorRepository.ObtenerPorId(id);
+            var profesor = await _profesorRepository.ObtenerPorIdAsync(id);
+
             if (profesor == null)
             {
                 return null;
             }
+
             return new ProfesorDTO
             {
                 IdPersona = profesor.PersonaId,
@@ -49,7 +52,7 @@ namespace Application.Services
             };
         }
 
-        public void Agregar(ProfesorCreaActualizaDTO profesorDto)
+        public async Task AgregarAsync(ProfesorCreaActualizaDTO profesorDto)
         {
             var profesor = new Profesor
             {
@@ -61,14 +64,15 @@ namespace Application.Services
                 FechaNac = profesorDto.FechaNac,
                 Cargo = profesorDto.Cargo
             };
-            _profesorRepository.Agregar(profesor);
+
+            await _profesorRepository.AgregarAsync(profesor);
         }
 
-        public void Actualizar(int id, ProfesorCreaActualizaDTO profesorDto)
+        public async Task ActualizarAsync(int id, ProfesorCreaActualizaDTO profesorDto)
         {
             var profesor = new Profesor
             {
-                PersonaId = id, 
+                PersonaId = id,
                 Dni = profesorDto.Dni,
                 Nombre = profesorDto.Nombre,
                 Apellido = profesorDto.Apellido,
@@ -77,12 +81,13 @@ namespace Application.Services
                 FechaNac = profesorDto.FechaNac,
                 Cargo = profesorDto.Cargo
             };
-            _profesorRepository.Actualizar(profesor);
+
+            await _profesorRepository.ActualizarAsync(profesor);
         }
 
-        public void Eliminar(int id)
+        public async Task EliminarAsync(int id)
         {
-            _profesorRepository.Eliminar(id);
+            await _profesorRepository.EliminarAsync(id);
         }
     }
 }

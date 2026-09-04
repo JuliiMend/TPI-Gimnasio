@@ -20,6 +20,7 @@ namespace Data
         public DbSet<Profesor> Profesores { get; set; }
         public DbSet<Plan> Planes { get; set; }
         public DbSet<Turno> Turnos { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         // 3. ACA PEGAS EL METODO NUEVO:
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,6 +35,10 @@ namespace Data
             modelBuilder.Entity<Turno>().HasKey(t => t.IdTurno); 
             modelBuilder.Entity<Plan>().HasKey(p => p.PlanId); 
             modelBuilder.Entity<Plan>().Property(p => p.Precio).HasPrecision(18, 2);
+
+            //Claves de Usuario
+            modelBuilder.Entity<Usuario>().HasKey(u => u.UsuarioId);
+            modelBuilder.Entity<Usuario>().HasIndex(u => u.Username).IsUnique();
         }
     }
 }

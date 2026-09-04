@@ -2,10 +2,8 @@
 using Data;
 using Domain.Model;
 using DTOs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -13,12 +11,13 @@ namespace Application.Services
     public class SocioService : ISocioService
     {
         private readonly ISocioRepository _socioRepository;
+
         public SocioService(ISocioRepository socioRepository)
         {
             _socioRepository = socioRepository;
         }
 
-        public List<SocioMostrarDTO> ObtenerTodos(SocioCriteriaDTO criterios)
+        public async Task<List<SocioMostrarDTO>> ObtenerTodosAsync(SocioCriteriaDTO criterios)
         {
             var criteria = new SocioCriteria
             {
@@ -28,7 +27,8 @@ namespace Application.Services
                 IdPlan = criterios.IdPlan
             };
 
-            var socios = _socioRepository.ObtenerTodos(criteria);
+            var socios = await _socioRepository.ObtenerTodosAsync(criteria);
+
             return socios.Select(s => new SocioMostrarDTO
             {
                 IdPersona = s.PersonaId,
@@ -41,13 +41,15 @@ namespace Application.Services
             }).ToList();
         }
 
-        public SocioMostrarDTO? ObtenerPorId(int id)
+        public async Task<SocioMostrarDTO?> ObtenerPorIdAsync(int id)
         {
-            var socio = _socioRepository.ObtenerPorId(id);
+            var socio = await _socioRepository.ObtenerPorIdAsync(id);
+
             if (socio == null)
             {
                 return null;
             }
+
             return new SocioMostrarDTO
             {
                 IdPersona = socio.PersonaId,
@@ -60,11 +62,10 @@ namespace Application.Services
             };
         }
 
-        public void Agregar(SocioCreaActualizaDTO socioDto)
+        public async Task AgregarAsync(SocioCreaActualizaDTO socioDto)
         {
             var socio = new Socio
             {
-                PersonaId = socioDto.IdPersona,
                 Dni = socioDto.Dni,
                 Nombre = socioDto.Nombre,
                 Apellido = socioDto.Apellido,
@@ -77,14 +78,15 @@ namespace Application.Services
                 FechaBaja = socioDto.FechaBaja,
                 IdPlan = socioDto.IdPlan
             };
-            _socioRepository.Agregar(socio);
+
+            await _socioRepository.AgregarAsync(socio);
         }
 
-        public void Actualizar(int id, SocioCreaActualizaDTO socioDto)
+        public async Task ActualizarAsync(int id, SocioCreaActualizaDTO socioDto)
         {
             var socio = new Socio
             {
-                PersonaId = socioDto.IdPersona,
+                PersonaId = id, 
                 Dni = socioDto.Dni,
                 Nombre = socioDto.Nombre,
                 Apellido = socioDto.Apellido,
@@ -97,12 +99,13 @@ namespace Application.Services
                 FechaBaja = socioDto.FechaBaja,
                 IdPlan = socioDto.IdPlan
             };
-            _socioRepository.Actualizar(socio);
+
+            await _socioRepository.ActualizarAsync(socio);
         }
 
-        public void Eliminar(int id)
+        public async Task EliminarAsync(int id)
         {
-            _socioRepository.Eliminar(id);
+            await _socioRepository.EliminarAsync(id);
         }
     }
 }

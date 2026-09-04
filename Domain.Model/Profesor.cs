@@ -5,7 +5,7 @@ namespace Domain.Model
 {
     public class Profesor : Persona
     {
-        public string Cargo { get; set; }
+        public string Cargo { get; set; } = string.Empty;
 
     }
 }

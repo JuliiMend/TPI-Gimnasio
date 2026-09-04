@@ -12,32 +12,33 @@ namespace WebAPI
         {
             var grupo = app.MapGroup("/api/profesores");
 
-            grupo.MapGet("/", (IProfesorService profesorService) =>
+            grupo.MapGet("/", async (IProfesorService profesorService) =>
             {
-                return Results.Ok(profesorService.ObtenerTodos());
+                var profesores = await profesorService.ObtenerTodosAsync();
+                return Results.Ok(profesores);
             });
 
-            grupo.MapGet("/{id}", (int id, IProfesorService profesorService) =>
+            grupo.MapGet("/{id}", async (int id, IProfesorService profesorService) =>
             {
-                var profesor = profesorService.ObtenerPorId(id);
+                var profesor = await profesorService.ObtenerPorIdAsync(id);
                 return profesor is null ? Results.NotFound() : Results.Ok(profesor);
             });
 
-            grupo.MapPost("/", (ProfesorCreaActualizaDTO dto, IProfesorService profesorService) =>
+            grupo.MapPost("/", async (ProfesorCreaActualizaDTO dto, IProfesorService profesorService) =>
             {
-                profesorService.Agregar(dto);
+                await profesorService.AgregarAsync(dto);
                 return Results.Ok("Profesor creado con éxito");
             });
 
-            grupo.MapPut("/{id}", (int id, ProfesorCreaActualizaDTO dto, IProfesorService profesorService) =>
+            grupo.MapPut("/{id}", async (int id, ProfesorCreaActualizaDTO dto, IProfesorService profesorService) =>
             {
-                profesorService.Actualizar(id, dto);
+                await profesorService.ActualizarAsync(id, dto);
                 return Results.Ok("Profesor actualizado con éxito");
             });
 
-            grupo.MapDelete("/{id}", (int id, IProfesorService profesorService) =>
+            grupo.MapDelete("/{id}", async (int id, IProfesorService profesorService) =>
             {
-                profesorService.Eliminar(id);
+                await profesorService.EliminarAsync(id);
                 return Results.Ok("Profesor eliminado con éxito");
             });
         }

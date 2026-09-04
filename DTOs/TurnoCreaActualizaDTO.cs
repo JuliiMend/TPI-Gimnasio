@@ -9,7 +9,7 @@ namespace DTOs
 {
     public class TurnoCreaActualizaDTO
     {
-        public string DiaSemana { get; set; }
+        public string DiaSemana { get; set; } = string.Empty;
         public TimeSpan HoraDesde { get; set; }
         public TimeSpan HoraHasta { get; set; }
     }
