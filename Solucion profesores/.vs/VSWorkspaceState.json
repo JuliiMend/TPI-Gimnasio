@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\API.Auth.Blazor.Server",
+    "\\API.Auth.Blazor.WebAssembly",
+    "\\API.Auth.WindowsForms",
+    "\\API.Clients",
+    "\\Domain.Model"
+  ],
+  "SelectedNode": "\\Domain.Model\\GrupoPermiso.cs",
+  "PreviewInSolutionExplorer": false
+}
