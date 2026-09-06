@@ -16,7 +16,5 @@ namespace Domain.Model
         public string Email { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
         public DateTime FechaNac { get; set; }
-        public string Usuario { get; set; } = string.Empty;
-        public string Contraseña { get; set; } = string.Empty;
     }
 }

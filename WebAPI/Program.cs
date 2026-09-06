@@ -22,6 +22,7 @@ builder.Services.AddScoped<IPlanService, PlanService>();
 builder.Services.AddScoped<ISocioService, SocioService>();
 builder.Services.AddScoped<ITurnoService, TurnoService>();
 builder.Services.AddScoped<IProfesorService, ProfesorService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 var app = builder.Build();
 
