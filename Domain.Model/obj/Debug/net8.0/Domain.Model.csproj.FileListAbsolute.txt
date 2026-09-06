@@ -1,0 +1,12 @@
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\bin\Debug\net8.0\Domain.Model.deps.json
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\bin\Debug\net8.0\Domain.Model.dll
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\bin\Debug\net8.0\Domain.Model.pdb
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.GeneratedMSBuildEditorConfig.editorconfig
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfoInputs.cache
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfo.cs
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.csproj.CoreCompileInputs.cache
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.sourcelink.json
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.dll
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\refint\Domain.Model.dll
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.pdb
+G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\ref\Domain.Model.dll
