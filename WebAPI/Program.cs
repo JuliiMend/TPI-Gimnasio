@@ -22,6 +22,9 @@ builder.Services.AddScoped<IPlanService, PlanService>();
 builder.Services.AddScoped<ISocioService, SocioService>();
 builder.Services.AddScoped<ITurnoService, TurnoService>();
 builder.Services.AddScoped<IProfesorService, ProfesorService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
@@ -34,4 +37,6 @@ app.MapPlanEndpoints();
 app.MapSocioEndpoints();
 app.MapTurnoEndpoints();
 app.MapProfesorEndpoints();
+app.MapAuthEndpoints();
+app.MapUsuarioEndpoints();
 app.Run();
