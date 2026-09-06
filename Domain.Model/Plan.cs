@@ -12,5 +12,6 @@ namespace Domain.Model
         public string Nombre { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;
         public decimal Precio { get; set; }
+        public string Descripcion { get; set; } = string.Empty;
     }
 }

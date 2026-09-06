@@ -72,8 +72,6 @@ namespace Application.Services
                 Email = socioDto.Email,
                 Telefono = socioDto.Telefono,
                 FechaNac = socioDto.FechaNac,
-                Usuario = socioDto.Usuario,
-                Contraseña = socioDto.Contraseña,
                 FechaAlta = socioDto.FechaAlta,
                 FechaBaja = socioDto.FechaBaja,
                 IdPlan = socioDto.IdPlan
@@ -93,8 +91,6 @@ namespace Application.Services
                 Email = socioDto.Email,
                 Telefono = socioDto.Telefono,
                 FechaNac = socioDto.FechaNac,
-                Usuario = socioDto.Usuario,
-                Contraseña = socioDto.Contraseña,
                 FechaAlta = socioDto.FechaAlta,
                 FechaBaja = socioDto.FechaBaja,
                 IdPlan = socioDto.IdPlan
