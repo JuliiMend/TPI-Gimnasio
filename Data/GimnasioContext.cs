@@ -10,7 +10,11 @@ namespace Data
 {
     public class GimnasioContext : DbContext
     {
-        // 1.Constructor actual
+
+        public GimnasioContext()
+        {
+        }
+
         public GimnasioContext(DbContextOptions<GimnasioContext> options) : base(options)
         {
         }
@@ -22,7 +26,6 @@ namespace Data
         public DbSet<Turno> Turnos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
-        // 3. ACA PEGAS EL METODO NUEVO:
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -32,13 +35,26 @@ namespace Data
             modelBuilder.Entity<Socio>().HasKey(s => s.PersonaId);
 
             // Claves del resto de las entidades
-            modelBuilder.Entity<Turno>().HasKey(t => t.IdTurno); 
-            modelBuilder.Entity<Plan>().HasKey(p => p.PlanId); 
+            modelBuilder.Entity<Turno>().HasKey(t => t.IdTurno);
+            modelBuilder.Entity<Plan>().HasKey(p => p.PlanId);
             modelBuilder.Entity<Plan>().Property(p => p.Precio).HasPrecision(18, 2);
 
-            //Claves de Usuario
+            // Claves de Usuario
             modelBuilder.Entity<Usuario>().HasKey(u => u.UsuarioId);
             modelBuilder.Entity<Usuario>().HasIndex(u => u.Username).IsUnique();
+
+            // NUEVO: relación real Socio -> Plan usando la columna IdPlan
+            modelBuilder.Entity<Socio>()
+                .HasOne(s => s.Plan)
+                .WithMany()
+                .HasForeignKey(s => s.IdPlan);
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=MSSQL-TPIGim;Trusted_Connection=True;TrustServerCertificate=True;");
+            }
         }
     }
 }

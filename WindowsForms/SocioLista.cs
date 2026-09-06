@@ -16,5 +16,10 @@ namespace WindowsFormsApp
         {
             InitializeComponent();
         }
+
+        private void SocioLista_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
