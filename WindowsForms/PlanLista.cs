@@ -24,6 +24,9 @@ namespace WindowsFormsApp
 
             btnActualizar.Click -= btnActualizar_Click;
             btnActualizar.Click += btnActualizar_Click;
+
+            btnEliminar.Click -= btnEliminar_Click;
+            btnEliminar.Click += btnEliminar_Click;
         }
 
         private async void PlanLista_Load(object? sender, EventArgs e)
@@ -75,6 +78,33 @@ namespace WindowsFormsApp
             if (planDetalleForm.ShowDialog() == DialogResult.OK)
             {
                 await CargarPlanesAsync();
+            }
+        }
+
+        private async void btnEliminar_Click(object? sender, EventArgs e)
+        {
+            if (dgvPlanes.CurrentRow == null)
+            {
+                MessageBox.Show("Seleccioná un plan para eliminar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var planSeleccionado = (PlanDTO)dgvPlanes.CurrentRow.DataBoundItem;
+
+            var respuesta = MessageBox.Show($"¿Estás seguro de que querés eliminar el plan '{planSeleccionado.Nombre}'?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (respuesta == DialogResult.Yes)
+            {
+                try
+                {
+                    await _planService.EliminarAsync(planSeleccionado.IdPlan);
+                    MessageBox.Show("Plan eliminado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await CargarPlanesAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al eliminar el plan: {ex.Message}\n\nAsegurate de que no haya socios usando este plan antes de borrarlo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

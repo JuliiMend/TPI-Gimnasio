@@ -4393,9 +4393,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
+      "projectUniqueName": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj",
       "projectName": "Data",
-      "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
+      "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj",
       "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\obj\\",
       "projectStyle": "PackageReference",
@@ -4418,8 +4418,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
-              "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
+            "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+              "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
             }
           }
         }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "74V+2OlDsLc=",
+  "dgSpecHash": "70cpCz/8H9Y=",
   "success": true,
-  "projectFilePath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WindowsForms\\WindowsFormsApp.csproj",
+  "projectFilePath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\WindowsForms\\WindowsFormsApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\julim\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\julim\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

@@ -94,7 +94,7 @@ namespace WindowsFormsApp
                 (int)dgvProfesores.CurrentRow.Cells["colId"].Value;
 
             var respuesta = MessageBox.Show(
-                "¿Estás segura de que querés eliminar este profesor?",
+                "¿Estás seguro de que querés eliminar este profesor?",
                 "Confirmar eliminación",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);

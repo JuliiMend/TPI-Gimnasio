@@ -81,5 +81,10 @@ namespace Application.Services
                 throw new Exception($"El plan con ID {id} no existe en la base de datos.");
             }
         }
+
+        public async Task EliminarAsync(int id)
+        {
+            await _planRepository.EliminarAsync(id);
+        }
     }
 }
