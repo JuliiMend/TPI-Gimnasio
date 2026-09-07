@@ -58,7 +58,7 @@
             // cerrarSesionToolStripMenuItem
             // 
             cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
-            cerrarSesionToolStripMenuItem.Size = new Size(180, 22);
+            cerrarSesionToolStripMenuItem.Size = new Size(142, 22);
             cerrarSesionToolStripMenuItem.Text = "Cerrar sesion";
             cerrarSesionToolStripMenuItem.Click += cerrarSesionToolStripMenuItem_Click;
             // 
@@ -87,12 +87,14 @@
             turnosToolStripMenuItem.Name = "turnosToolStripMenuItem";
             turnosToolStripMenuItem.Size = new Size(180, 22);
             turnosToolStripMenuItem.Text = "Turnos";
+            turnosToolStripMenuItem.Click += turnosToolStripMenuItem_Click;
             // 
             // profesoresToolStripMenuItem
             // 
             profesoresToolStripMenuItem.Name = "profesoresToolStripMenuItem";
             profesoresToolStripMenuItem.Size = new Size(180, 22);
             profesoresToolStripMenuItem.Text = "Profesores";
+            profesoresToolStripMenuItem.Click += profesoresToolStripMenuItem_Click;
             // 
             // Home
             // 
