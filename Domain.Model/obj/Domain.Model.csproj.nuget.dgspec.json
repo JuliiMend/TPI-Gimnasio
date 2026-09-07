@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {}
+    "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {}
   },
   "projects": {
-    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+    "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
         "projectName": "Domain.Model",
-        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
+        "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
         "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\obj\\",
         "projectStyle": "PackageReference",

@@ -88,7 +88,7 @@ namespace WindowsFormsApp
             var turnoId = (int)dgvTurnos.CurrentRow.Cells["colId"].Value;
 
             var respuesta = MessageBox.Show(
-                "¿Estás segura de que querés eliminar este turno?",
+                "¿Estás seguro de que querés eliminar este turno?",
                 "Confirmar eliminación",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);

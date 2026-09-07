@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj": {}
+    "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
+    "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
         "projectName": "Application.Services",
-        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
+        "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
         "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\obj\\",
         "projectStyle": "PackageReference",
@@ -32,14 +32,14 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj": {
-                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj"
+              "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj": {
+                "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj"
               },
-              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
-                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
+              "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+                "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
               },
-              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
-                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj"
+              "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
+                "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj"
               }
             }
           }
@@ -79,12 +79,12 @@
         }
       }
     },
-    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj": {
+    "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj",
         "projectName": "Data",
-        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
+        "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj",
         "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\obj\\",
         "projectStyle": "PackageReference",
@@ -107,8 +107,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
-                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
+              "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+                "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
               }
             }
           }
@@ -168,12 +168,12 @@
         }
       }
     },
-    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+    "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
         "projectName": "Domain.Model",
-        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
+        "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
         "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\obj\\",
         "projectStyle": "PackageReference",
@@ -233,12 +233,12 @@
         }
       }
     },
-    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
+    "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
         "projectName": "DTOs",
-        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
+        "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
         "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\obj\\",
         "projectStyle": "PackageReference",
@@ -298,12 +298,12 @@
         }
       }
     },
-    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj": {
+    "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj",
         "projectName": "WebAPI",
-        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj",
+        "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj",
         "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WebAPI\\obj\\",
         "projectStyle": "PackageReference",
@@ -326,14 +326,14 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
-                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj"
+              "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
+                "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj"
               },
-              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
-                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
+              "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+                "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
               },
-              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
-                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj"
+              "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
+                "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj"
               }
             }
           }

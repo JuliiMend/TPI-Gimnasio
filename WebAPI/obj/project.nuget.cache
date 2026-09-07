@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dvU5PfecPPs=",
+  "dgSpecHash": "NgTDWz0/0KE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj",
+  "projectFilePath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\WebAPI\\WebAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\julim\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\julim\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

@@ -17,6 +17,15 @@ namespace WindowsFormsApp
             InitializeComponent();
             _socioService = socioService;
             _planService = planService;
+
+            this.Load -= SocioDetalle_Load;
+            this.Load += SocioDetalle_Load;
+
+            btnGuardar.Click -= btnGuardar_Click;
+            btnGuardar.Click += btnGuardar_Click;
+
+            btnCancelar.Click -= btnCancelar_Click;
+            btnCancelar.Click += btnCancelar_Click;
         }
 
         private async Task CargarPlanesComboAsync()
@@ -31,7 +40,7 @@ namespace WindowsFormsApp
             }
         }
 
-        private async void SocioDetalle_Load(object sender, EventArgs e)
+        private async void SocioDetalle_Load(object? sender, EventArgs e)
         {
             try
             {
@@ -90,7 +99,7 @@ namespace WindowsFormsApp
             }
         }
 
-        private async void btnGuardar_Click(object sender, EventArgs e)
+        private async void btnGuardar_Click(object? sender, EventArgs e)
         {
             if (cmbPlanes.SelectedValue == null)
             {
@@ -133,7 +142,7 @@ namespace WindowsFormsApp
             }
         }
 
-        private void btnCancelar_Click(object sender, EventArgs e)
+        private void btnCancelar_Click(object? sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();

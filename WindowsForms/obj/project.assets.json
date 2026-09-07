@@ -4415,9 +4415,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WindowsForms\\WindowsFormsApp.csproj",
+      "projectUniqueName": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\WindowsForms\\WindowsFormsApp.csproj",
       "projectName": "WindowsFormsApp",
-      "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WindowsForms\\WindowsFormsApp.csproj",
+      "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\WindowsForms\\WindowsFormsApp.csproj",
       "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\WindowsForms\\obj\\",
       "projectStyle": "PackageReference",
@@ -4440,17 +4440,17 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "projectReferences": {
-            "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
-              "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj"
+            "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
+              "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj"
             },
-            "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj": {
-              "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj"
+            "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj": {
+              "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj"
             },
-            "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
-              "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
+            "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+              "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
             },
-            "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
-              "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj"
+            "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
+              "projectPath": "C:\\Users\\julim\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj"
             }
           }
         }
