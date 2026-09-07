@@ -1,8 +1,9 @@
 ﻿using Application.Services;
+using DTOs;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using WindowsFormsApp;
 
 namespace WindowsFormsApp
 {
@@ -10,26 +11,33 @@ namespace WindowsFormsApp
     {
         private readonly IPlanService _planService;
 
-        // Inyectamos el servicio de planes automáticamente
         public PlanLista(IPlanService planService)
         {
             InitializeComponent();
             _planService = planService;
+
+            this.Load -= PlanLista_Load;
+            this.Load += PlanLista_Load;
+
+            btnNuevo.Click -= btnNuevo_Click;
+            btnNuevo.Click += btnNuevo_Click;
+
+            btnActualizar.Click -= btnActualizar_Click;
+            btnActualizar.Click += btnActualizar_Click;
         }
 
-        private async void PlanListaForm_Load(object sender, EventArgs e)
+        private async void PlanLista_Load(object? sender, EventArgs e)
         {
             await CargarPlanesAsync();
         }
 
-        private async System.Threading.Tasks.Task CargarPlanesAsync()
+        private async Task CargarPlanesAsync()
         {
             try
             {
-                // Pedimos la lista de planes a la capa de servicios
                 var planes = await _planService.ObtenerTodosAsync();
 
-                // Volcamos los datos directamente en la grilla
+                dgvPlanes.DataSource = null;
                 dgvPlanes.DataSource = planes;
             }
             catch (Exception ex)
@@ -38,36 +46,36 @@ namespace WindowsFormsApp
             }
         }
 
-        private async void btnActualizar_Click(object sender, EventArgs e)
+        private async void btnNuevo_Click(object? sender, EventArgs e)
         {
-            await CargarPlanesAsync();
-        }
-
-        private void btnNuevo_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Acá abriremos el formulario de creación de plan.", "Info");
-        }
-
-        private void dgvPlanes_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void btnNuevo_Click_1(object sender, EventArgs e)
-        {
-            // Pedimos el formulario de detalle al contenedor
             var planDetalleForm = Program.ServiceProvider.GetRequiredService<PlanDetalle>();
 
-            // Si se guarda correctamente, refrescamos la grilla
+            planDetalleForm.PlanId = null;
+
             if (planDetalleForm.ShowDialog() == DialogResult.OK)
             {
-                _ = CargarPlanesAsync();
+                await CargarPlanesAsync();
             }
         }
 
-        private void PlanListaForm_Load_1(object sender, EventArgs e)
+        private async void btnActualizar_Click(object? sender, EventArgs e)
         {
+            if (dgvPlanes.CurrentRow == null)
+            {
+                MessageBox.Show("Seleccioná un plan para actualizar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            var planSeleccionado = (PlanDTO)dgvPlanes.CurrentRow.DataBoundItem;
+
+            var planDetalleForm = Program.ServiceProvider.GetRequiredService<PlanDetalle>();
+
+            planDetalleForm.PlanId = planSeleccionado.IdPlan;
+
+            if (planDetalleForm.ShowDialog() == DialogResult.OK)
+            {
+                await CargarPlanesAsync();
+            }
         }
     }
 }

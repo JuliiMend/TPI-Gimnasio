@@ -74,6 +74,7 @@
             sociosToolStripMenuItem.Name = "sociosToolStripMenuItem";
             sociosToolStripMenuItem.Size = new Size(180, 22);
             sociosToolStripMenuItem.Text = "Socios";
+            sociosToolStripMenuItem.Click += sociosToolStripMenuItem_Click;
             // 
             // planesToolStripMenuItem
             // 

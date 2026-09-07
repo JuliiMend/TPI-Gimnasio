@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
 namespace DTOs
 {
     public class SocioMostrarDTO
@@ -17,5 +15,9 @@ namespace DTOs
         public string Email { get; set; } = string.Empty;
         public DateTime FechaAlta { get; set; }
         public string NombrePlan { get; set; } = string.Empty;
+        public string Telefono { get; set; } = string.Empty;
+        public DateTime FechaNac { get; set; }
+        public DateTime? FechaBaja { get; set; }
+        public int? IdPlan { get; set; }
     }
 }

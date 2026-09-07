@@ -32,7 +32,7 @@ namespace WindowsFormsApp
         private static void ConfigureServices(ServiceCollection services)
         {
             // Configuracion del DbContext
-            var connectionString = "Server=localhost\\SQLEXPRESS;Database=MSSQL-TPIGim;Trusted_Connection=True;TrustServerCertificate=True;";
+            var connectionString = "Server=localhost\\SQLEXPRESS;Database=MSSQL-TPIGim;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True;";
             services.AddDbContext<GimnasioContext>(options =>
             options.UseSqlServer(connectionString),
             ServiceLifetime.Transient);
@@ -76,6 +76,13 @@ namespace WindowsFormsApp
             services.AddTransient<IProfesorService, ProfesorService>();
             services.AddTransient<ProfesorLista>();
             services.AddTransient<ProfesorDetalle>();
+            
+
+            // Para los Socios
+            services.AddTransient<ISocioRepository, SocioRepository>();
+            services.AddTransient<ISocioService, SocioService>();
+            services.AddTransient<SocioLista>();
+            services.AddTransient<SocioDetalle>();
 
         }
     }

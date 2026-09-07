@@ -82,5 +82,10 @@ namespace WindowsFormsApp
             DialogResult = DialogResult.OK;
             Close();
         }
+
+        private void ProfesorDetalle_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

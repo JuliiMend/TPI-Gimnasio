@@ -53,5 +53,13 @@ namespace WindowsFormsApp
             profesorForm.MdiParent = this;
             profesorForm.Show();
         }
+
+        private void sociosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var socioForm = Program.ServiceProvider.GetRequiredService<SocioLista>();
+
+            socioForm.MdiParent = this;
+            socioForm.Show();
+        }
     }
 }

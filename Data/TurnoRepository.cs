@@ -33,6 +33,13 @@ namespace Data
 
         public async Task ActualizarAsync(Turno turno)
         {
+            var turnoTrackeado = _context.Turnos.Local.FirstOrDefault(t => t.IdTurno == turno.IdTurno);
+
+            if (turnoTrackeado != null)
+            {
+                _context.Entry(turnoTrackeado).State = EntityState.Detached;
+            }
+
             _context.Turnos.Update(turno);
             await _context.SaveChangesAsync();
         }

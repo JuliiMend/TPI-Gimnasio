@@ -49,9 +49,9 @@
             // lblTitulo
             // 
             lblTitulo.AutoSize = true;
-            lblTitulo.Location = new Point(309, 9);
+            lblTitulo.Location = new Point(310, 23);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(126, 15);
+            lblTitulo.Size = new Size(125, 15);
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "DATOS DEL PROFESOR";
             // 
@@ -117,7 +117,7 @@
             lblTelefono.AutoSize = true;
             lblTelefono.Location = new Point(200, 275);
             lblTelefono.Name = "lblTelefono";
-            lblTelefono.Size = new Size(56, 15);
+            lblTelefono.Size = new Size(55, 15);
             lblTelefono.TabIndex = 8;
             lblTelefono.Text = "Telefono:";
             // 
@@ -200,6 +200,7 @@
             Controls.Add(lblTitulo);
             Name = "ProfesorDetalle";
             Text = "ProfesorDetalle";
+            Load += ProfesorDetalle_Load;
             ResumeLayout(false);
             PerformLayout();
         }

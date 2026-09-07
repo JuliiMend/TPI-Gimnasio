@@ -37,7 +37,11 @@ namespace Application.Services
                 Apellido = s.Apellido,
                 Email = s.Email,
                 FechaAlta = s.FechaAlta,
-                NombrePlan = s.Plan?.Nombre ?? ""
+                NombrePlan = s.Plan?.Nombre ?? "",
+                Telefono = s.Telefono,
+                FechaNac = s.FechaNac,
+                FechaBaja = s.FechaBaja,
+                IdPlan = s.IdPlan
             }).ToList();
         }
 
@@ -58,23 +62,27 @@ namespace Application.Services
                 Apellido = socio.Apellido,
                 Email = socio.Email,
                 FechaAlta = socio.FechaAlta,
-                NombrePlan = socio.Plan?.Nombre ?? ""
+                NombrePlan = socio.Plan?.Nombre ?? "",
+                Telefono = socio.Telefono,
+                FechaNac = socio.FechaNac,
+                FechaBaja = socio.FechaBaja,
+                IdPlan = socio.IdPlan
             };
         }
 
-        public async Task AgregarAsync(SocioCreaActualizaDTO socioDto)
+        public async Task AgregarAsync(SocioCreaActualizaDTO dto)
         {
             var socio = new Socio
             {
-                Dni = socioDto.Dni,
-                Nombre = socioDto.Nombre,
-                Apellido = socioDto.Apellido,
-                Email = socioDto.Email,
-                Telefono = socioDto.Telefono,
-                FechaNac = socioDto.FechaNac,
-                FechaAlta = socioDto.FechaAlta,
-                FechaBaja = socioDto.FechaBaja,
-                IdPlan = socioDto.IdPlan
+                Dni = dto.Dni,
+                Nombre = dto.Nombre,
+                Apellido = dto.Apellido,
+                Email = dto.Email,
+                Telefono = dto.Telefono,
+                FechaNac = dto.FechaNac,
+                FechaAlta = dto.FechaAlta,
+                FechaBaja = dto.FechaBaja,
+                IdPlan = dto.IdPlan
             };
 
             await _socioRepository.AgregarAsync(socio);
@@ -84,7 +92,7 @@ namespace Application.Services
         {
             var socio = new Socio
             {
-                PersonaId = id, 
+                PersonaId = id,
                 Dni = socioDto.Dni,
                 Nombre = socioDto.Nombre,
                 Apellido = socioDto.Apellido,
