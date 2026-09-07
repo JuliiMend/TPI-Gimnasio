@@ -41,7 +41,6 @@
                 dgvPlanes.Name = "dgvPlanes";
                 dgvPlanes.Size = new Size(514, 438);
                 dgvPlanes.TabIndex = 0;
-                dgvPlanes.CellContentClick += dgvPlanes_CellContentClick;
                 // 
                 // btnNuevo
                 // 
@@ -51,7 +50,6 @@
                 btnNuevo.TabIndex = 1;
                 btnNuevo.Text = "Registrar nuevo Plan";
                 btnNuevo.UseVisualStyleBackColor = true;
-                btnNuevo.Click += btnNuevo_Click_1;
                 // 
                 // btnActualizar
                 // 
@@ -72,7 +70,6 @@
                 Controls.Add(dgvPlanes);
                 Name = "PlanListaForm";
                 Text = "PlanListaForm";
-                Load += PlanListaForm_Load_1;
                 ((System.ComponentModel.ISupportInitialize)dgvPlanes).EndInit();
                 ResumeLayout(false);
             }
