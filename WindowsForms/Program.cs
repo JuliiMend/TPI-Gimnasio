@@ -54,6 +54,10 @@ namespace WindowsFormsApp
             //services.AddTransient<PlanDetalle>();
 
 
+            // Formularios para Turno
+            services.AddTransient<TurnoLista>();
+            services.AddTransient<TurnoDetalle>();
+
             //Declaraci{on de los servicios y repositorios para los formularios que se van a utilizar
 
             // Para los Planes
@@ -61,6 +65,17 @@ namespace WindowsFormsApp
             services.AddTransient<IPlanService, PlanService>();
             services.AddTransient<PlanDetalle>();
 
+
+            // Para los Turnos
+            services.AddTransient<ITurnoRepository, TurnoRepository>();
+            services.AddTransient<ITurnoService, TurnoService>();
+
+
+            // Para los Profesores
+            services.AddTransient<IProfesorRepository, ProfesorRepository>();
+            services.AddTransient<IProfesorService, ProfesorService>();
+            services.AddTransient<ProfesorLista>();
+            services.AddTransient<ProfesorDetalle>();
 
         }
     }
