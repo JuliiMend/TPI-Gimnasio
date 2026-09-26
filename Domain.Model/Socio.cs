@@ -15,5 +15,6 @@ namespace Domain.Model
         public DateTime? FechaBaja { get; set; }
         public int IdPlan { get; set; }
         public Plan? Plan { get; set; }
+        public List<Cuota> Cuotas { get; set; } = new List<Cuota>();
     }
 }

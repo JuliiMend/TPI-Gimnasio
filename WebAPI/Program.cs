@@ -2,6 +2,7 @@ using Application.Services;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using WebAPI;
+using WebAPI.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ builder.Services.AddScoped<IProfesorService, ProfesorService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICuotaService, CuotaService>();
+builder.Services.AddScoped<ICuotaRepository, CuotaRepository>();
 
 var app = builder.Build();
 
@@ -39,4 +42,5 @@ app.MapTurnoEndpoints();
 app.MapProfesorEndpoints();
 app.MapAuthEndpoints();
 app.MapUsuarioEndpoints();
+app.MapCuotaEndpoints();
 app.Run();

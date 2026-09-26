@@ -25,6 +25,8 @@ namespace Data
         public DbSet<Plan> Planes { get; set; }
         public DbSet<Turno> Turnos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Cuota> Cuotas { get; set; }
+        public DbSet<DetalleCuota> DetallesCuota { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +40,8 @@ namespace Data
             modelBuilder.Entity<Turno>().HasKey(t => t.IdTurno);
             modelBuilder.Entity<Plan>().HasKey(p => p.PlanId);
             modelBuilder.Entity<Plan>().Property(p => p.Precio).HasPrecision(18, 2);
+            modelBuilder.Entity<Cuota>().HasKey(c => c.CuotaId);
+            modelBuilder.Entity<DetalleCuota>().HasKey(d => d.DetalleCuotaId);
 
             // Claves de Usuario
             modelBuilder.Entity<Usuario>().HasKey(u => u.UsuarioId);
@@ -48,6 +52,20 @@ namespace Data
                 .HasOne(s => s.Plan)
                 .WithMany()
                 .HasForeignKey(s => s.IdPlan);
+
+            //relacion socio cuota
+            modelBuilder.Entity<Cuota>()
+            .HasOne(c => c.Socio)
+            .WithMany(s => s.Cuotas) 
+            .HasForeignKey(c => c.SocioId);
+
+            //relacion cuota detallecuota
+            modelBuilder.Entity<Cuota>()
+            .HasMany(c => c.Detalles)
+            .WithOne(d => d.Cuota)
+            .HasForeignKey(d => d.CuotaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
