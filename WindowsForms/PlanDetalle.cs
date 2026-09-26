@@ -1,10 +1,8 @@
 ﻿using Application.Services;
 using DTOs;
 using System;
-using System;
 using System.Globalization;
 using System.Windows.Forms;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WindowsFormsApp
 {
@@ -18,9 +16,15 @@ namespace WindowsFormsApp
         {
             InitializeComponent();
             _planService = planService;
+
+            this.Load -= PlanDetalle_Load;
+            this.Load += PlanDetalle_Load;
+
+            btnGuardar.Click -= btnGuardar_Click;
+            btnGuardar.Click += btnGuardar_Click;
         }
 
-        private async void PlanDetalle_Load(object sender, EventArgs e)
+        private async void PlanDetalle_Load(object? sender, EventArgs e)
         {
             Text = PlanId.HasValue
                 ? "Modificar plan"
@@ -62,7 +66,7 @@ namespace WindowsFormsApp
             }
         }
 
-        private async void btnGuardar_Click(object sender, EventArgs e)
+        private async void btnGuardar_Click(object? sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(Nombre.Text))
             {
@@ -116,7 +120,8 @@ namespace WindowsFormsApp
             {
                 Nombre = Nombre.Text.Trim(),
                 Tipo = Tipo.Text.Trim(),
-                Precio = precio
+                Precio = precio,
+                Descripcion = Descripcion.Text.Trim()
             };
 
             try

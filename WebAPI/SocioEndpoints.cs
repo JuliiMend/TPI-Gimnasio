@@ -10,7 +10,7 @@ namespace WebAPI
     {
         public static void MapSocioEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/socios");
+            var grupo = app.MapGroup("/api/socios").RequireAuthorization();
 
             grupo.MapGet("/", async ([AsParameters] SocioCriteriaDTO criterios, ISocioService socioService) =>
             {

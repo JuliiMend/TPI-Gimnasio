@@ -28,6 +28,8 @@ namespace Application.Services
                 Nombre = p.Nombre,
                 Apellido = p.Apellido,
                 Email = p.Email,
+                Telefono = p.Telefono,
+                FechaNac = p.FechaNac,
                 Cargo = p.Cargo
             }).ToList();
         }
@@ -48,6 +50,8 @@ namespace Application.Services
                 Nombre = profesor.Nombre,
                 Apellido = profesor.Apellido,
                 Email = profesor.Email,
+                Telefono = profesor.Telefono,
+                FechaNac = profesor.FechaNac,
                 Cargo = profesor.Cargo
             };
         }

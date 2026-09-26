@@ -32,7 +32,7 @@ namespace WindowsFormsApp
         private static void ConfigureServices(ServiceCollection services)
         {
             // Configuracion del DbContext
-            var connectionString = "Server=localhost\\SQLEXPRESS;Database=MSSQL-TPIGim;Trusted_Connection=True;TrustServerCertificate=True;";
+            var connectionString = "Server=localhost\\SQLEXPRESS;Database=MSSQL-TPIGim;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True;";
             services.AddDbContext<GimnasioContext>(options =>
             options.UseSqlServer(connectionString),
             ServiceLifetime.Transient);
@@ -54,6 +54,10 @@ namespace WindowsFormsApp
             //services.AddTransient<PlanDetalle>();
 
 
+            // Formularios para Turno
+            services.AddTransient<TurnoLista>();
+            services.AddTransient<TurnoDetalle>();
+
             //Declaraci{on de los servicios y repositorios para los formularios que se van a utilizar
 
             // Para los Planes
@@ -61,6 +65,24 @@ namespace WindowsFormsApp
             services.AddTransient<IPlanService, PlanService>();
             services.AddTransient<PlanDetalle>();
 
+
+            // Para los Turnos
+            services.AddTransient<ITurnoRepository, TurnoRepository>();
+            services.AddTransient<ITurnoService, TurnoService>();
+
+
+            // Para los Profesores
+            services.AddTransient<IProfesorRepository, ProfesorRepository>();
+            services.AddTransient<IProfesorService, ProfesorService>();
+            services.AddTransient<ProfesorLista>();
+            services.AddTransient<ProfesorDetalle>();
+            
+
+            // Para los Socios
+            services.AddTransient<ISocioRepository, SocioRepository>();
+            services.AddTransient<ISocioService, SocioService>();
+            services.AddTransient<SocioLista>();
+            services.AddTransient<SocioDetalle>();
 
         }
     }

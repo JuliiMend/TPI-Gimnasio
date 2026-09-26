@@ -10,7 +10,7 @@ namespace WebAPI
     {
         public static void MapUsuarioEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/usuarios");
+            var grupo = app.MapGroup("/api/usuarios").RequireAuthorization();
 
             grupo.MapGet("/", async (IUsuarioService usuarioService) =>
             {
@@ -28,7 +28,7 @@ namespace WebAPI
             {
                 await usuarioService.AgregarAsync(dto);
                 return Results.Ok("Usuario creado con éxito");
-            });
+            }).AllowAnonymous(); ;
 
             grupo.MapPut("/{id}", async (int id, UsuarioCreaActualizaDTO dto, IUsuarioService usuarioService) =>
             {

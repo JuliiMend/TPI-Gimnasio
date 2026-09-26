@@ -17,7 +17,7 @@ namespace Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.30")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -259,7 +259,7 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Socio");
-                });
+                });     
 
             modelBuilder.Entity("Domain.Model.DetalleCuota", b =>
                 {

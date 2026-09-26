@@ -10,7 +10,7 @@ namespace WebAPI
     {
         public static void MapTurnoEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/turnos");
+            var grupo = app.MapGroup("/api/turnos").RequireAuthorization();
 
             grupo.MapGet("/", async (ITurnoService turnoService) =>
             {

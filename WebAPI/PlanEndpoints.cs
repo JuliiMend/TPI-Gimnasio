@@ -6,7 +6,7 @@ namespace WebAPI {
     {
         public static void MapPlanEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/planes");
+            var grupo = app.MapGroup("/api/planes").RequireAuthorization();
     
             grupo.MapGet("/", async (IPlanService planService) =>
             {

@@ -33,6 +33,13 @@ namespace Data
 
         public async Task ActualizarAsync(Profesor profesor)
         {
+            var profesorTrackeado = _context.Profesores.Local.FirstOrDefault(p => p.PersonaId == profesor.PersonaId);
+
+            if (profesorTrackeado != null)
+            {
+                _context.Entry(profesorTrackeado).State = EntityState.Detached;
+            }
+
             _context.Profesores.Update(profesor);
             await _context.SaveChangesAsync();
         }

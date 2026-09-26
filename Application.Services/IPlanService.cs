@@ -10,5 +10,6 @@ namespace Application.Services
         Task<PlanDTO?> ObtenerPorIdAsync(int id);
         Task CrearAsync(PlanCreaActualizaDTO planDto);
         Task ActualizarAsync(int id, PlanCreaActualizaDTO planDto);
+        Task EliminarAsync(int id);
     }
 }

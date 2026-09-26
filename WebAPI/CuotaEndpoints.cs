@@ -7,7 +7,7 @@ namespace WebAPI.Endpoints
     {
         public static void MapCuotaEndpoints(this IEndpointRouteBuilder app)
         {
-            var group = app.MapGroup("/api/cuotas");
+            var group = app.MapGroup("/api/cuotas").RequireAuthorization();
 
             group.MapGet("/", async (ICuotaService cuotaService) =>
             {

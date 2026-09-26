@@ -20,7 +20,9 @@ namespace Data
 
         public async Task<List<Socio>> ObtenerTodosAsync(SocioCriteria criterios)
         {
-            var query = _context.Socios.AsQueryable();
+            var query = _context.Socios
+                .Include(s => s.Plan)
+                .AsQueryable();
 
             if (criterios != null)
             {
@@ -51,6 +53,7 @@ namespace Data
         public async Task<Socio?> ObtenerPorIdAsync(int id)
         {
             return await _context.Socios
+                .Include(s => s.Plan)
                 .FirstOrDefaultAsync(s => s.PersonaId == id);
         }
 
@@ -62,6 +65,13 @@ namespace Data
 
         public async Task ActualizarAsync(Socio socio)
         {
+            var socioTrackeado = _context.Socios.Local.FirstOrDefault(s => s.PersonaId == socio.PersonaId);
+
+            if (socioTrackeado != null)
+            {
+                _context.Entry(socioTrackeado).State = EntityState.Detached;
+            }
+
             _context.Socios.Update(socio);
             await _context.SaveChangesAsync();
         }

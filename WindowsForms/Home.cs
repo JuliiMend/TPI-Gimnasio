@@ -37,5 +37,29 @@ namespace WindowsFormsApp
         {
 
         }
+
+        private void turnosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var turnoForm = Program.ServiceProvider.GetRequiredService<TurnoLista>();
+
+            turnoForm.MdiParent = this;
+            turnoForm.Show();
+        }
+
+        private void profesoresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var profesorForm = Program.ServiceProvider.GetRequiredService<ProfesorLista>();
+
+            profesorForm.MdiParent = this;
+            profesorForm.Show();
+        }
+
+        private void sociosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var socioForm = Program.ServiceProvider.GetRequiredService<SocioLista>();
+
+            socioForm.MdiParent = this;
+            socioForm.Show();
+        }
     }
 }
