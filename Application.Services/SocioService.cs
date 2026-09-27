@@ -70,7 +70,7 @@ namespace Application.Services
             };
         }
 
-        public async Task AgregarAsync(SocioCreaActualizaDTO dto)
+        public async Task<int> AgregarAsync(SocioCreaActualizaDTO dto)
         {
             var socio = new Socio
             {
@@ -82,10 +82,13 @@ namespace Application.Services
                 FechaNac = dto.FechaNac,
                 FechaAlta = dto.FechaAlta,
                 FechaBaja = dto.FechaBaja,
-                IdPlan = dto.IdPlan
+                IdPlan = dto.IdPlan,
+                Usuario = dto.Usuario,
+                Contraseña = dto.Contraseña
             };
 
             await _socioRepository.AgregarAsync(socio);
+            return socio.PersonaId;
         }
 
         public async Task ActualizarAsync(int id, SocioCreaActualizaDTO socioDto)

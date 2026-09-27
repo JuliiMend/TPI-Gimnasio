@@ -34,6 +34,7 @@
             colDia = new DataGridViewTextBoxColumn();
             colHoraDesde = new DataGridViewTextBoxColumn();
             colHoraHasta = new DataGridViewTextBoxColumn();
+            lblOpciones = new Label();
             btnNuevo = new Button();
             btnModificar = new Button();
             btnEliminar = new Button();
@@ -43,9 +44,10 @@
             // lblTitulo
             // 
             lblTitulo.AutoSize = true;
-            lblTitulo.Location = new Point(338, 26);
+            lblTitulo.Font = new Font("Times New Roman", 15F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
+            lblTitulo.Location = new Point(12, 9);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(103, 15);
+            lblTitulo.Size = new Size(163, 23);
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "Gestión de Turnos";
             // 
@@ -53,7 +55,7 @@
             // 
             dgvTurnos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTurnos.Columns.AddRange(new DataGridViewColumn[] { colId, colDia, colHoraDesde, colHoraHasta });
-            dgvTurnos.Location = new Point(166, 62);
+            dgvTurnos.Location = new Point(12, 46);
             dgvTurnos.Name = "dgvTurnos";
             dgvTurnos.Size = new Size(443, 150);
             dgvTurnos.TabIndex = 1;
@@ -86,34 +88,50 @@
             colHoraHasta.Name = "colHoraHasta";
             colHoraHasta.ReadOnly = true;
             // 
+            // lblOpciones
+            // 
+            lblOpciones.AutoSize = true;
+            lblOpciones.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
+            lblOpciones.Location = new Point(12, 208);
+            lblOpciones.Name = "lblOpciones";
+            lblOpciones.Size = new Size(91, 22);
+            lblOpciones.TabIndex = 5;
+            lblOpciones.Text = "Opciones:";
+            // 
             // btnNuevo
             // 
-            btnNuevo.Location = new Point(138, 218);
+            btnNuevo.BackColor = Color.LightBlue;
+            btnNuevo.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnNuevo.Location = new Point(12, 240);
             btnNuevo.Name = "btnNuevo";
-            btnNuevo.Size = new Size(75, 23);
-            btnNuevo.TabIndex = 2;
+            btnNuevo.Size = new Size(154, 35);
+            btnNuevo.TabIndex = 6;
             btnNuevo.Text = "Nuevo";
-            btnNuevo.UseVisualStyleBackColor = true;
+            btnNuevo.UseVisualStyleBackColor = false;
             btnNuevo.Click += btnNuevo_Click;
             // 
             // btnModificar
             // 
-            btnModificar.Location = new Point(338, 218);
+            btnModificar.BackColor = Color.MediumSeaGreen;
+            btnModificar.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnModificar.Location = new Point(12, 281);
             btnModificar.Name = "btnModificar";
-            btnModificar.Size = new Size(75, 23);
-            btnModificar.TabIndex = 3;
+            btnModificar.Size = new Size(154, 35);
+            btnModificar.TabIndex = 7;
             btnModificar.Text = "Modificar";
-            btnModificar.UseVisualStyleBackColor = true;
+            btnModificar.UseVisualStyleBackColor = false;
             btnModificar.Click += btnModificar_Click;
             // 
             // btnEliminar
             // 
-            btnEliminar.Location = new Point(582, 218);
+            btnEliminar.BackColor = Color.Crimson;
+            btnEliminar.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnEliminar.Location = new Point(12, 322);
             btnEliminar.Name = "btnEliminar";
-            btnEliminar.Size = new Size(75, 23);
-            btnEliminar.TabIndex = 4;
+            btnEliminar.Size = new Size(154, 35);
+            btnEliminar.TabIndex = 8;
             btnEliminar.Text = "Eliminar";
-            btnEliminar.UseVisualStyleBackColor = true;
+            btnEliminar.UseVisualStyleBackColor = false;
             btnEliminar.Click += btnEliminar_Click;
             // 
             // TurnoLista
@@ -124,6 +142,7 @@
             Controls.Add(btnEliminar);
             Controls.Add(btnModificar);
             Controls.Add(btnNuevo);
+            Controls.Add(lblOpciones);
             Controls.Add(dgvTurnos);
             Controls.Add(lblTitulo);
             Name = "TurnoLista";
@@ -138,12 +157,13 @@
 
         private Label lblTitulo;
         private DataGridView dgvTurnos;
-        private Button btnNuevo;
-        private Button btnModificar;
-        private Button btnEliminar;
         private DataGridViewTextBoxColumn colId;
         private DataGridViewTextBoxColumn colDia;
         private DataGridViewTextBoxColumn colHoraDesde;
         private DataGridViewTextBoxColumn colHoraHasta;
+        private Label lblOpciones;
+        private Button btnNuevo;
+        private Button btnModificar;
+        private Button btnEliminar;
     }
 }

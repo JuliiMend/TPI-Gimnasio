@@ -5,12 +5,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<!-- Dejamos el de Json que ya tenías -->
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="..\Domain.Model\Domain.Model.csproj" />
 	</ItemGroup>

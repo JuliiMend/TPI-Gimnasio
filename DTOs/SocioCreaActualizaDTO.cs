@@ -15,7 +15,8 @@ namespace DTOs
         public string Email { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
         public DateTime FechaNac { get; set; }
-        public string Usuario { get; set; } = string.Empty;
+        public required string Usuario { get; set; } = string.Empty;
+        public required string Contraseña { get; set; }
         public DateTime FechaAlta { get; set; }
         public DateTime? FechaBaja { get; set; }
         public int IdPlan { get; set; }

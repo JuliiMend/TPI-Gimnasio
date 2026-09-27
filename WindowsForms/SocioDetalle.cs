@@ -119,7 +119,9 @@ namespace WindowsFormsApp
                     FechaNac = dtpFechaNac.Value,
                     FechaAlta = dtpFechaAlta.Value,
                     FechaBaja = dtpFechaBaja.Checked ? dtpFechaBaja.Value : (DateTime?)null,
-                    IdPlan = (int)cmbPlanes.SelectedValue
+                    IdPlan = (int)cmbPlanes.SelectedValue,
+                    Usuario = string.Empty,
+                    Contraseña = string.Empty
                 };
 
                 if (_idSocio == null)
@@ -146,6 +148,21 @@ namespace WindowsFormsApp
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void dtpFechaNac_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblFechaNac_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnCancelar_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

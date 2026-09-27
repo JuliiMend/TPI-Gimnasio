@@ -50,7 +50,7 @@ namespace Application.Services
             };
         }
 
-        public async Task CrearAsync(PlanCreaActualizaDTO planDto)
+        public async Task<int> CrearAsync(PlanCreaActualizaDTO planDto)
         {
             var planNuevo = new Plan
             {
@@ -61,6 +61,7 @@ namespace Application.Services
             };
 
             await _planRepository.AgregarAsync(planNuevo);
+            return planNuevo.PlanId;
         }
 
         public async Task ActualizarAsync(int id, PlanCreaActualizaDTO planDto)

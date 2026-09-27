@@ -159,5 +159,20 @@ namespace WindowsFormsApp
                     MessageBoxIcon.Error);
             }
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblDni_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

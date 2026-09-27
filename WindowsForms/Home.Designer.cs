@@ -44,7 +44,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { sistemaToolStripMenuItem, gestionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1275, 24);
+            menuStrip1.Size = new Size(800, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -58,7 +58,7 @@
             // cerrarSesionToolStripMenuItem
             // 
             cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
-            cerrarSesionToolStripMenuItem.Size = new Size(142, 22);
+            cerrarSesionToolStripMenuItem.Size = new Size(180, 22);
             cerrarSesionToolStripMenuItem.Text = "Cerrar sesion";
             cerrarSesionToolStripMenuItem.Click += cerrarSesionToolStripMenuItem_Click;
             // 
@@ -99,7 +99,7 @@
             // 
             // Home
             // 
-            ClientSize = new Size(1275, 575);
+            ClientSize = new Size(800, 450);
             Controls.Add(menuStrip1);
             IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
