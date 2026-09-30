@@ -1,6 +1,7 @@
 ﻿using Data;
 using Domain.Model;
 using DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -71,7 +72,7 @@ namespace Application.Services
                 SocioId = cuotaDto.SocioId,
                 MesAnio = cuotaDto.MesAnio,
                 FechaPago = cuotaDto.FechaPago,
-                Valor = cuotaDto.Valor,
+                Valor = cuotaDto.Detalles.Sum(d => d.Monto),
                 Detalles = cuotaDto.Detalles.Select(d => new DetalleCuota
                 {
                     Concepto = d.Concepto,
@@ -85,21 +86,19 @@ namespace Application.Services
 
         public async Task ActualizarAsync(int id, CuotaCreaActualizaDTO cuotaDto)
         {
-            var cuotaExistente = await _cuotaRepository.ObtenerPorIdAsync(id);
-            if (cuotaExistente == null)
-                throw new Exception("La cuota no existe");
-
             var cuotaActualizada = new Cuota
             {
                 CuotaId = id,
                 SocioId = cuotaDto.SocioId,
                 MesAnio = cuotaDto.MesAnio,
                 FechaPago = cuotaDto.FechaPago,
-                Valor = cuotaDto.Valor,
+                Valor = cuotaDto.Detalles.Sum(d => d.Monto),
                 Detalles = cuotaDto.Detalles.Select(d => new DetalleCuota
                 {
+                    DetalleCuotaId = d.DetalleCuotaId, 
                     Concepto = d.Concepto,
-                    Subtotal = d.Subtotal
+                    Subtotal = d.Subtotal,
+                    Monto = d.Monto
                 }).ToList()
             };
 

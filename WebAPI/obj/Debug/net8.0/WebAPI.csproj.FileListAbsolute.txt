@@ -622,3 +622,4 @@ C:\Users\elneg\source\repos\TPI-Gimnasio\WebAPI\obj\Debug\net8.0\refint\WebAPI.d
 C:\Users\elneg\source\repos\TPI-Gimnasio\WebAPI\obj\Debug\net8.0\WebAPI.pdb
 C:\Users\elneg\source\repos\TPI-Gimnasio\WebAPI\obj\Debug\net8.0\WebAPI.genruntimeconfig.cache
 C:\Users\elneg\source\repos\TPI-Gimnasio\WebAPI\obj\Debug\net8.0\ref\WebAPI.dll
+C:\Users\elneg\source\repos\TPI-Gimnasio\WebAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

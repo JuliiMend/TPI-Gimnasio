@@ -4590,6 +4590,7 @@
     "net8.0": [
       "Application.Services >= 1.0.0",
       "DTOs >= 1.0.0",
+      "Data >= 1.0.0",
       "Domain.Model >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.8",
       "Microsoft.AspNetCore.OpenApi >= 8.0.25",
@@ -4631,6 +4632,9 @@
           "projectReferences": {
             "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
               "projectPath": "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj"
+            },
+            "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj": {
+              "projectPath": "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\Data\\Data.csproj"
             },
             "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
               "projectPath": "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"

@@ -37,21 +37,49 @@ namespace Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task ActualizarAsync(Cuota cuota)
+        public async Task ActualizarAsync(Cuota cuotaModificada)
         {
             var cuotaExistente = await _context.Cuotas
                 .Include(c => c.Detalles)
-                .FirstOrDefaultAsync(c => c.CuotaId == cuota.CuotaId);
+                .FirstOrDefaultAsync(c => c.CuotaId == cuotaModificada.CuotaId);
 
             if (cuotaExistente != null)
             {
-                _context.DetallesCuota.RemoveRange(cuotaExistente.Detalles);
+                cuotaExistente.SocioId = cuotaModificada.SocioId;
+                cuotaExistente.MesAnio = cuotaModificada.MesAnio;
+                cuotaExistente.FechaPago = cuotaModificada.FechaPago;
+                cuotaExistente.Valor = cuotaModificada.Valor;
 
-                cuotaExistente.SocioId = cuota.SocioId;
-                cuotaExistente.MesAnio = cuota.MesAnio;
-                cuotaExistente.FechaPago = cuota.FechaPago;
-                cuotaExistente.Valor = cuota.Valor;
-                cuotaExistente.Detalles = cuota.Detalles;
+                var idsModificados = cuotaModificada.Detalles.Select(d => d.DetalleCuotaId).ToList();
+                var aEliminar = cuotaExistente.Detalles
+                    .Where(d => d.DetalleCuotaId != 0 && !idsModificados.Contains(d.DetalleCuotaId))
+                    .ToList();
+
+                foreach (var det in aEliminar)
+                {
+                    _context.DetallesCuota.Remove(det);
+                }
+
+                foreach (var detModificado in cuotaModificada.Detalles)
+                {
+                    var existente = cuotaExistente.Detalles.FirstOrDefault(d => d.DetalleCuotaId == detModificado.DetalleCuotaId && d.DetalleCuotaId != 0);
+
+                    if (existente != null)
+                    {
+                        existente.Concepto = detModificado.Concepto;
+                        existente.Subtotal = detModificado.Subtotal;
+                        existente.Monto = detModificado.Monto;
+                    }
+                    else
+                    {
+                        cuotaExistente.Detalles.Add(new DetalleCuota
+                        {
+                            Concepto = detModificado.Concepto,
+                            Subtotal = detModificado.Subtotal,
+                            Monto = detModificado.Monto
+                        });
+                    }
+                }
 
                 await _context.SaveChangesAsync();
             }

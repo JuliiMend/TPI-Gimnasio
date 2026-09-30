@@ -14,5 +14,6 @@ namespace Domain.Model
         public string Password { get; set; } = string.Empty;
         public DateTime FechaCreacion { get; set; }
         public bool Activo { get; set; }
+        public string Rol { get; set; } = string.Empty;
     }
 }
