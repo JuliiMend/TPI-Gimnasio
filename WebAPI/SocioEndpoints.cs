@@ -26,8 +26,10 @@ namespace WebAPI
 
             grupo.MapPost("/", async (SocioCreaActualizaDTO socio, ISocioService socioService) =>
             {
-                await socioService.AgregarAsync(socio);
-                return Results.Created($"/api/socios/{socio.IdPersona}", socio);
+                var idGenerado = await socioService.AgregarAsync(socio);
+                socio.IdPersona = idGenerado; // Actualizas el DTO con el ID real
+
+                return Results.Created($"/api/socios/{idGenerado}", socio);
             });
 
             grupo.MapPut("/{id}", async (int id, SocioCreaActualizaDTO socio, ISocioService socioService) =>

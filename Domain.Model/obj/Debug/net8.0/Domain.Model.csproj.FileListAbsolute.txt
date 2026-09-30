@@ -34,3 +34,14 @@ C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Mo
 C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\refint\Domain.Model.dll
 C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.pdb
 C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\ref\Domain.Model.dll
+C:\nuevo repo - net\TPI.NET\Domain.Model\bin\Debug\net8.0\Domain.Model.deps.json
+C:\nuevo repo - net\TPI.NET\Domain.Model\bin\Debug\net8.0\Domain.Model.dll
+C:\nuevo repo - net\TPI.NET\Domain.Model\bin\Debug\net8.0\Domain.Model.pdb
+C:\nuevo repo - net\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\nuevo repo - net\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfoInputs.cache
+C:\nuevo repo - net\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfo.cs
+C:\nuevo repo - net\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.csproj.CoreCompileInputs.cache
+C:\nuevo repo - net\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.dll
+C:\nuevo repo - net\TPI.NET\Domain.Model\obj\Debug\net8.0\refint\Domain.Model.dll
+C:\nuevo repo - net\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.pdb
+C:\nuevo repo - net\TPI.NET\Domain.Model\obj\Debug\net8.0\ref\Domain.Model.dll

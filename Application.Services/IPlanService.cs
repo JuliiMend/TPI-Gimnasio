@@ -8,7 +8,7 @@ namespace Application.Services
     {
         Task<List<PlanDTO>> ObtenerTodosAsync();
         Task<PlanDTO?> ObtenerPorIdAsync(int id);
-        Task CrearAsync(PlanCreaActualizaDTO planDto);
+        Task<int> CrearAsync(PlanCreaActualizaDTO planDto);
         Task ActualizarAsync(int id, PlanCreaActualizaDTO planDto);
         Task EliminarAsync(int id);
     }

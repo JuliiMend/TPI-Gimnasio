@@ -20,6 +20,14 @@ namespace WebAPI
                 var plan = await planService.ObtenerPorIdAsync(id);
                 return plan is null ? Results.NotFound() : Results.Ok(plan);
             });
+
+            grupo.MapPost("/", async (PlanCreaActualizaDTO planDto, IPlanService planService) =>
+            {
+                var idGenerado = await planService.CrearAsync(planDto);
+                return Results.Created($"/api/planes/{idGenerado}", planDto);
+            });
         }
+
+
     }
 }
