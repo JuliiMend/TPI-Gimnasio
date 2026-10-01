@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using DTOs;
 using System;
 using System.Threading.Tasks;
@@ -37,7 +37,7 @@ namespace WindowsFormsApp
                 var socios = await SocioApiClient.GetAllAsync();
 
                 dgvSocios.DataSource = null;
-                dgvSocios.DataSource = socios;
+                dgvSocios.DataSource = socios.ToList();
             }
             catch (Exception ex)
             {

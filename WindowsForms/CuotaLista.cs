@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using API.Clients;
 using System;
 using System.Collections.Generic;
@@ -65,7 +65,22 @@ namespace WindowsFormsApp
 
                 CuotaMostrarDTO seleccionada = (CuotaMostrarDTO)dgv_cuotas.SelectedRows[0].DataBoundItem;
 
-                CuotaCreaActualizaDTO cuota = await CuotaApiClient.GetAsync(seleccionada.CuotaId);
+                var cuotaMostrar = await CuotaApiClient.GetAsync(seleccionada.CuotaId);
+                if (cuotaMostrar == null) return;
+
+                var cuota = new CuotaCreaActualizaDTO
+                {
+                    CuotaId = cuotaMostrar.CuotaId,
+                    SocioId = cuotaMostrar.SocioId,
+                    MesAnio = cuotaMostrar.MesAnio,
+                    FechaPago = cuotaMostrar.FechaPago,
+                    Detalles = cuotaMostrar.Detalles?.Select(d => new DetalleCuotaCreaActualizaDTO
+                    {
+                        Concepto = d.Concepto,
+                        Subtotal = d.Subtotal,
+                        Monto = d.Monto
+                    }).ToList() ?? new List<DetalleCuotaCreaActualizaDTO>()
+                };
 
                 CuotaDetalle cuotaDetalle = new CuotaDetalle(cuota);
                 cuotaDetalle.ShowDialog();

@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using DTOs;
 using System;
 using System.Threading.Tasks;
@@ -51,7 +51,9 @@ namespace WindowsFormsApp
                 Email = txtEmail.Text,
                 Telefono = txtTelefono.Text,
                 FechaNac = dtpFechaNac.Value,
-                Cargo = txtCargo.Text
+                Cargo = txtCargo.Text,
+                Username = txtDni.Text.Trim(),
+                Password = txtDni.Text.Trim()
             };
 
             if (_idProfesor == null)
@@ -66,7 +68,7 @@ namespace WindowsFormsApp
             }
             else
             {
-                await ProfesorApiClient.UpdateAsync(profesorDto);
+                await ProfesorApiClient.UpdateAsync(_idProfesor.Value, profesorDto);
 
                 MessageBox.Show(
                     "Profesor modificado correctamente.",
