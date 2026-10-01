@@ -1,4 +1,4 @@
-﻿using Data;
+using Data;
 using Domain.Model;
 using DTOs;
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace Application.Services
             };
         }
 
-        public async Task AgregarAsync(TurnoCreaActualizaDTO turnoDto)
+        public async Task<int> AgregarAsync(TurnoCreaActualizaDTO turnoDto)
         {
             var turno = new Turno
             {
@@ -57,6 +57,7 @@ namespace Application.Services
             };
 
             await _turnoRepository.AgregarAsync(turno);
+            return turno.IdTurno;
         }
 
         public async Task ActualizarAsync(int id, TurnoCreaActualizaDTO turnoDto)

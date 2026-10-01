@@ -61,7 +61,7 @@ namespace Application.Services
             };
         }
 
-        public async Task AgregarAsync(ProfesorCreaActualizaDTO profesorDto)
+        public async Task<int> AgregarAsync(ProfesorCreaActualizaDTO profesorDto)
         {
             var username = !string.IsNullOrWhiteSpace(profesorDto.Username)
                 ? profesorDto.Username.Trim()
@@ -93,6 +93,7 @@ namespace Application.Services
             };
 
             await _profesorRepository.AgregarAsync(profesor);
+            return profesor.PersonaId;
         }
 
         public async Task ActualizarAsync(int id, ProfesorCreaActualizaDTO profesorDto)

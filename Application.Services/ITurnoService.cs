@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,7 +8,7 @@ namespace Application.Services
     {
         Task<List<TurnoMostrarDTO>> ObtenerTodosAsync();
         Task<TurnoMostrarDTO?> ObtenerPorIdAsync(int id);
-        Task AgregarAsync(TurnoCreaActualizaDTO turnoDto);
+        Task<int> AgregarAsync(TurnoCreaActualizaDTO turnoDto);
         Task ActualizarAsync(int id, TurnoCreaActualizaDTO turnoDto);
         Task EliminarAsync(int id);
     }

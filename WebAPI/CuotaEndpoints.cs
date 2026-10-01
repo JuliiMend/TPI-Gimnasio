@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using DTOs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -27,8 +27,9 @@ namespace WebAPI.Endpoints
 
             group.MapPost("/", async (CuotaCreaActualizaDTO dto, ICuotaService cuotaService) =>
             {
-                await cuotaService.AgregarAsync(dto);
-                return Results.Created("/api/cuotas", dto);
+                var id = await cuotaService.AgregarAsync(dto);
+                var cuota = await cuotaService.ObtenerPorIdAsync(id);
+                return Results.Created($"/api/cuotas/{id}", cuota);
             });
 
             group.MapPut("/{id}", async (int id, CuotaCreaActualizaDTO dto, ICuotaService cuotaService) =>

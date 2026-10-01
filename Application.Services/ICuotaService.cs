@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTOs;
 
@@ -8,7 +8,7 @@ namespace Application.Services
     {
         Task<List<CuotaMostrarDTO>> ObtenerTodosAsync();
         Task<CuotaMostrarDTO?> ObtenerPorIdAsync(int id);
-        Task AgregarAsync(CuotaCreaActualizaDTO cuotaDto);
+        Task<int> AgregarAsync(CuotaCreaActualizaDTO cuotaDto);
         Task ActualizarAsync(int id, CuotaCreaActualizaDTO cuotaDto);
         Task EliminarAsync(int id);
     }

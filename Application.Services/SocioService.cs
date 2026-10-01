@@ -43,7 +43,8 @@ namespace Application.Services
                 FechaBaja = s.FechaBaja,
                 IdPlan = s.IdPlan,
                 Email = s.Usuario?.Email ?? "",
-                Username = s.Usuario?.Username ?? ""
+                Username = s.Usuario?.Username ?? "",
+                UsuarioActivo = s.Usuario?.Activo ?? false
             }).ToList();
         }
 
@@ -67,7 +68,10 @@ namespace Application.Services
                 Telefono = socio.Telefono,
                 FechaNac = socio.FechaNac,
                 FechaBaja = socio.FechaBaja,
-                IdPlan = socio.IdPlan
+                IdPlan = socio.IdPlan,
+                Email = socio.Usuario?.Email ?? "",
+                Username = socio.Usuario?.Username ?? "",
+                UsuarioActivo = socio.Usuario?.Activo ?? false
             };
         }
 
