@@ -1,4 +1,4 @@
-﻿using Domain.Model;
+using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,12 +16,15 @@ namespace Data
 
         public async Task<List<Profesor>> ObtenerTodosAsync()
         {
-            return await _context.Profesores.ToListAsync();
+            return await _context.Profesores
+                .Include(p => p.Usuario)
+                .ToListAsync();
         }
 
         public async Task<Profesor?> ObtenerPorIdAsync(int id)
         {
             return await _context.Profesores
+                .Include(p => p.Usuario)
                 .FirstOrDefaultAsync(p => p.PersonaId == id);
         }
 
