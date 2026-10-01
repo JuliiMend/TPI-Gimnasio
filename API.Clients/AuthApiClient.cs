@@ -1,6 +1,5 @@
-﻿using DTOs;
-using System.Text;
-using System.Text.Json;
+using DTOs;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace API.Clients
@@ -9,27 +8,16 @@ namespace API.Clients
     {
         public async Task<LoginResponse?> LoginAsync(LoginRequest request)
         {
-            /* TODO: Descomentar esto cuando la API de backend esté terminada
             using var httpClient = await CreateHttpClientAsync();
 
-            var json = JsonSerializer.Serialize(request);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await httpClient.PostAsync("/auth/login", content);
+            var response = await httpClient.PostAsJsonAsync("api/auth/login", request);
 
             if (response.IsSuccessStatusCode)
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<LoginResponse>(responseContent, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+                return await response.Content.ReadFromJsonAsync<LoginResponse>();
             }
-            return null;
-            */
 
-            // SIMULACIÓN: Devolvemos un objeto vacío no-nulo para fingir que la API respondió OK
-            return await Task.FromResult(new LoginResponse());
+            return null;
         }
     }
 }
