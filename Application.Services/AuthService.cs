@@ -27,21 +27,24 @@ namespace Application.Services
         public async Task<LoginResponse?> LoginAsync(LoginRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
-                return null;
+                return new LoginResponse { Exito = false, Mensaje = "Usuario y contraseña requeridos" };
 
             var usuario = await _usuarioRepository.ObtenerPorUsernameAsync(request.Username);
 
             if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Password, usuario.PasswordHash))
-                return null;
+                return new LoginResponse { Exito = false, Mensaje = "Usuario o contraseña incorrectos" };
 
             var token = GenerateJwtToken(usuario);
             var expiresAt = DateTime.UtcNow.AddMinutes(GetExpirationMinutes());
 
             return new LoginResponse
             {
+                Exito = true,
+                Mensaje = "Login exitoso",
                 Token = token,
                 ExpiresAt = expiresAt,
-                Username = usuario.Username
+                Username = usuario.Username,
+                Rol = usuario.Rol
             };
         }
 

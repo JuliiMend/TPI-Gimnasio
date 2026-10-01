@@ -18,14 +18,14 @@ namespace Application.Services
             _socioRepository = socioRepository;
         }
 
-        public async Task<List<SocioMostrarDTO>> ObtenerTodosAsync(SocioCriteriaDTO criterios)
+        public async Task<List<SocioMostrarDTO>> ObtenerTodosAsync(SocioCriteriaDTO? criterios)
         {
             var criteria = new SocioCriteria
             {
-                Nombre = criterios.Nombre,
-                Apellido = criterios.Apellido,
-                Dni = criterios.Dni,
-                IdPlan = criterios.IdPlan
+                Nombre = criterios?.Nombre ?? string.Empty,
+                Apellido = criterios?.Apellido ?? string.Empty,
+                Dni = criterios?.Dni ?? string.Empty,
+                IdPlan = criterios?.IdPlan ?? 0
             };
 
             var socios = await _socioRepository.ObtenerTodosAsync(criteria);
@@ -73,11 +73,19 @@ namespace Application.Services
 
         public async Task<int> AgregarAsync(SocioCreaActualizaDTO dto)
         {
+            var username = !string.IsNullOrWhiteSpace(dto.Username)
+                ? dto.Username.Trim()
+                : (!string.IsNullOrWhiteSpace(dto.Dni) ? dto.Dni.Trim() : $"socio_{Guid.NewGuid().ToString("N")[..8]}");
+
+            var password = !string.IsNullOrWhiteSpace(dto.Password)
+                ? dto.Password
+                : (!string.IsNullOrWhiteSpace(dto.Dni) ? dto.Dni.Trim() : "123456");
+
             var nuevoUsuario = new Usuario
             {
-                Username = dto.Username,
+                Username = username,
                 Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
                 FechaCreacion = DateTime.Now,
                 Activo = true,
                 Rol = "Socio"
@@ -103,20 +111,33 @@ namespace Application.Services
 
         public async Task ActualizarAsync(int id, SocioCreaActualizaDTO socioDto)
         {
-            var socio = new Socio
-            {
-                PersonaId = id,
-                Dni = socioDto.Dni,
-                Nombre = socioDto.Nombre,
-                Apellido = socioDto.Apellido,
-                Telefono = socioDto.Telefono,
-                FechaNac = socioDto.FechaNac,
-                FechaAlta = socioDto.FechaAlta,
-                FechaBaja = socioDto.FechaBaja,
-                IdPlan = socioDto.IdPlan
-            };
+            var socio = await _socioRepository.ObtenerPorIdAsync(id);
 
-            await _socioRepository.ActualizarAsync(socio);
+            if (socio != null)
+            {
+                socio.Dni = socioDto.Dni;
+                socio.Nombre = socioDto.Nombre;
+                socio.Apellido = socioDto.Apellido;
+                socio.Telefono = socioDto.Telefono;
+                socio.FechaNac = socioDto.FechaNac;
+                socio.FechaAlta = socioDto.FechaAlta;
+                socio.FechaBaja = socioDto.FechaBaja;
+                socio.IdPlan = socioDto.IdPlan;
+
+                if (socio.Usuario != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(socioDto.Email))
+                    {
+                        socio.Usuario.Email = socioDto.Email;
+                    }
+                    if (!string.IsNullOrWhiteSpace(socioDto.Password))
+                    {
+                        socio.Usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(socioDto.Password);
+                    }
+                }
+
+                await _socioRepository.ActualizarAsync(socio);
+            }
         }
 
         public async Task EliminarAsync(int id)

@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using DTOs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,12 +16,12 @@ namespace WebAPI
             {
                 var respuesta = await authService.LoginAsync(request);
 
-                if (respuesta.Exito)
+                if (respuesta != null && respuesta.Exito)
                 {
                     return Results.Ok(respuesta);
                 }
 
-                return Results.BadRequest(respuesta);
+                return Results.BadRequest(respuesta ?? new LoginResponse { Exito = false, Mensaje = "Credenciales incorrectas" });
             });
         }
     }
