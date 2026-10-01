@@ -37,8 +37,6 @@
             dtpFechaNac = new DateTimePicker();
             dtpFechaAlta = new DateTimePicker();
             cmbPlanes = new ComboBox();
-            btnGuardar = new Button();
-            btnCancelar = new Button();
             dtpFechaBaja = new DateTimePicker();
             lblDni = new Label();
             lblNombre = new Label();
@@ -49,62 +47,66 @@
             lblFechaAlta = new Label();
             lblFechaBaja = new Label();
             lblPlan = new Label();
+            btnGuardar = new Button();
+            btnCancelar = new Button();
             SuspendLayout();
             // 
             // lblTitulo
             // 
             lblTitulo.AutoSize = true;
-            lblTitulo.Location = new Point(355, 27);
+            lblTitulo.Font = new Font("Times New Roman", 15F, FontStyle.Underline);
+            lblTitulo.Location = new Point(12, 19);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(87, 15);
+            lblTitulo.Size = new Size(177, 22);
             lblTitulo.TabIndex = 0;
-            lblTitulo.Text = "Datos del socio";
+            lblTitulo.Text = "DATOS DEL SOCIO";
             // 
             // txtNombre
             // 
-            txtNombre.Location = new Point(342, 129);
+            txtNombre.Location = new Point(150, 126);
             txtNombre.Name = "txtNombre";
-            txtNombre.Size = new Size(100, 23);
+            txtNombre.Size = new Size(200, 23);
             txtNombre.TabIndex = 6;
             // 
             // txtApellido
             // 
-            txtApellido.Location = new Point(342, 95);
+            txtApellido.Location = new Point(150, 89);
             txtApellido.Name = "txtApellido";
-            txtApellido.Size = new Size(100, 23);
+            txtApellido.Size = new Size(200, 23);
             txtApellido.TabIndex = 4;
             // 
             // txtDni
             // 
-            txtDni.Location = new Point(342, 63);
+            txtDni.Location = new Point(150, 60);
             txtDni.Name = "txtDni";
-            txtDni.Size = new Size(100, 23);
+            txtDni.Size = new Size(200, 23);
             txtDni.TabIndex = 2;
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(342, 162);
+            txtEmail.Location = new Point(150, 159);
             txtEmail.Name = "txtEmail";
-            txtEmail.Size = new Size(100, 23);
+            txtEmail.Size = new Size(200, 23);
             txtEmail.TabIndex = 8;
             // 
             // txtTelefono
             // 
-            txtTelefono.Location = new Point(342, 195);
+            txtTelefono.Location = new Point(150, 197);
             txtTelefono.Name = "txtTelefono";
-            txtTelefono.Size = new Size(100, 23);
+            txtTelefono.Size = new Size(200, 23);
             txtTelefono.TabIndex = 10;
             // 
             // dtpFechaNac
             // 
-            dtpFechaNac.Location = new Point(342, 243);
+            dtpFechaNac.Location = new Point(150, 235);
             dtpFechaNac.Name = "dtpFechaNac";
             dtpFechaNac.Size = new Size(200, 23);
             dtpFechaNac.TabIndex = 12;
+            dtpFechaNac.ValueChanged += dtpFechaNac_ValueChanged;
             // 
             // dtpFechaAlta
             // 
-            dtpFechaAlta.Location = new Point(342, 287);
+            dtpFechaAlta.Location = new Point(150, 277);
             dtpFechaAlta.Name = "dtpFechaAlta";
             dtpFechaAlta.Size = new Size(200, 23);
             dtpFechaAlta.TabIndex = 14;
@@ -112,33 +114,14 @@
             // cmbPlanes
             // 
             cmbPlanes.FormattingEnabled = true;
-            cmbPlanes.Location = new Point(342, 363);
+            cmbPlanes.Location = new Point(150, 372);
             cmbPlanes.Name = "cmbPlanes";
             cmbPlanes.Size = new Size(121, 23);
             cmbPlanes.TabIndex = 18;
             // 
-            // btnGuardar
-            // 
-            btnGuardar.Location = new Point(241, 402);
-            btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new Size(75, 23);
-            btnGuardar.TabIndex = 19;
-            btnGuardar.Text = "Guardar";
-            btnGuardar.UseVisualStyleBackColor = true;
-            btnGuardar.Click += btnGuardar_Click;
-            // 
-            // btnCancelar
-            // 
-            btnCancelar.Location = new Point(388, 402);
-            btnCancelar.Name = "btnCancelar";
-            btnCancelar.Size = new Size(75, 23);
-            btnCancelar.TabIndex = 20;
-            btnCancelar.Text = "Cancelar";
-            btnCancelar.UseVisualStyleBackColor = true;
-            // 
             // dtpFechaBaja
             // 
-            dtpFechaBaja.Location = new Point(342, 330);
+            dtpFechaBaja.Location = new Point(150, 322);
             dtpFechaBaja.Name = "dtpFechaBaja";
             dtpFechaBaja.ShowCheckBox = true;
             dtpFechaBaja.Size = new Size(200, 23);
@@ -147,89 +130,122 @@
             // lblDni
             // 
             lblDni.AutoSize = true;
-            lblDni.Location = new Point(210, 66);
+            lblDni.Font = new Font("Segoe UI", 12F);
+            lblDni.Location = new Point(18, 58);
             lblDni.Name = "lblDni";
-            lblDni.Size = new Size(30, 15);
+            lblDni.Size = new Size(40, 21);
             lblDni.TabIndex = 1;
             lblDni.Text = "DNI:";
             // 
             // lblNombre
             // 
             lblNombre.AutoSize = true;
-            lblNombre.Location = new Point(210, 95);
+            lblNombre.Font = new Font("Segoe UI", 12F);
+            lblNombre.Location = new Point(18, 87);
             lblNombre.Name = "lblNombre";
-            lblNombre.Size = new Size(54, 15);
+            lblNombre.Size = new Size(71, 21);
             lblNombre.TabIndex = 3;
             lblNombre.Text = "Nombre:";
             // 
             // lblApellido
             // 
             lblApellido.AutoSize = true;
-            lblApellido.Location = new Point(210, 132);
+            lblApellido.Font = new Font("Segoe UI", 12F);
+            lblApellido.Location = new Point(18, 124);
             lblApellido.Name = "lblApellido";
-            lblApellido.Size = new Size(57, 15);
+            lblApellido.Size = new Size(74, 21);
             lblApellido.TabIndex = 5;
             lblApellido.Text = "Apellido: ";
             // 
             // lblEmail
             // 
             lblEmail.AutoSize = true;
-            lblEmail.Location = new Point(210, 165);
+            lblEmail.Font = new Font("Segoe UI", 12F);
+            lblEmail.Location = new Point(18, 157);
             lblEmail.Name = "lblEmail";
-            lblEmail.Size = new Size(39, 15);
+            lblEmail.Size = new Size(51, 21);
             lblEmail.TabIndex = 7;
             lblEmail.Text = "Email:";
             // 
             // lblTelefono
             // 
             lblTelefono.AutoSize = true;
-            lblTelefono.Location = new Point(210, 203);
+            lblTelefono.Font = new Font("Segoe UI", 12F);
+            lblTelefono.Location = new Point(18, 195);
             lblTelefono.Name = "lblTelefono";
-            lblTelefono.Size = new Size(55, 15);
+            lblTelefono.Size = new Size(71, 21);
             lblTelefono.TabIndex = 9;
             lblTelefono.Text = "Teléfono:";
             // 
             // lblFechaNac
             // 
             lblFechaNac.AutoSize = true;
-            lblFechaNac.Location = new Point(210, 249);
+            lblFechaNac.Font = new Font("Segoe UI", 11.5F);
+            lblFechaNac.Location = new Point(18, 235);
             lblFechaNac.Name = "lblFechaNac";
-            lblFechaNac.Size = new Size(106, 15);
+            lblFechaNac.Size = new Size(84, 21);
             lblFechaNac.TabIndex = 11;
-            lblFechaNac.Text = "Fecha Nacimiento:";
+            lblFechaNac.Text = "Fecha Nac:";
             // 
             // lblFechaAlta
             // 
             lblFechaAlta.AutoSize = true;
-            lblFechaAlta.Location = new Point(210, 293);
+            lblFechaAlta.Font = new Font("Segoe UI", 12F);
+            lblFechaAlta.Location = new Point(18, 285);
             lblFechaAlta.Name = "lblFechaAlta";
-            lblFechaAlta.Size = new Size(65, 15);
+            lblFechaAlta.Size = new Size(84, 21);
             lblFechaAlta.TabIndex = 13;
             lblFechaAlta.Text = "Fecha Alta:";
             // 
             // lblFechaBaja
             // 
             lblFechaBaja.AutoSize = true;
-            lblFechaBaja.Location = new Point(210, 338);
+            lblFechaBaja.Font = new Font("Segoe UI", 12F);
+            lblFechaBaja.Location = new Point(18, 330);
             lblFechaBaja.Name = "lblFechaBaja";
-            lblFechaBaja.Size = new Size(66, 15);
+            lblFechaBaja.Size = new Size(86, 21);
             lblFechaBaja.TabIndex = 15;
             lblFechaBaja.Text = "Fecha Baja:";
             // 
             // lblPlan
             // 
             lblPlan.AutoSize = true;
-            lblPlan.Location = new Point(210, 366);
+            lblPlan.Font = new Font("Segoe UI", 12F);
+            lblPlan.Location = new Point(18, 375);
             lblPlan.Name = "lblPlan";
-            lblPlan.Size = new Size(33, 15);
+            lblPlan.Size = new Size(43, 21);
             lblPlan.TabIndex = 17;
             lblPlan.Text = "Plan:";
+            // 
+            // btnGuardar
+            // 
+            btnGuardar.BackColor = Color.LightBlue;
+            btnGuardar.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnGuardar.Location = new Point(269, 410);
+            btnGuardar.Name = "btnGuardar";
+            btnGuardar.Size = new Size(81, 30);
+            btnGuardar.TabIndex = 21;
+            btnGuardar.Text = "Guardar";
+            btnGuardar.UseVisualStyleBackColor = false;
+            // 
+            // btnCancelar
+            // 
+            btnCancelar.BackColor = Color.Transparent;
+            btnCancelar.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnCancelar.Location = new Point(182, 410);
+            btnCancelar.Name = "btnCancelar";
+            btnCancelar.Size = new Size(81, 30);
+            btnCancelar.TabIndex = 22;
+            btnCancelar.Text = "Cancelar";
+            btnCancelar.UseVisualStyleBackColor = false;
             // 
             // SocioDetalle
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnCancelar);
+            Controls.Add(btnGuardar);
             Controls.Add(lblPlan);
             Controls.Add(lblFechaBaja);
             Controls.Add(lblFechaAlta);
@@ -240,8 +256,6 @@
             Controls.Add(lblNombre);
             Controls.Add(lblDni);
             Controls.Add(dtpFechaBaja);
-            Controls.Add(btnCancelar);
-            Controls.Add(btnGuardar);
             Controls.Add(cmbPlanes);
             Controls.Add(dtpFechaAlta);
             Controls.Add(dtpFechaNac);
@@ -269,8 +283,6 @@
         private DateTimePicker dtpFechaNac;
         private DateTimePicker dtpFechaAlta;
         private ComboBox cmbPlanes;
-        private Button btnGuardar;
-        private Button btnCancelar;
         private DateTimePicker dtpFechaBaja;
         private Label lblDni;
         private Label lblNombre;
@@ -281,5 +293,7 @@
         private Label lblFechaAlta;
         private Label lblFechaBaja;
         private Label lblPlan;
+        private Button btnGuardar;
+        private Button btnCancelar;
     }
 }

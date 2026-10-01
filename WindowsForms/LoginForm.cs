@@ -1,8 +1,8 @@
-using Application.Services;
 using DTOs;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows.Forms;
+using API.Clients; 
 
 namespace WindowsFormsApp
 {
@@ -28,15 +28,9 @@ namespace WindowsFormsApp
                 btnLogin.Enabled = false;
                 btnLogin.Text = "Iniciando sesión...";
 
-                var request = new LoginRequest
-                {
-                    Username = txtUsername.Text,
-                    Password = txtPassword.Text
-                };
+                bool exito = await _authService.LoginAsync(txtUsername.Text, txtPassword.Text);
 
-                var respuesta = await _authService.LoginAsync(request);
-
-                if (respuesta.Exito)
+                if (exito)
                 {
                     this.Hide();
                     var homeForm = Program.ServiceProvider.GetRequiredService<Home>();
@@ -45,14 +39,14 @@ namespace WindowsFormsApp
                 }
                 else
                 {
-                    MessageBox.Show(respuesta.Mensaje, "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Usuario o contraseña incorrectos.", "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtPassword.Clear();
                     txtPassword.Focus();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al iniciar sesión: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -92,5 +86,8 @@ namespace WindowsFormsApp
             }
         }
 
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+        }
     }
 }

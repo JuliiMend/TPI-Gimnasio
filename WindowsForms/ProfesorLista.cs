@@ -1,5 +1,4 @@
-﻿using Application.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using API.Clients; 
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -8,12 +7,9 @@ namespace WindowsFormsApp
 {
     public partial class ProfesorLista : Form
     {
-        private readonly IProfesorService _profesorService;
-
-        public ProfesorLista(IProfesorService profesorService)
+        public ProfesorLista()
         {
             InitializeComponent();
-            _profesorService = profesorService;
         }
 
         private async void ProfesorLista_Load(object sender, EventArgs e)
@@ -25,8 +21,9 @@ namespace WindowsFormsApp
         {
             try
             {
-                var profesores = await _profesorService.ObtenerTodosAsync();
+                var profesores = await ProfesorApiClient.GetAllAsync();
 
+                dgvProfesores.DataSource = null; 
                 dgvProfesores.DataSource = profesores;
             }
             catch (Exception ex)
@@ -41,8 +38,7 @@ namespace WindowsFormsApp
 
         private void btnNuevo_Click(object sender, EventArgs e)
         {
-            var profesorDetalleForm =
-                Program.ServiceProvider.GetRequiredService<ProfesorDetalle>();
+            var profesorDetalleForm = new ProfesorDetalle();
 
             if (profesorDetalleForm.ShowDialog() == DialogResult.OK)
             {
@@ -63,11 +59,9 @@ namespace WindowsFormsApp
                 return;
             }
 
-            var profesorId =
-                (int)dgvProfesores.CurrentRow.Cells["colId"].Value;
+            var profesorId = (int)dgvProfesores.CurrentRow.Cells["colId"].Value;
 
-            var profesorDetalleForm =
-                Program.ServiceProvider.GetRequiredService<ProfesorDetalle>();
+            var profesorDetalleForm = new ProfesorDetalle();
 
             await profesorDetalleForm.CargarProfesorAsync(profesorId);
 
@@ -90,8 +84,7 @@ namespace WindowsFormsApp
                 return;
             }
 
-            var profesorId =
-                (int)dgvProfesores.CurrentRow.Cells["colId"].Value;
+            var profesorId = (int)dgvProfesores.CurrentRow.Cells["colId"].Value;
 
             var respuesta = MessageBox.Show(
                 "¿Estás seguro de que querés eliminar este profesor?",
@@ -101,15 +94,22 @@ namespace WindowsFormsApp
 
             if (respuesta == DialogResult.Yes)
             {
-                await _profesorService.EliminarAsync(profesorId);
+                try
+                {
+                    await ProfesorApiClient.DeleteAsync(profesorId);
 
-                MessageBox.Show(
-                    "Profesor eliminado correctamente.",
-                    "Éxito",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        "Profesor eliminado correctamente.",
+                        "Éxito",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
 
-                await CargarProfesoresAsync();
+                    await CargarProfesoresAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al eliminar el profesor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

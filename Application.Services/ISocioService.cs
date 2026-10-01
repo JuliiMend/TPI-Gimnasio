@@ -11,7 +11,7 @@ namespace Application.Services
     {
         Task<List<SocioMostrarDTO>> ObtenerTodosAsync(SocioCriteriaDTO criterios);
         Task<SocioMostrarDTO?> ObtenerPorIdAsync(int id);
-        Task AgregarAsync(SocioCreaActualizaDTO socioDto);
+        Task <int> AgregarAsync(SocioCreaActualizaDTO socioDto);
         Task ActualizarAsync(int id, SocioCreaActualizaDTO socioDto);
         Task EliminarAsync(int id);
     }

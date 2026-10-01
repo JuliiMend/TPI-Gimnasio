@@ -87,6 +87,7 @@
             btn_aceptar.TabIndex = 10;
             btn_aceptar.Text = "Aceptar";
             btn_aceptar.UseVisualStyleBackColor = true;
+            btn_aceptar.Click += btn_aceptar_Click;
             // 
             // dtp_mesAnio
             // 
@@ -129,6 +130,7 @@
             btn_modificarItem.TabIndex = 19;
             btn_modificarItem.Text = "Modificar Item";
             btn_modificarItem.UseVisualStyleBackColor = true;
+            btn_modificarItem.Click += btn_modificarItem_Click;
             // 
             // btn_eliminarItem
             // 
@@ -138,6 +140,7 @@
             btn_eliminarItem.TabIndex = 20;
             btn_eliminarItem.Text = "Eliminar Item";
             btn_eliminarItem.UseVisualStyleBackColor = true;
+            btn_eliminarItem.Click += btn_eliminarItem_Click;
             // 
             // btn_cancelar
             // 
@@ -147,6 +150,7 @@
             btn_cancelar.TabIndex = 21;
             btn_cancelar.Text = "Cancelar";
             btn_cancelar.UseVisualStyleBackColor = true;
+            btn_cancelar.Click += btn_cancelar_Click;
             // 
             // bton_agregarItem
             // 
@@ -156,6 +160,7 @@
             bton_agregarItem.TabIndex = 22;
             bton_agregarItem.Text = "Agregar Item";
             bton_agregarItem.UseVisualStyleBackColor = true;
+            bton_agregarItem.Click += btn_agregar_item_Click;
             // 
             // CuotaDetalle
             // 

@@ -31,7 +31,7 @@ namespace Application.Services
 
             var usuario = await _usuarioRepository.ObtenerPorUsernameAsync(request.Username);
 
-            if (usuario == null || usuario.Password != request.Password)
+            if (usuario == null || usuario.PasswordHash != request.Password)
                 return null;
 
             var token = GenerateJwtToken(usuario);

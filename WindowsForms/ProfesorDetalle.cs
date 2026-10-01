@@ -1,4 +1,4 @@
-﻿using Application.Services;
+﻿using API.Clients;
 using DTOs;
 using System;
 using System.Threading.Tasks;
@@ -8,18 +8,16 @@ namespace WindowsFormsApp
 {
     public partial class ProfesorDetalle : Form
     {
-        private readonly IProfesorService _profesorService;
         private int? _idProfesor;
 
-        public ProfesorDetalle(IProfesorService profesorService)
+        public ProfesorDetalle()
         {
             InitializeComponent();
-            _profesorService = profesorService;
         }
 
         public async Task CargarProfesorAsync(int id)
         {
-            var profesor = await _profesorService.ObtenerPorIdAsync(id);
+            var profesor = await ProfesorApiClient.GetAsync(id);
 
             if (profesor == null)
             {
@@ -32,7 +30,7 @@ namespace WindowsFormsApp
                 return;
             }
 
-            _idProfesor = profesor.IdPersona;
+            _idProfesor = id;
 
             txtDni.Text = profesor.Dni;
             txtNombre.Text = profesor.Nombre;
@@ -58,7 +56,7 @@ namespace WindowsFormsApp
 
             if (_idProfesor == null)
             {
-                await _profesorService.AgregarAsync(profesorDto);
+                await ProfesorApiClient.AddAsync(profesorDto);
 
                 MessageBox.Show(
                     "Profesor creado correctamente.",
@@ -68,9 +66,7 @@ namespace WindowsFormsApp
             }
             else
             {
-                await _profesorService.ActualizarAsync(
-                    _idProfesor.Value,
-                    profesorDto);
+                await ProfesorApiClient.UpdateAsync(profesorDto);
 
                 MessageBox.Show(
                     "Profesor modificado correctamente.",

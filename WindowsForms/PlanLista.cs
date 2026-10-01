@@ -1,7 +1,7 @@
-﻿using Application.Services;
+﻿using API.Clients;
 using DTOs;
-using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -9,12 +9,9 @@ namespace WindowsFormsApp
 {
     public partial class PlanLista : Form
     {
-        private readonly IPlanService _planService;
-
-        public PlanLista(IPlanService planService)
+        public PlanLista()
         {
             InitializeComponent();
-            _planService = planService;
 
             this.Load -= PlanLista_Load;
             this.Load += PlanLista_Load;
@@ -38,7 +35,7 @@ namespace WindowsFormsApp
         {
             try
             {
-                var planes = await _planService.ObtenerTodosAsync();
+                var planes = await PlanApiClient.GetAllAsync();
 
                 dgvPlanes.DataSource = null;
                 dgvPlanes.DataSource = planes;
@@ -51,7 +48,7 @@ namespace WindowsFormsApp
 
         private async void btnNuevo_Click(object? sender, EventArgs e)
         {
-            var planDetalleForm = Program.ServiceProvider.GetRequiredService<PlanDetalle>();
+            var planDetalleForm = new PlanDetalle();
 
             planDetalleForm.PlanId = null;
 
@@ -69,9 +66,9 @@ namespace WindowsFormsApp
                 return;
             }
 
-            var planSeleccionado = (PlanDTO)dgvPlanes.CurrentRow.DataBoundItem;
+            var planSeleccionado = (PlanMostrarDTO)dgvPlanes.CurrentRow.DataBoundItem;
 
-            var planDetalleForm = Program.ServiceProvider.GetRequiredService<PlanDetalle>();
+            var planDetalleForm = new PlanDetalle();
 
             planDetalleForm.PlanId = planSeleccionado.IdPlan;
 
@@ -89,7 +86,7 @@ namespace WindowsFormsApp
                 return;
             }
 
-            var planSeleccionado = (PlanDTO)dgvPlanes.CurrentRow.DataBoundItem;
+            var planSeleccionado = (PlanMostrarDTO)dgvPlanes.CurrentRow.DataBoundItem;
 
             var respuesta = MessageBox.Show($"¿Estás seguro de que querés eliminar el plan '{planSeleccionado.Nombre}'?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -97,7 +94,8 @@ namespace WindowsFormsApp
             {
                 try
                 {
-                    await _planService.EliminarAsync(planSeleccionado.IdPlan);
+                    await PlanApiClient.DeleteAsync(planSeleccionado.IdPlan);
+
                     MessageBox.Show("Plan eliminado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     await CargarPlanesAsync();
                 }
@@ -106,6 +104,10 @@ namespace WindowsFormsApp
                     MessageBox.Show($"Error al eliminar el plan: {ex.Message}\n\nAsegurate de que no haya socios usando este plan antes de borrarlo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void lblTitulo_Click(object sender, EventArgs e)
+        {
         }
     }
 }

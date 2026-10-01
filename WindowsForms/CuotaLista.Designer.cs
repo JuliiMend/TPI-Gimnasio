@@ -51,6 +51,7 @@
             btn_agregar.TabIndex = 1;
             btn_agregar.Text = "Agregar";
             btn_agregar.UseVisualStyleBackColor = true;
+            btn_agregar.Click += btn_agregar_Click;
             // 
             // btn_actualizar
             // 
@@ -60,6 +61,7 @@
             btn_actualizar.TabIndex = 2;
             btn_actualizar.Text = "Actualizar";
             btn_actualizar.UseVisualStyleBackColor = true;
+            btn_actualizar.Click += btn_actualizar_Click;
             // 
             // btn_eliminar
             // 
@@ -69,6 +71,7 @@
             btn_eliminar.TabIndex = 3;
             btn_eliminar.Text = "Eliminar";
             btn_eliminar.UseVisualStyleBackColor = true;
+            btn_eliminar.Click += btn_eliminar_Click;
             // 
             // CuotaLista
             // 

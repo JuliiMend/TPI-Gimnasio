@@ -36,6 +36,7 @@
             planesToolStripMenuItem = new ToolStripMenuItem();
             turnosToolStripMenuItem = new ToolStripMenuItem();
             profesoresToolStripMenuItem = new ToolStripMenuItem();
+            cuotasToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -44,7 +45,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { sistemaToolStripMenuItem, gestionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1275, 24);
+            menuStrip1.Size = new Size(800, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -64,7 +65,7 @@
             // 
             // gestionToolStripMenuItem
             // 
-            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem });
+            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem });
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(59, 20);
             gestionToolStripMenuItem.Text = "Gestion";
@@ -97,9 +98,16 @@
             profesoresToolStripMenuItem.Text = "Profesores";
             profesoresToolStripMenuItem.Click += profesoresToolStripMenuItem_Click;
             // 
+            // cuotasToolStripMenuItem
+            // 
+            cuotasToolStripMenuItem.Name = "cuotasToolStripMenuItem";
+            cuotasToolStripMenuItem.Size = new Size(180, 22);
+            cuotasToolStripMenuItem.Text = "Cuotas";
+            cuotasToolStripMenuItem.Click += cuotasToolStripMenuItem_Click;
+            // 
             // Home
             // 
-            ClientSize = new Size(1275, 575);
+            ClientSize = new Size(800, 450);
             Controls.Add(menuStrip1);
             IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
@@ -119,6 +127,7 @@
         private ToolStripMenuItem planesToolStripMenuItem;
         private ToolStripMenuItem turnosToolStripMenuItem;
         private ToolStripMenuItem profesoresToolStripMenuItem;
+        private ToolStripMenuItem cuotasToolStripMenuItem;
     }
 }
 

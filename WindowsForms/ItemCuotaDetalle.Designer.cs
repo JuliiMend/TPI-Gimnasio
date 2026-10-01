@@ -86,6 +86,7 @@
             btn_aceptar.TabIndex = 19;
             btn_aceptar.Text = "Aceptar";
             btn_aceptar.UseVisualStyleBackColor = true;
+            btn_aceptar.Click += btn_aceptar_Click;
             // 
             // btn_cancelar
             // 
@@ -95,6 +96,7 @@
             btn_cancelar.TabIndex = 20;
             btn_cancelar.Text = "Cancelar";
             btn_cancelar.UseVisualStyleBackColor = true;
+            btn_cancelar.Click += btn_cancelar_Click;
             // 
             // ItemCuotaDetalle
             // 

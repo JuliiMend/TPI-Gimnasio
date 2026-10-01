@@ -1,39 +1,3 @@
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\bin\Debug\net8.0\Domain.Model.deps.json
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\bin\Debug\net8.0\Domain.Model.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\bin\Debug\net8.0\Domain.Model.pdb
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.GeneratedMSBuildEditorConfig.editorconfig
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfoInputs.cache
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfo.cs
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.csproj.CoreCompileInputs.cache
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.sourcelink.json
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\refint\Domain.Model.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\Domain.Model.pdb
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Domain.Model\obj\Debug\net8.0\ref\Domain.Model.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\bin\Debug\net8.0\Domain.Model.deps.json
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\bin\Debug\net8.0\Domain.Model.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\bin\Debug\net8.0\Domain.Model.pdb
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfoInputs.cache
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfo.cs
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.csproj.CoreCompileInputs.cache
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.sourcelink.json
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\refint\Domain.Model.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.pdb
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\ref\Domain.Model.dll
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\bin\Debug\net8.0\Domain.Model.deps.json
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\bin\Debug\net8.0\Domain.Model.dll
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\bin\Debug\net8.0\Domain.Model.pdb
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfoInputs.cache
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfo.cs
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.csproj.CoreCompileInputs.cache
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.sourcelink.json
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.dll
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\refint\Domain.Model.dll
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.pdb
-C:\Users\julim\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\ref\Domain.Model.dll
 C:\Users\elneg\source\repos\TPI-Gimnasio\Domain.Model\bin\Debug\net8.0\Domain.Model.deps.json
 C:\Users\elneg\source\repos\TPI-Gimnasio\Domain.Model\bin\Debug\net8.0\Domain.Model.dll
 C:\Users\elneg\source\repos\TPI-Gimnasio\Domain.Model\bin\Debug\net8.0\Domain.Model.pdb

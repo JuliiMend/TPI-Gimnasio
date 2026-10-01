@@ -1,4 +1,4 @@
-﻿using Application.Services;
+﻿using API.Clients;
 using DTOs;
 using System;
 using System.Globalization;
@@ -8,14 +8,11 @@ namespace WindowsFormsApp
 {
     public partial class PlanDetalle : Form
     {
-        private readonly IPlanService _planService;
-
         public int? PlanId { get; set; }
 
-        public PlanDetalle(IPlanService planService)
+        public PlanDetalle()
         {
             InitializeComponent();
-            _planService = planService;
 
             this.Load -= PlanDetalle_Load;
             this.Load += PlanDetalle_Load;
@@ -37,7 +34,7 @@ namespace WindowsFormsApp
 
             try
             {
-                var plan = await _planService.ObtenerPorIdAsync(PlanId.Value);
+                var plan = await PlanApiClient.GetAsync(PlanId.Value);
 
                 if (plan == null)
                 {
@@ -128,7 +125,7 @@ namespace WindowsFormsApp
             {
                 if (PlanId.HasValue)
                 {
-                    await _planService.ActualizarAsync(PlanId.Value, planDto);
+                    await PlanApiClient.UpdateAsync(planDto);
 
                     MessageBox.Show(
                         "Plan actualizado correctamente.",
@@ -138,7 +135,7 @@ namespace WindowsFormsApp
                 }
                 else
                 {
-                    await _planService.CrearAsync(planDto);
+                    await PlanApiClient.AddAsync(planDto);
 
                     MessageBox.Show(
                         "Plan registrado correctamente.",
@@ -159,5 +156,9 @@ namespace WindowsFormsApp
                     MessageBoxIcon.Error);
             }
         }
+
+        private void label1_Click(object sender, EventArgs e) { }
+        private void label3_Click(object sender, EventArgs e) { }
+        private void lblDni_Click(object sender, EventArgs e) { }
     }
 }

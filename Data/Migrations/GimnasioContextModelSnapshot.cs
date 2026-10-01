@@ -40,6 +40,7 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("CuotaId");
@@ -65,9 +66,11 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Monto")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Subtotal")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("DetalleCuotaId");
@@ -126,10 +129,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("FechaNac")
                         .HasColumnType("datetime2");
 
@@ -141,7 +140,12 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("PersonaId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Profesores");
                 });
@@ -159,10 +163,6 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Dni")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -186,9 +186,14 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("PersonaId");
 
                     b.HasIndex("IdPlan");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Socios");
                 });
@@ -234,7 +239,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -259,7 +264,7 @@ namespace Data.Migrations
                     b.HasOne("Domain.Model.Socio", "Socio")
                         .WithMany("Cuotas")
                         .HasForeignKey("SocioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Socio");
@@ -276,15 +281,32 @@ namespace Data.Migrations
                     b.Navigation("Cuota");
                 });
 
+            modelBuilder.Entity("Domain.Model.Profesor", b =>
+                {
+                    b.HasOne("Domain.Model.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("Domain.Model.Socio", b =>
                 {
                     b.HasOne("Domain.Model.Plan", "Plan")
                         .WithMany()
                         .HasForeignKey("IdPlan")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.Model.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Plan");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Domain.Model.Cuota", b =>
