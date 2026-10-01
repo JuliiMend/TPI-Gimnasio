@@ -17,11 +17,11 @@ namespace Application.Services
             _planRepository = planRepository;
         }
 
-        public async Task<List<PlanDTO>> ObtenerTodosAsync()
+        public async Task<List<PlanMostrarDTO>> ObtenerTodosAsync()
         {
             var planes = await _planRepository.ObtenerTodosAsync();
 
-            return planes.Select(p => new PlanDTO
+            return planes.Select(p => new PlanMostrarDTO
             {
                 IdPlan = p.PlanId,
                 Nombre = p.Nombre,
@@ -31,7 +31,7 @@ namespace Application.Services
             }).ToList();
         }
 
-        public async Task<PlanDTO?> ObtenerPorIdAsync(int id)
+        public async Task<PlanMostrarDTO?> ObtenerPorIdAsync(int id)
         {
             var plan = await _planRepository.ObtenerPorIdAsync(id);
 
@@ -40,7 +40,7 @@ namespace Application.Services
                 return null;
             }
 
-            return new PlanDTO
+            return new PlanMostrarDTO
             {
                 IdPlan = plan.PlanId,
                 Nombre = plan.Nombre,

@@ -1,6 +1,5 @@
-﻿using Application.Services;
+﻿using API.Clients;
 using DTOs;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,12 +8,9 @@ namespace WindowsFormsApp
 {
     public partial class SocioLista : Form
     {
-        private readonly ISocioService _socioService;
-
-        public SocioLista(ISocioService socioService)
+        public SocioLista()
         {
             InitializeComponent();
-            _socioService = socioService;
 
             this.Load -= SocioLista_Load;
             this.Load += SocioLista_Load;
@@ -38,7 +34,7 @@ namespace WindowsFormsApp
         {
             try
             {
-                var socios = await _socioService.ObtenerTodosAsync(new SocioCriteriaDTO());
+                var socios = await SocioApiClient.GetAllAsync();
 
                 dgvSocios.DataSource = null;
                 dgvSocios.DataSource = socios;
@@ -48,9 +44,10 @@ namespace WindowsFormsApp
                 MessageBox.Show($"Error al cargar los socios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private async void btnNuevo_Click(object? sender, EventArgs e)
         {
-            var socioDetalleForm = Program.ServiceProvider.GetRequiredService<SocioDetalle>();
+            var socioDetalleForm = new SocioDetalle();
 
             if (socioDetalleForm.ShowDialog() == DialogResult.OK)
             {
@@ -68,7 +65,7 @@ namespace WindowsFormsApp
 
             var socioSeleccionado = (SocioMostrarDTO)dgvSocios.CurrentRow.DataBoundItem;
 
-            var socioDetalleForm = Program.ServiceProvider.GetRequiredService<SocioDetalle>();
+            var socioDetalleForm = new SocioDetalle();
 
             await socioDetalleForm.CargarSocioAsync(socioSeleccionado.IdPersona);
 
@@ -94,7 +91,8 @@ namespace WindowsFormsApp
             {
                 try
                 {
-                    await _socioService.EliminarAsync(socioSeleccionado.IdPersona);
+                    await SocioApiClient.DeleteAsync(socioSeleccionado.IdPersona);
+
                     MessageBox.Show("Socio eliminado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     await CargarSociosAsync();
                 }

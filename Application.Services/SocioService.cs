@@ -2,6 +2,7 @@
 using Data;
 using Domain.Model;
 using DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,13 +36,14 @@ namespace Application.Services
                 Dni = s.Dni,
                 Nombre = s.Nombre,
                 Apellido = s.Apellido,
-                Email = s.Email,
                 FechaAlta = s.FechaAlta,
                 NombrePlan = s.Plan?.Nombre ?? "",
                 Telefono = s.Telefono,
                 FechaNac = s.FechaNac,
                 FechaBaja = s.FechaBaja,
-                IdPlan = s.IdPlan
+                IdPlan = s.IdPlan,
+                Email = s.Usuario?.Email ?? "",
+                Username = s.Usuario?.Username ?? ""
             }).ToList();
         }
 
@@ -60,7 +62,6 @@ namespace Application.Services
                 Dni = socio.Dni,
                 Nombre = socio.Nombre,
                 Apellido = socio.Apellido,
-                Email = socio.Email,
                 FechaAlta = socio.FechaAlta,
                 NombrePlan = socio.Plan?.Nombre ?? "",
                 Telefono = socio.Telefono,
@@ -72,22 +73,31 @@ namespace Application.Services
 
         public async Task<int> AgregarAsync(SocioCreaActualizaDTO dto)
         {
+            var nuevoUsuario = new Usuario
+            {
+                Username = dto.Username,
+                Email = dto.Email,
+                PasswordHash = dto.Password, // cuando se hashee se va a llamar passwordhash
+                FechaCreacion = DateTime.Now,
+                Activo = true,
+                Rol = "Socio"
+            };
+
             var socio = new Socio
             {
                 Dni = dto.Dni,
                 Nombre = dto.Nombre,
                 Apellido = dto.Apellido,
-                Email = dto.Email,
                 Telefono = dto.Telefono,
                 FechaNac = dto.FechaNac,
                 FechaAlta = dto.FechaAlta,
                 FechaBaja = dto.FechaBaja,
                 IdPlan = dto.IdPlan,
-                Usuario = dto.Usuario,
-                Contraseña = dto.Contraseña
+                Usuario = nuevoUsuario 
             };
 
             await _socioRepository.AgregarAsync(socio);
+
             return socio.PersonaId;
         }
 
@@ -99,7 +109,6 @@ namespace Application.Services
                 Dni = socioDto.Dni,
                 Nombre = socioDto.Nombre,
                 Apellido = socioDto.Apellido,
-                Email = socioDto.Email,
                 Telefono = socioDto.Telefono,
                 FechaNac = socioDto.FechaNac,
                 FechaAlta = socioDto.FechaAlta,

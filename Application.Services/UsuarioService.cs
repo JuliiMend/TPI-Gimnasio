@@ -39,16 +39,20 @@ namespace Application.Services
             };
         }
 
-        public async Task AgregarAsync(UsuarioCreaActualizaDTO dto)
+        public async Task<int> AgregarAsync(UsuarioCreaActualizaDTO dto)
         {
             var usuario = new Usuario
             {
                 Username = dto.Username,
-                Password = dto.Password,
-                Activo = true 
+                Email = dto.Email, 
+                PasswordHash = dto.Password, // agregar hasheo acaaaaaaaaaaaa
+                FechaCreacion = DateTime.Now, 
+                Activo = true,
+                Rol = "Usuario" 
             };
 
             await _usuarioRepository.AgregarAsync(usuario);
+            return usuario.UsuarioId; 
         }
 
         public async Task ActualizarAsync(int id, UsuarioCreaActualizaDTO dto)
@@ -58,7 +62,7 @@ namespace Application.Services
             if (usuario != null)
             {
                 usuario.Username = dto.Username;
-                usuario.Password = dto.Password;
+                usuario.PasswordHash = dto.Password;
 
                 await _usuarioRepository.ActualizarAsync(usuario);
             }

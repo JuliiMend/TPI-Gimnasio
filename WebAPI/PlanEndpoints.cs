@@ -1,30 +1,42 @@
 ﻿using Application.Services;
 using DTOs;
 
-namespace WebAPI
-{
+namespace WebAPI { 
     public static class PlanEndpoints
     {
         public static void MapPlanEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/planes");
-
+            var grupo = app.MapGroup("/api/planes").RequireAuthorization();
+    
             grupo.MapGet("/", async (IPlanService planService) =>
             {
                 var planes = await planService.ObtenerTodosAsync();
                 return Results.Ok(planes);
             });
-
+    
             grupo.MapGet("/{id}", async (int id, IPlanService planService) =>
             {
                 var plan = await planService.ObtenerPorIdAsync(id);
                 return plan is null ? Results.NotFound() : Results.Ok(plan);
             });
-
-            grupo.MapPost("/", async (PlanCreaActualizaDTO planDto, IPlanService planService) =>
+    
+            grupo.MapPost("/", async (PlanCreaActualizaDTO dto, IPlanService planService) =>
             {
-                var idGenerado = await planService.CrearAsync(planDto);
-                return Results.Created($"/api/planes/{idGenerado}", planDto);
+                await planService.CrearAsync(dto);
+                return Results.Created("/api/planes", null);
+            });
+    
+            grupo.MapPut("/{id}", async (int id, PlanCreaActualizaDTO dto, IPlanService planService) =>
+            {
+                try
+                {
+                    await planService.ActualizarAsync(id, dto);
+                    return Results.NoContent();
+                }
+                catch (Exception)
+                {
+                    return Results.NotFound();
+                }
             });
         }
 

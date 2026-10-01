@@ -13,12 +13,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application.Services\Application.Services.csproj" />
-    <ProjectReference Include="..\Data\Data.csproj" />
-    <ProjectReference Include="..\Domain.Model\Domain.Model.csproj" />
+    <ProjectReference Include="..\API.Clients\API.Clients.csproj" />
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
   </ItemGroup>
 

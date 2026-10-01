@@ -1,24 +1,23 @@
-﻿using Application.Services;
+﻿using API.Clients;
 using DTOs;
 using System;
+using System.Threading.Tasks; 
 using System.Windows.Forms;
 
 namespace WindowsFormsApp
 {
     public partial class TurnoDetalle : Form
     {
-        private readonly ITurnoService _turnoService;
         private int? _idTurno;
 
-        public TurnoDetalle(ITurnoService turnoService)
+        public TurnoDetalle()
         {
             InitializeComponent();
-            _turnoService = turnoService;
         }
 
         public async Task CargarTurnoAsync(int id)
         {
-            var turno = await _turnoService.ObtenerPorIdAsync(id);
+            var turno = await TurnoApiClient.GetAsync(id);
 
             if (turno == null)
             {
@@ -31,7 +30,7 @@ namespace WindowsFormsApp
                 return;
             }
 
-            _idTurno = turno.IdTurno;
+            _idTurno = id;
 
             cmbDia.Text = turno.DiaSemana;
             dtpHoraDesde.Value = DateTime.Today.Add(turno.HoraDesde);
@@ -49,7 +48,7 @@ namespace WindowsFormsApp
 
             if (_idTurno == null)
             {
-                await _turnoService.AgregarAsync(turnoDto);
+                await TurnoApiClient.AddAsync(turnoDto);
 
                 MessageBox.Show(
                     "Turno creado correctamente.",
@@ -59,7 +58,7 @@ namespace WindowsFormsApp
             }
             else
             {
-                await _turnoService.ActualizarAsync(_idTurno.Value, turnoDto);
+                await TurnoApiClient.UpdateAsync(turnoDto);
 
                 MessageBox.Show(
                     "Turno modificado correctamente.",

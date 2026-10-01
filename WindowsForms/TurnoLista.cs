@@ -1,18 +1,15 @@
-﻿using Application.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using API.Clients; 
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp
 {
     public partial class TurnoLista : Form
     {
-        private readonly ITurnoService _turnoService;
-
-        public TurnoLista(ITurnoService turnoService)
+        public TurnoLista()
         {
             InitializeComponent();
-            _turnoService = turnoService;
         }
 
         private async void TurnoLista_Load(object sender, EventArgs e)
@@ -20,12 +17,13 @@ namespace WindowsFormsApp
             await CargarTurnosAsync();
         }
 
-        private async System.Threading.Tasks.Task CargarTurnosAsync()
+        private async Task CargarTurnosAsync()
         {
             try
             {
-                var turnos = await _turnoService.ObtenerTodosAsync();
+                var turnos = await TurnoApiClient.GetAllAsync();
 
+                dgvTurnos.DataSource = null; 
                 dgvTurnos.DataSource = turnos;
             }
             catch (Exception ex)
@@ -37,9 +35,10 @@ namespace WindowsFormsApp
                     MessageBoxIcon.Error);
             }
         }
+
         private void btnNuevo_Click(object sender, EventArgs e)
         {
-            var turnoDetalleForm = Program.ServiceProvider.GetRequiredService<TurnoDetalle>();
+            var turnoDetalleForm = new TurnoDetalle();
 
             if (turnoDetalleForm.ShowDialog() == DialogResult.OK)
             {
@@ -62,7 +61,7 @@ namespace WindowsFormsApp
 
             var turnoId = (int)dgvTurnos.CurrentRow.Cells["colId"].Value;
 
-            var turnoDetalleForm = Program.ServiceProvider.GetRequiredService<TurnoDetalle>();
+            var turnoDetalleForm = new TurnoDetalle();
 
             await turnoDetalleForm.CargarTurnoAsync(turnoId);
 
@@ -95,15 +94,26 @@ namespace WindowsFormsApp
 
             if (respuesta == DialogResult.Yes)
             {
-                await _turnoService.EliminarAsync(turnoId);
+                try
+                {
+                    await TurnoApiClient.DeleteAsync(turnoId);
 
-                MessageBox.Show(
-                    "Turno eliminado correctamente.",
-                    "Éxito",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        "Turno eliminado correctamente.",
+                        "Éxito",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
 
-                await CargarTurnosAsync();
+                    await CargarTurnosAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Error al eliminar el turno: {ex.Message}",
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
             }
         }
     }

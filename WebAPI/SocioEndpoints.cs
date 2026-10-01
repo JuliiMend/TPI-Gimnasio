@@ -10,7 +10,7 @@ namespace WebAPI
     {
         public static void MapSocioEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/socios");
+            var grupo = app.MapGroup("/api/socios").RequireAuthorization();
 
             grupo.MapGet("/", async ([AsParameters] SocioCriteriaDTO criterios, ISocioService socioService) =>
             {
@@ -27,9 +27,10 @@ namespace WebAPI
             grupo.MapPost("/", async (SocioCreaActualizaDTO socio, ISocioService socioService) =>
             {
                 var idGenerado = await socioService.AgregarAsync(socio);
-                socio.IdPersona = idGenerado; // Actualizas el DTO con el ID real
 
-                return Results.Created($"/api/socios/{idGenerado}", socio);
+                var socioCreado = await socioService.ObtenerPorIdAsync(idGenerado);
+
+                return Results.Created($"/api/socios/{idGenerado}", socioCreado);
             });
 
             grupo.MapPut("/{id}", async (int id, SocioCreaActualizaDTO socio, ISocioService socioService) =>

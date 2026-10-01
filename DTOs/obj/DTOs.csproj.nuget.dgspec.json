@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\nuevo repo - net\\TPI.NET\\DTOs\\DTOs.csproj": {}
+    "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {}
   },
   "projects": {
-    "C:\\nuevo repo - net\\TPI.NET\\DTOs\\DTOs.csproj": {
+    "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\nuevo repo - net\\TPI.NET\\DTOs\\DTOs.csproj",
+        "projectUniqueName": "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
         "projectName": "DTOs",
-        "projectPath": "C:\\nuevo repo - net\\TPI.NET\\DTOs\\DTOs.csproj",
-        "packagesPath": "C:\\Users\\neo\\.nuget\\packages\\",
-        "outputPath": "C:\\nuevo repo - net\\TPI.NET\\DTOs\\obj\\",
+        "projectPath": "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
+        "packagesPath": "C:\\Users\\elneg\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\elneg\\source\\repos\\TPI-Gimnasio\\DTOs\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\neo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\elneg\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -65,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.317/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,4 +1,4 @@
-﻿using Application.Services;
+﻿using API.Clients;
 using DTOs;
 using System;
 using System.Threading.Tasks;
@@ -8,15 +8,11 @@ namespace WindowsFormsApp
 {
     public partial class SocioDetalle : Form
     {
-        private readonly ISocioService _socioService;
-        private readonly IPlanService _planService;
         private int? _idSocio;
 
-        public SocioDetalle(ISocioService socioService, IPlanService planService)
+        public SocioDetalle()
         {
             InitializeComponent();
-            _socioService = socioService;
-            _planService = planService;
 
             this.Load -= SocioDetalle_Load;
             this.Load += SocioDetalle_Load;
@@ -32,7 +28,7 @@ namespace WindowsFormsApp
         {
             if (cmbPlanes.DataSource == null)
             {
-                var planes = await _planService.ObtenerTodosAsync();
+                var planes = await PlanApiClient.GetAllAsync();
 
                 cmbPlanes.DisplayMember = "Nombre";
                 cmbPlanes.ValueMember = "IdPlan";
@@ -61,7 +57,7 @@ namespace WindowsFormsApp
             {
                 await CargarPlanesComboAsync();
 
-                var socio = await _socioService.ObtenerPorIdAsync(id);
+                var socio = await SocioApiClient.GetAsync(id);
 
                 if (socio == null)
                 {
@@ -69,7 +65,7 @@ namespace WindowsFormsApp
                     return;
                 }
 
-                _idSocio = socio.IdPersona;
+                _idSocio = id;
 
                 txtDni.Text = socio.Dni;
                 txtNombre.Text = socio.Nombre;
@@ -120,18 +116,18 @@ namespace WindowsFormsApp
                     FechaAlta = dtpFechaAlta.Value,
                     FechaBaja = dtpFechaBaja.Checked ? dtpFechaBaja.Value : (DateTime?)null,
                     IdPlan = (int)cmbPlanes.SelectedValue,
-                    Usuario = string.Empty,
-                    Contraseña = string.Empty
+                    Username = string.Empty,
+                    Password = string.Empty
                 };
 
                 if (_idSocio == null)
                 {
-                    await _socioService.AgregarAsync(socioDto);
+                    await SocioApiClient.AddAsync(socioDto);
                     MessageBox.Show("Socio creado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    await _socioService.ActualizarAsync(_idSocio.Value, socioDto);
+                    await SocioApiClient.UpdateAsync(socioDto);
                     MessageBox.Show("Socio modificado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
@@ -140,7 +136,7 @@ namespace WindowsFormsApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error al guardar: {ex.Message}", "Error de Base de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ocurrió un error al guardar: {ex.Message}", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -150,19 +146,8 @@ namespace WindowsFormsApp
             this.Close();
         }
 
-        private void dtpFechaNac_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblFechaNac_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnCancelar_Click_1(object sender, EventArgs e)
-        {
-
-        }
+        private void dtpFechaNac_ValueChanged(object sender, EventArgs e) { }
+        private void lblFechaNac_Click(object sender, EventArgs e) { }
+        private void btnCancelar_Click_1(object sender, EventArgs e) { }
     }
 }

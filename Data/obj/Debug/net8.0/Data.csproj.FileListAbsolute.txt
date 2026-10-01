@@ -1,71 +1,18 @@
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\bin\Debug\net8.0\Data.deps.json
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\bin\Debug\net8.0\Data.runtimeconfig.json
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\bin\Debug\net8.0\Data.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\bin\Debug\net8.0\Data.pdb
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\bin\Debug\net8.0\Domain.Model.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\bin\Debug\net8.0\Domain.Model.pdb
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.csproj.AssemblyReference.cache
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.GeneratedMSBuildEditorConfig.editorconfig
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.AssemblyInfoInputs.cache
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.AssemblyInfo.cs
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.csproj.CoreCompileInputs.cache
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.sourcelink.json
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.csproj.Up2Date
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\refint\Data.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.pdb
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\Data.genruntimeconfig.cache
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\Data\obj\Debug\net8.0\ref\Data.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.csproj.AssemblyReference.cache
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.AssemblyInfoInputs.cache
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.AssemblyInfo.cs
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.csproj.CoreCompileInputs.cache
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.sourcelink.json
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.deps.json
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.runtimeconfig.json
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.pdb
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Domain.Model.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Domain.Model.pdb
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.csproj.Up2Date
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\refint\Data.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.pdb
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.genruntimeconfig.cache
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\Data\obj\Debug\net8.0\ref\Data.dll
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.deps.json
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.runtimeconfig.json
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.dll
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.pdb
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Domain.Model.dll
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Domain.Model.pdb
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.csproj.AssemblyReference.cache
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.AssemblyInfoInputs.cache
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.AssemblyInfo.cs
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.csproj.CoreCompileInputs.cache
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.sourcelink.json
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.csproj.Up2Date
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.dll
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\refint\Data.dll
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.pdb
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.genruntimeconfig.cache
-C:\Users\julim\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\ref\Data.dll
-C:\nuevo repo - net\TPI.NET\Data\bin\Debug\net8.0\Data.deps.json
-C:\nuevo repo - net\TPI.NET\Data\bin\Debug\net8.0\Data.runtimeconfig.json
-C:\nuevo repo - net\TPI.NET\Data\bin\Debug\net8.0\Data.dll
-C:\nuevo repo - net\TPI.NET\Data\bin\Debug\net8.0\Data.pdb
-C:\nuevo repo - net\TPI.NET\Data\bin\Debug\net8.0\Domain.Model.dll
-C:\nuevo repo - net\TPI.NET\Data\bin\Debug\net8.0\Domain.Model.pdb
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\Data.csproj.AssemblyReference.cache
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\Data.GeneratedMSBuildEditorConfig.editorconfig
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\Data.AssemblyInfoInputs.cache
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\Data.AssemblyInfo.cs
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\Data.csproj.CoreCompileInputs.cache
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\Data.csproj.Up2Date
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\Data.dll
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\refint\Data.dll
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\Data.pdb
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\Data.genruntimeconfig.cache
-C:\nuevo repo - net\TPI.NET\Data\obj\Debug\net8.0\ref\Data.dll
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.deps.json
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.runtimeconfig.json
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.dll
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Data.pdb
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Domain.Model.dll
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\bin\Debug\net8.0\Domain.Model.pdb
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.csproj.AssemblyReference.cache
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.AssemblyInfoInputs.cache
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.AssemblyInfo.cs
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.csproj.CoreCompileInputs.cache
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.sourcelink.json
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.csproj.Up2Date
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.dll
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\refint\Data.dll
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.pdb
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\Data.genruntimeconfig.cache
+C:\Users\elneg\source\repos\TPI-Gimnasio\Data\obj\Debug\net8.0\ref\Data.dll

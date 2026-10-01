@@ -16,11 +16,11 @@ namespace Application.Services
             _turnoRepository = turnoRepository;
         }
 
-        public async Task<List<TurnoDTO>> ObtenerTodosAsync()
+        public async Task<List<TurnoMostrarDTO>> ObtenerTodosAsync()
         {
             var turnos = await _turnoRepository.ObtenerTodosAsync();
 
-            return turnos.Select(t => new TurnoDTO
+            return turnos.Select(t => new TurnoMostrarDTO
             {
                 IdTurno = t.IdTurno,
                 DiaSemana = t.DiaSemana,
@@ -29,7 +29,7 @@ namespace Application.Services
             }).ToList();
         }
 
-        public async Task<TurnoDTO?> ObtenerPorIdAsync(int id)
+        public async Task<TurnoMostrarDTO?> ObtenerPorIdAsync(int id)
         {
             var turno = await _turnoRepository.ObtenerPorIdAsync(id);
 
@@ -38,7 +38,7 @@ namespace Application.Services
                 return null;
             }
 
-            return new TurnoDTO
+            return new TurnoMostrarDTO
             {
                 IdTurno = turno.IdTurno,
                 DiaSemana = turno.DiaSemana,

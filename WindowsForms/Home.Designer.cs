@@ -36,6 +36,7 @@
             planesToolStripMenuItem = new ToolStripMenuItem();
             turnosToolStripMenuItem = new ToolStripMenuItem();
             profesoresToolStripMenuItem = new ToolStripMenuItem();
+            cuotasToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -58,13 +59,13 @@
             // cerrarSesionToolStripMenuItem
             // 
             cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
-            cerrarSesionToolStripMenuItem.Size = new Size(180, 22);
+            cerrarSesionToolStripMenuItem.Size = new Size(142, 22);
             cerrarSesionToolStripMenuItem.Text = "Cerrar sesion";
             cerrarSesionToolStripMenuItem.Click += cerrarSesionToolStripMenuItem_Click;
             // 
             // gestionToolStripMenuItem
             // 
-            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem });
+            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem });
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(59, 20);
             gestionToolStripMenuItem.Text = "Gestion";
@@ -97,6 +98,13 @@
             profesoresToolStripMenuItem.Text = "Profesores";
             profesoresToolStripMenuItem.Click += profesoresToolStripMenuItem_Click;
             // 
+            // cuotasToolStripMenuItem
+            // 
+            cuotasToolStripMenuItem.Name = "cuotasToolStripMenuItem";
+            cuotasToolStripMenuItem.Size = new Size(180, 22);
+            cuotasToolStripMenuItem.Text = "Cuotas";
+            cuotasToolStripMenuItem.Click += cuotasToolStripMenuItem_Click;
+            // 
             // Home
             // 
             ClientSize = new Size(800, 450);
@@ -119,6 +127,7 @@
         private ToolStripMenuItem planesToolStripMenuItem;
         private ToolStripMenuItem turnosToolStripMenuItem;
         private ToolStripMenuItem profesoresToolStripMenuItem;
+        private ToolStripMenuItem cuotasToolStripMenuItem;
     }
 }
 
