@@ -4,7 +4,8 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+      <UserSecretsId>56492bcd-a877-415d-bcfd-390676b63fbb</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <!-- Paquetes de Auth y OpenApi que tenías localmente -->

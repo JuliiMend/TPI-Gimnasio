@@ -10,3 +10,15 @@ C:\Users\elneg\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Mo
 C:\Users\elneg\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\refint\Domain.Model.dll
 C:\Users\elneg\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\Domain.Model.pdb
 C:\Users\elneg\source\repos\TPI-Gimnasio\Domain.Model\obj\Debug\net8.0\ref\Domain.Model.dll
+C:\Users\neo\source\repos\TPI\Domain.Model\bin\Debug\net8.0\Domain.Model.deps.json
+C:\Users\neo\source\repos\TPI\Domain.Model\bin\Debug\net8.0\Domain.Model.dll
+C:\Users\neo\source\repos\TPI\Domain.Model\bin\Debug\net8.0\Domain.Model.pdb
+C:\Users\neo\source\repos\TPI\Domain.Model\obj\Debug\net8.0\Domain.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\neo\source\repos\TPI\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfoInputs.cache
+C:\Users\neo\source\repos\TPI\Domain.Model\obj\Debug\net8.0\Domain.Model.AssemblyInfo.cs
+C:\Users\neo\source\repos\TPI\Domain.Model\obj\Debug\net8.0\Domain.Model.csproj.CoreCompileInputs.cache
+C:\Users\neo\source\repos\TPI\Domain.Model\obj\Debug\net8.0\Domain.Model.sourcelink.json
+C:\Users\neo\source\repos\TPI\Domain.Model\obj\Debug\net8.0\Domain.Model.dll
+C:\Users\neo\source\repos\TPI\Domain.Model\obj\Debug\net8.0\refint\Domain.Model.dll
+C:\Users\neo\source\repos\TPI\Domain.Model\obj\Debug\net8.0\Domain.Model.pdb
+C:\Users\neo\source\repos\TPI\Domain.Model\obj\Debug\net8.0\ref\Domain.Model.dll

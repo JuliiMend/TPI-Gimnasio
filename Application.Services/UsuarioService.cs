@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data;
@@ -45,7 +45,7 @@ namespace Application.Services
             {
                 Username = dto.Username,
                 Email = dto.Email, 
-                PasswordHash = dto.Password, // agregar hasheo acaaaaaaaaaaaa
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FechaCreacion = DateTime.Now, 
                 Activo = true,
                 Rol = "Usuario" 
@@ -62,7 +62,7 @@ namespace Application.Services
             if (usuario != null)
             {
                 usuario.Username = dto.Username;
-                usuario.PasswordHash = dto.Password;
+                if (!string.IsNullOrWhiteSpace(dto.Password)) usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
                 await _usuarioRepository.ActualizarAsync(usuario);
             }

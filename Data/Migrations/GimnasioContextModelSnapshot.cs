@@ -47,7 +47,7 @@ namespace Data.Migrations
 
                     b.HasIndex("SocioId");
 
-                    b.ToTable("Cuotas");
+                    b.ToTable("Cuotas", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.DetalleCuota", b =>
@@ -77,7 +77,7 @@ namespace Data.Migrations
 
                     b.HasIndex("CuotaId");
 
-                    b.ToTable("DetallesCuota");
+                    b.ToTable("DetallesCuota", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Plan", b =>
@@ -106,7 +106,7 @@ namespace Data.Migrations
 
                     b.HasKey("PlanId");
 
-                    b.ToTable("Planes");
+                    b.ToTable("Planes", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Profesor", b =>
@@ -147,7 +147,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Profesores");
+                    b.ToTable("Profesores", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Socio", b =>
@@ -195,7 +195,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Socios");
+                    b.ToTable("Socios", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Turno", b =>
@@ -218,7 +218,7 @@ namespace Data.Migrations
 
                     b.HasKey("IdTurno");
 
-                    b.ToTable("Turnos");
+                    b.ToTable("Turnos", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Usuario", b =>
@@ -256,7 +256,7 @@ namespace Data.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Cuota", b =>

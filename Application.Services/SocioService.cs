@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using Data;
 using Domain.Model;
 using DTOs;
@@ -77,7 +77,7 @@ namespace Application.Services
             {
                 Username = dto.Username,
                 Email = dto.Email,
-                PasswordHash = dto.Password, // cuando se hashee se va a llamar passwordhash
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FechaCreacion = DateTime.Now,
                 Activo = true,
                 Rol = "Socio"

@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using Data;
 using Domain.Model;
 using Microsoft.Extensions.Configuration;
@@ -31,7 +31,7 @@ namespace Application.Services
 
             var usuario = await _usuarioRepository.ObtenerPorUsernameAsync(request.Username);
 
-            if (usuario == null || usuario.PasswordHash != request.Password)
+            if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Password, usuario.PasswordHash))
                 return null;
 
             var token = GenerateJwtToken(usuario);
