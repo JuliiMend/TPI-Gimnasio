@@ -1,5 +1,220 @@
-﻿<h3>Usuarios</h3>
+﻿@page "/usuarios"
+@using DTOs
+
+<h3>Usuarios</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoUsuario">
+        + Nuevo usuario
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+
+        <h4>@(editando ? "Editar usuario" : "Nuevo usuario")</h4>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label>Username</label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="usuarioActual.Username" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Email</label>
+
+                <input type="email"
+                       class="form-control"
+                       @bind="usuarioActual.Email" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Password</label>
+
+                <input type="password"
+                       class="form-control"
+                       @bind="usuarioActual.Password" />
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2"
+                    @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary"
+                    @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var usuario in usuarios)
+        {
+            <tr>
+
+                <td>@usuario.UsuarioId</td>
+
+                <td>@usuario.Username</td>
+
+                <td>
+
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarUsuario(usuario)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarUsuario(usuario)">
+                        Eliminar
+                    </button>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
 
 @code {
 
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private UsuarioCreaActualizaDTO usuarioActual = new();
+
+    private int idUsuarioEditando;
+
+
+    private List<UsuarioMostrarDTO> usuarios = new()
+    {
+        new UsuarioMostrarDTO
+        {
+            UsuarioId = 1,
+            Username = "juanperez"
+        },
+
+        new UsuarioMostrarDTO
+        {
+            UsuarioId = 2,
+            Username = "mariagomez"
+        },
+
+        new UsuarioMostrarDTO
+        {
+            UsuarioId = 3,
+            Username = "admin"
+        }
+    };
+
+
+    private void NuevoUsuario()
+    {
+        usuarioActual = new UsuarioCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+
+        mensaje = string.Empty;
+    }
+
+
+    private void EditarUsuario(UsuarioMostrarDTO usuario)
+    {
+        idUsuarioEditando = usuario.UsuarioId;
+
+        usuarioActual = new UsuarioCreaActualizaDTO
+        {
+            Username = usuario.Username,
+            Email = "",
+            Password = ""
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+
+        mensaje = string.Empty;
+    }
+
+
+    private void Guardar()
+    {
+        if (editando)
+        {
+            var usuario = usuarios.FirstOrDefault(
+                u => u.UsuarioId == idUsuarioEditando);
+
+            if (usuario != null)
+            {
+                usuario.Username = usuarioActual.Username;
+            }
+
+            mensaje = "Usuario modificado correctamente.";
+        }
+        else
+        {
+            var nuevoUsuario = new UsuarioMostrarDTO
+            {
+                UsuarioId = usuarios.Count + 1,
+                Username = usuarioActual.Username
+            };
+
+            usuarios.Add(nuevoUsuario);
+
+            mensaje = "Usuario creado correctamente.";
+        }
+
+        mostrarFormulario = false;
+    }
+
+
+    private void EliminarUsuario(UsuarioMostrarDTO usuario)
+    {
+        usuarios.Remove(usuario);
+
+        mensaje = "Usuario eliminado correctamente.";
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+
+        mensaje = string.Empty;
+    }
 }
+
+
