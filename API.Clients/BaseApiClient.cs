@@ -9,7 +9,7 @@ namespace API.Clients
         protected static async Task<HttpClient> CreateHttpClientAsync()
         {
             var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5183/");
+            client.BaseAddress = new Uri("https://localhost:7209/");
 
             return await Task.FromResult(client);
         }

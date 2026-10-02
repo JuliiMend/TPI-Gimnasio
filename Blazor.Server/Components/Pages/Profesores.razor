@@ -1,5 +1,265 @@
-﻿<h3>Profesores</h3>
+﻿@page "/profesores"
+@using DTOs
+
+<h3>Profesores</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoProfesor">
+        + Nuevo profesor
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar profesor" : "Nuevo profesor")</h4>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>DNI</label>
+                <input class="form-control" @bind="profesorActual.Dni" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Nombre</label>
+                <input class="form-control" @bind="profesorActual.Nombre" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Apellido</label>
+                <input class="form-control" @bind="profesorActual.Apellido" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Teléfono</label>
+                <input class="form-control" @bind="profesorActual.Telefono" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Fecha de nacimiento</label>
+                <input type="date" class="form-control" @bind="profesorActual.FechaNac" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Cargo</label>
+                <input class="form-control" @bind="profesorActual.Cargo" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Username</label>
+                <input class="form-control" @bind="profesorActual.Username" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Email</label>
+                <input type="email" class="form-control" @bind="profesorActual.Email" />
+            </div>
+
+            @if (!editando)
+            {
+                <div class="col-md-6 mb-3">
+                    <label>Password</label>
+                    <input type="password" class="form-control" @bind="profesorActual.Password" />
+                </div>
+            }
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Teléfono</th>
+            <th>Cargo</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var profesor in profesores)
+        {
+            <tr>
+                <td>@profesor.Dni</td>
+                <td>@profesor.Nombre</td>
+                <td>@profesor.Apellido</td>
+                <td>@profesor.Telefono</td>
+                <td>@profesor.Cargo</td>
+                <td>@profesor.Email</td>
+                <td>
+                    @(profesor.UsuarioActivo ? "Activo" : "Inactivo")
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarProfesor(profesor)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarProfesor(profesor)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
 
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private ProfesorCreaActualizaDTO profesorActual = new();
+
+    private int idProfesorEditando;
+
+    private List<ProfesorMostrarDTO> profesores = new()
+    {
+        new ProfesorMostrarDTO
+        {
+            IdPersona = 1,
+            Dni = "11223344",
+            Nombre = "Carlos",
+            Apellido = "Rodríguez",
+            Telefono = "3400123456",
+            FechaNac = new DateTime(1990, 4, 15),
+            Cargo = "Profesor de musculación",
+            Username = "carlosrodriguez",
+            Email = "carlos@tpi-gimnasio.com",
+            UsuarioActivo = true
+        },
+
+        new ProfesorMostrarDTO
+        {
+            IdPersona = 2,
+            Dni = "55667788",
+            Nombre = "Laura",
+            Apellido = "Fernández",
+            Telefono = "3400987654",
+            FechaNac = new DateTime(1995, 7, 20),
+            Cargo = "Profesora de cardio",
+            Username = "laurafernandez",
+            Email = "laura@tpi-gimnasio.com",
+            UsuarioActivo = true
+        }
+    };
+
+
+    private void NuevoProfesor()
+    {
+        profesorActual = new ProfesorCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+    }
+
+
+    private void EditarProfesor(ProfesorMostrarDTO profesor)
+    {
+        idProfesorEditando = profesor.IdPersona;
+
+        profesorActual = new ProfesorCreaActualizaDTO
+        {
+            Dni = profesor.Dni,
+            Nombre = profesor.Nombre,
+            Apellido = profesor.Apellido,
+            Telefono = profesor.Telefono,
+            FechaNac = profesor.FechaNac,
+            Cargo = profesor.Cargo,
+            Username = profesor.Username,
+            Email = profesor.Email
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+    }
+
+
+    private void Guardar()
+    {
+        if (editando)
+        {
+            var profesor = profesores.FirstOrDefault(
+                p => p.IdPersona == idProfesorEditando);
+
+            if (profesor != null)
+            {
+                profesor.Dni = profesorActual.Dni;
+                profesor.Nombre = profesorActual.Nombre;
+                profesor.Apellido = profesorActual.Apellido;
+                profesor.Telefono = profesorActual.Telefono;
+                profesor.FechaNac = profesorActual.FechaNac;
+                profesor.Cargo = profesorActual.Cargo;
+                profesor.Username = profesorActual.Username;
+                profesor.Email = profesorActual.Email;
+            }
+
+            mensaje = "Profesor modificado correctamente.";
+        }
+        else
+        {
+            var nuevoProfesor = new ProfesorMostrarDTO
+            {
+                IdPersona = profesores.Count + 1,
+                Dni = profesorActual.Dni,
+                Nombre = profesorActual.Nombre,
+                Apellido = profesorActual.Apellido,
+                Telefono = profesorActual.Telefono,
+                FechaNac = profesorActual.FechaNac,
+                Cargo = profesorActual.Cargo,
+                Username = profesorActual.Username,
+                Email = profesorActual.Email,
+                UsuarioActivo = true
+            };
+
+            profesores.Add(nuevoProfesor);
+
+            mensaje = "Profesor creado correctamente.";
+        }
+
+        mostrarFormulario = false;
+    }
+
+
+    private void EliminarProfesor(ProfesorMostrarDTO profesor)
+    {
+        profesores.Remove(profesor);
+
+        mensaje = "Profesor eliminado correctamente.";
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+    }
 }

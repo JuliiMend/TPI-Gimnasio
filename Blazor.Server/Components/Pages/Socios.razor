@@ -1,5 +1,310 @@
-﻿<h3>Socios</h3>
+﻿@page "/socios"
+@using DTOs
+
+<h3>Socios</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoSocio">
+        + Nuevo socio
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar socio" : "Nuevo socio")</h4>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>DNI</label>
+                <input class="form-control" @bind="socioActual.Dni" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Nombre</label>
+                <input class="form-control" @bind="socioActual.Nombre" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Apellido</label>
+                <input class="form-control" @bind="socioActual.Apellido" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Teléfono</label>
+                <input class="form-control" @bind="socioActual.Telefono" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Fecha de nacimiento</label>
+                <input type="date" class="form-control" @bind="socioActual.FechaNac" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Fecha de alta</label>
+                <input type="date" class="form-control" @bind="socioActual.FechaAlta" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Fecha de baja</label>
+                <input type="date" class="form-control" @bind="socioActual.FechaBaja" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Plan</label>
+                <select class="form-select" @bind="socioActual.IdPlan">
+                    <option value="0">Seleccionar plan</option>
+                    <option value="1">Premium</option>
+                    <option value="2">Básico</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Username</label>
+                <input class="form-control" @bind="socioActual.Username" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Email</label>
+                <input type="email" class="form-control" @bind="socioActual.Email" />
+            </div>
+
+            @if (!editando)
+            {
+                <div class="col-md-6 mb-3">
+                    <label>Password</label>
+                    <input type="password" class="form-control" @bind="socioActual.Password" />
+                </div>
+            }
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Teléfono</th>
+            <th>Plan</th>
+            <th>Fecha de alta</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var socio in socios)
+        {
+            <tr>
+                <td>@socio.Dni</td>
+                <td>@socio.Nombre</td>
+                <td>@socio.Apellido</td>
+                <td>@socio.Telefono</td>
+                <td>@socio.NombrePlan</td>
+                <td>@socio.FechaAlta.ToShortDateString()</td>
+                <td>
+                    @(socio.UsuarioActivo ? "Activo" : "Inactivo")
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarSocio(socio)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarSocio(socio)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
 
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private SocioCreaActualizaDTO socioActual = new();
+
+    private int idSocioEditando;
+
+    private List<SocioMostrarDTO> socios = new()
+    {
+        new SocioMostrarDTO
+        {
+            IdPersona = 1,
+            Dni = "12345678",
+            Nombre = "Juan",
+            Apellido = "Pérez",
+            Telefono = "3400123456",
+            NombrePlan = "Premium",
+            IdPlan = 1,
+            FechaAlta = new DateTime(2026, 9, 1),
+            FechaNac = new DateTime(2000, 5, 10),
+            Username = "juanperez",
+            Email = "juan@gmail.com",
+            UsuarioActivo = true
+        },
+
+        new SocioMostrarDTO
+        {
+            IdPersona = 2,
+            Dni = "87654321",
+            Nombre = "María",
+            Apellido = "Gómez",
+            Telefono = "3400987654",
+            NombrePlan = "Básico",
+            IdPlan = 2,
+            FechaAlta = new DateTime(2026, 8, 15),
+            FechaNac = new DateTime(1999, 3, 20),
+            Username = "mariagomez",
+            Email = "maria@gmail.com",
+            UsuarioActivo = true
+        }
+    };
+
+
+    private void NuevoSocio()
+    {
+        socioActual = new SocioCreaActualizaDTO
+        {
+            FechaAlta = DateTime.Today
+        };
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+    }
+
+
+    private void EditarSocio(SocioMostrarDTO socio)
+    {
+        idSocioEditando = socio.IdPersona;
+
+        socioActual = new SocioCreaActualizaDTO
+        {
+            Dni = socio.Dni,
+            Nombre = socio.Nombre,
+            Apellido = socio.Apellido,
+            Telefono = socio.Telefono,
+            FechaNac = socio.FechaNac,
+            FechaAlta = socio.FechaAlta,
+            FechaBaja = socio.FechaBaja,
+            IdPlan = socio.IdPlan,
+            Username = socio.Username,
+            Email = socio.Email
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+    }
+
+
+    private void Guardar()
+    {
+        if (editando)
+        {
+            var socio = socios.FirstOrDefault(s => s.IdPersona == idSocioEditando);
+
+            if (socio != null)
+            {
+                socio.Dni = socioActual.Dni;
+                socio.Nombre = socioActual.Nombre;
+                socio.Apellido = socioActual.Apellido;
+                socio.Telefono = socioActual.Telefono;
+                socio.FechaNac = socioActual.FechaNac;
+                socio.FechaAlta = socioActual.FechaAlta;
+                socio.FechaBaja = socioActual.FechaBaja;
+                socio.IdPlan = socioActual.IdPlan;
+                socio.Username = socioActual.Username;
+                socio.Email = socioActual.Email;
+
+                socio.NombrePlan = ObtenerNombrePlan(socioActual.IdPlan);
+            }
+
+            mensaje = "Socio modificado correctamente.";
+        }
+        else
+        {
+            var nuevoSocio = new SocioMostrarDTO
+            {
+                IdPersona = socios.Count + 1,
+                Dni = socioActual.Dni,
+                Nombre = socioActual.Nombre,
+                Apellido = socioActual.Apellido,
+                Telefono = socioActual.Telefono,
+                FechaNac = socioActual.FechaNac,
+                FechaAlta = socioActual.FechaAlta,
+                FechaBaja = socioActual.FechaBaja,
+                IdPlan = socioActual.IdPlan,
+                NombrePlan = ObtenerNombrePlan(socioActual.IdPlan),
+                Username = socioActual.Username,
+                Email = socioActual.Email,
+                UsuarioActivo = true
+            };
+
+            socios.Add(nuevoSocio);
+
+            mensaje = "Socio creado correctamente.";
+        }
+
+        mostrarFormulario = false;
+    }
+
+
+    private void EliminarSocio(SocioMostrarDTO socio)
+    {
+        socios.Remove(socio);
+
+        mensaje = "Socio eliminado correctamente.";
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+    }
+
+
+    private string ObtenerNombrePlan(int idPlan)
+    {
+        if (idPlan == 1)
+        {
+            return "Premium";
+        }
+
+        if (idPlan == 2)
+        {
+            return "Básico";
+        }
+
+        return "Sin plan";
+    }
 }

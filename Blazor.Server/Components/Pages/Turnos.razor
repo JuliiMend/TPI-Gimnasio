@@ -1,5 +1,239 @@
-﻿<h3>Turnos</h3>
+﻿@page "/turnos"
+@using DTOs
+
+<h3>Turnos</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoTurno">
+        + Nuevo turno
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar turno" : "Nuevo turno")</h4>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label>Día de la semana</label>
+
+                <select class="form-select" @bind="turnoActual.DiaSemana">
+                    <option value="">Seleccionar día</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Hora desde</label>
+
+                <input type="time"
+                       class="form-control"
+                       value="@turnoActual.HoraDesde.ToString(@"hh\:mm")"
+                       @onchange="CambiarHoraDesde" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Hora hasta</label>
+
+                <input type="time"
+                       class="form-control"
+                       value="@turnoActual.HoraHasta.ToString(@"hh\:mm")"
+                       @onchange="CambiarHoraHasta" />
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Día</th>
+            <th>Hora desde</th>
+            <th>Hora hasta</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var turno in turnos)
+        {
+            <tr>
+                <td>@turno.DiaSemana</td>
+                <td>@turno.HoraDesde.ToString(@"hh\:mm")</td>
+                <td>@turno.HoraHasta.ToString(@"hh\:mm")</td>
+
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarTurno(turno)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarTurno(turno)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
 
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private TurnoCreaActualizaDTO turnoActual = new();
+
+    private int idTurnoEditando;
+
+    private List<TurnoMostrarDTO> turnos = new()
+    {
+        new TurnoMostrarDTO
+        {
+            IdTurno = 1,
+            DiaSemana = "Lunes",
+            HoraDesde = new TimeSpan(8, 0, 0),
+            HoraHasta = new TimeSpan(10, 0, 0)
+        },
+
+        new TurnoMostrarDTO
+        {
+            IdTurno = 2,
+            DiaSemana = "Miércoles",
+            HoraDesde = new TimeSpan(16, 0, 0),
+            HoraHasta = new TimeSpan(18, 0, 0)
+        },
+
+        new TurnoMostrarDTO
+        {
+            IdTurno = 3,
+            DiaSemana = "Viernes",
+            HoraDesde = new TimeSpan(18, 0, 0),
+            HoraHasta = new TimeSpan(20, 0, 0)
+        }
+    };
+
+
+    private void NuevoTurno()
+    {
+        turnoActual = new TurnoCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+    }
+
+
+    private void EditarTurno(TurnoMostrarDTO turno)
+    {
+        idTurnoEditando = turno.IdTurno;
+
+        turnoActual = new TurnoCreaActualizaDTO
+        {
+            DiaSemana = turno.DiaSemana,
+            HoraDesde = turno.HoraDesde,
+            HoraHasta = turno.HoraHasta
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+    }
+
+
+    private void Guardar()
+    {
+        if (editando)
+        {
+            var turno = turnos.FirstOrDefault(
+                t => t.IdTurno == idTurnoEditando);
+
+            if (turno != null)
+            {
+                turno.DiaSemana = turnoActual.DiaSemana;
+                turno.HoraDesde = turnoActual.HoraDesde;
+                turno.HoraHasta = turnoActual.HoraHasta;
+            }
+
+            mensaje = "Turno modificado correctamente.";
+        }
+        else
+        {
+            var nuevoTurno = new TurnoMostrarDTO
+            {
+                IdTurno = turnos.Count + 1,
+                DiaSemana = turnoActual.DiaSemana,
+                HoraDesde = turnoActual.HoraDesde,
+                HoraHasta = turnoActual.HoraHasta
+            };
+
+            turnos.Add(nuevoTurno);
+
+            mensaje = "Turno creado correctamente.";
+        }
+
+        mostrarFormulario = false;
+    }
+
+
+    private void EliminarTurno(TurnoMostrarDTO turno)
+    {
+        turnos.Remove(turno);
+
+        mensaje = "Turno eliminado correctamente.";
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+    }
+
+
+    private void CambiarHoraDesde(ChangeEventArgs e)
+    {
+        if (TimeSpan.TryParse(e.Value?.ToString(), out var hora))
+        {
+            turnoActual.HoraDesde = hora;
+        }
+    }
+
+
+    private void CambiarHoraHasta(ChangeEventArgs e)
+    {
+        if (TimeSpan.TryParse(e.Value?.ToString(), out var hora))
+        {
+            turnoActual.HoraHasta = hora;
+        }
+    }
 }

@@ -1,5 +1,48 @@
-﻿<h3>Planes</h3>
+﻿@page "/planes"
+@using DTOs
+
+<h3>Planes</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Precio</th>
+            <th>Descripción</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var plan in planes)
+        {
+            <tr>
+                <td>@plan.Nombre</td>
+                <td>@plan.Tipo</td>
+                <td>$@plan.Precio</td>
+                <td>@plan.Descripcion</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
+    private List<PlanMostrarDTO> planes = new()
+    {
+        new PlanMostrarDTO
+        {
+            Nombre = "Premium",
+            Tipo = "Musculación",
+            Precio = 25000,
+            Descripcion = "Acceso al sector de musculación"
+        },
 
+        new PlanMostrarDTO
+        {
+            Nombre = "Básico",
+            Tipo = "Cardio",
+            Precio = 18000,
+            Descripcion = "Acceso al sector de cardio"
+        }
+    };
 }

@@ -1,5 +1,490 @@
-﻿<h3>Cuotas</h3>
+﻿```razor
+@page "/cuotas"
+@using DTOs
+
+<h3>Cuotas</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevaCuota">
+        + Nueva cuota
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+
+        <h4>@(editando ? "Editar cuota" : "Nueva cuota")</h4>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label>Socio</label>
+
+                <select class="form-select" @bind="cuotaActual.SocioId">
+                    <option value="0">Seleccionar socio</option>
+                    <option value="1">Juan Pérez</option>
+                    <option value="2">María Gómez</option>
+                    <option value="3">Pedro Rodríguez</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Mes y año</label>
+
+                <input type="number"
+                       class="form-control"
+                       @bind="cuotaActual.MesAnio" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Fecha de pago</label>
+
+                <input type="date"
+                       class="form-control"
+                       @bind="cuotaActual.FechaPago" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Valor</label>
+
+                <input type="number"
+                       step="0.01"
+                       class="form-control"
+                       @bind="cuotaActual.Valor" />
+            </div>
+
+        </div>
+
+        <hr />
+
+        <h5>Detalles de la cuota</h5>
+
+        <div class="row align-items-end">
+
+            <div class="col-md-4 mb-3">
+                <label>Concepto</label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="detalleActual.Concepto" />
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label>Subtotal</label>
+
+                <input type="number"
+                       step="0.01"
+                       class="form-control"
+                       @bind="detalleActual.Subtotal" />
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label>Monto</label>
+
+                <input type="number"
+                       step="0.01"
+                       class="form-control"
+                       @bind="detalleActual.Monto" />
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <button class="btn btn-info w-100"
+                        @onclick="AgregarDetalle">
+                    Agregar
+                </button>
+            </div>
+
+        </div>
+
+        @if (cuotaActual.Detalles.Any())
+        {
+            <table class="table table-sm">
+
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Subtotal</th>
+                        <th>Monto</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var detalle in cuotaActual.Detalles)
+                    {
+                        <tr>
+                            <td>@detalle.Concepto</td>
+                            <td>@detalle.Subtotal</td>
+                            <td>@detalle.Monto</td>
+
+                            <td>
+                                <button class="btn btn-sm btn-warning me-2"
+                                        @onclick="() => EditarDetalle(detalle)">
+                                    Editar
+                                </button>
+
+                                <button class="btn btn-sm btn-danger"
+                                        @onclick="() => EliminarDetalle(detalle)">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">
+                No hay detalles agregados.
+            </p>
+        }
+
+        <div class="mt-3">
+
+            <button class="btn btn-success me-2"
+                    @onclick="Guardar">
+                Guardar cuota
+            </button>
+
+            <button class="btn btn-secondary"
+                    @onclick="Cancelar">
+                Cancelar
+            </button>
+
+        </div>
+
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>Socio</th>
+            <th>Mes/Año</th>
+            <th>Fecha de pago</th>
+            <th>Valor</th>
+            <th>Detalles</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var cuota in cuotas)
+        {
+            <tr>
+
+                <td>@cuota.SocioNombre</td>
+
+                <td>@cuota.MesAnio</td>
+
+                <td>@cuota.FechaPago.ToString("dd/MM/yyyy")</td>
+
+                <td>$ @cuota.Valor</td>
+
+                <td>
+                    @cuota.Detalles.Count
+                </td>
+
+                <td>
+
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarCuota(cuota)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarCuota(cuota)">
+                        Eliminar
+                    </button>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
 
 @code {
 
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private CuotaCreaActualizaDTO cuotaActual = new();
+
+    private DetalleCuotaCreaActualizaDTO detalleActual = new();
+
+    private int idCuotaEditando;
+
+
+    private List<CuotaMostrarDTO> cuotas = new()
+    {
+        new CuotaMostrarDTO
+        {
+            CuotaId = 1,
+            SocioId = 1,
+            SocioNombre = "Juan Pérez",
+            MesAnio = 92026,
+            FechaPago = new DateTime(2026, 9, 5),
+            Valor = 25000,
+
+            Detalles = new List<DetalleCuotaMostrarDTO>
+            {
+                new DetalleCuotaMostrarDTO
+                {
+                    DetalleCuotaId = 1,
+                    CuotaId = 1,
+                    Concepto = "Plan Premium",
+                    Subtotal = 25000,
+                    Monto = 25000
+                }
+            }
+        },
+
+        new CuotaMostrarDTO
+        {
+            CuotaId = 2,
+            SocioId = 2,
+            SocioNombre = "María Gómez",
+            MesAnio = 92026,
+            FechaPago = new DateTime(2026, 9, 7),
+            Valor = 18000,
+
+            Detalles = new List<DetalleCuotaMostrarDTO>
+            {
+                new DetalleCuotaMostrarDTO
+                {
+                    DetalleCuotaId = 2,
+                    CuotaId = 2,
+                    Concepto = "Plan Básico",
+                    Subtotal = 18000,
+                    Monto = 18000
+                }
+            }
+        }
+    };
+
+
+    private void NuevaCuota()
+    {
+        cuotaActual = new CuotaCreaActualizaDTO
+        {
+            FechaPago = DateTime.Today
+        };
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+
+        mensaje = string.Empty;
+    }
+
+
+    private void EditarCuota(CuotaMostrarDTO cuota)
+    {
+        idCuotaEditando = cuota.CuotaId;
+
+        cuotaActual = new CuotaCreaActualizaDTO
+        {
+            CuotaId = cuota.CuotaId,
+            SocioId = cuota.SocioId,
+            MesAnio = cuota.MesAnio,
+            FechaPago = cuota.FechaPago,
+            Valor = cuota.Valor,
+
+            Detalles = cuota.Detalles
+                .Select(d => new DetalleCuotaCreaActualizaDTO
+                {
+                    DetalleCuotaId = d.DetalleCuotaId,
+                    Concepto = d.Concepto,
+                    Subtotal = d.Subtotal,
+                    Monto = d.Monto
+                })
+                .ToList()
+        };
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+
+        editando = true;
+        mostrarFormulario = true;
+
+        mensaje = string.Empty;
+    }
+
+
+    private void Guardar()
+    {
+        if (editando)
+        {
+            var cuota = cuotas.FirstOrDefault(
+                c => c.CuotaId == idCuotaEditando);
+
+            if (cuota != null)
+            {
+                cuota.SocioId = cuotaActual.SocioId;
+                cuota.MesAnio = cuotaActual.MesAnio;
+                cuota.FechaPago = cuotaActual.FechaPago;
+                cuota.Valor = cuotaActual.Valor;
+
+                cuota.Detalles = cuotaActual.Detalles
+                    .Select(d => new DetalleCuotaMostrarDTO
+                    {
+                        DetalleCuotaId = d.DetalleCuotaId,
+                        CuotaId = cuota.CuotaId,
+                        Concepto = d.Concepto,
+                        Subtotal = d.Subtotal,
+                        Monto = d.Monto
+                    })
+                    .ToList();
+
+                cuota.SocioNombre = ObtenerNombreSocio(
+                    cuotaActual.SocioId);
+            }
+
+            mensaje = "Cuota modificada correctamente.";
+        }
+        else
+        {
+            int nuevoId = cuotas.Count + 1;
+
+            var nuevaCuota = new CuotaMostrarDTO
+            {
+                CuotaId = nuevoId,
+                SocioId = cuotaActual.SocioId,
+                SocioNombre = ObtenerNombreSocio(
+                    cuotaActual.SocioId),
+                MesAnio = cuotaActual.MesAnio,
+                FechaPago = cuotaActual.FechaPago,
+                Valor = cuotaActual.Valor,
+
+                Detalles = cuotaActual.Detalles
+                    .Select(d => new DetalleCuotaMostrarDTO
+                    {
+                        DetalleCuotaId = d.DetalleCuotaId,
+                        CuotaId = nuevoId,
+                        Concepto = d.Concepto,
+                        Subtotal = d.Subtotal,
+                        Monto = d.Monto
+                    })
+                    .ToList()
+            };
+
+            cuotas.Add(nuevaCuota);
+
+            mensaje = "Cuota creada correctamente.";
+        }
+
+        mostrarFormulario = false;
+    }
+
+
+    private void EliminarCuota(CuotaMostrarDTO cuota)
+    {
+        cuotas.Remove(cuota);
+
+        mensaje = "Cuota eliminada correctamente.";
+    }
+
+
+    private void AgregarDetalle()
+    {
+        if (string.IsNullOrWhiteSpace(detalleActual.Concepto))
+        {
+            return;
+        }
+
+        if (detalleActual.DetalleCuotaId == 0)
+        {
+            detalleActual.DetalleCuotaId =
+                cuotaActual.Detalles.Count + 1;
+
+            cuotaActual.Detalles.Add(
+                new DetalleCuotaCreaActualizaDTO
+                {
+                    DetalleCuotaId =
+                        detalleActual.DetalleCuotaId,
+
+                    Concepto = detalleActual.Concepto,
+                    Subtotal = detalleActual.Subtotal,
+                    Monto = detalleActual.Monto
+                });
+        }
+        else
+        {
+            var detalle = cuotaActual.Detalles.FirstOrDefault(
+                d => d.DetalleCuotaId ==
+                     detalleActual.DetalleCuotaId);
+
+            if (detalle != null)
+            {
+                detalle.Concepto = detalleActual.Concepto;
+                detalle.Subtotal = detalleActual.Subtotal;
+                detalle.Monto = detalleActual.Monto;
+            }
+        }
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+    }
+
+
+    private void EditarDetalle(
+        DetalleCuotaCreaActualizaDTO detalle)
+    {
+        detalleActual = new DetalleCuotaCreaActualizaDTO
+        {
+            DetalleCuotaId = detalle.DetalleCuotaId,
+            Concepto = detalle.Concepto,
+            Subtotal = detalle.Subtotal,
+            Monto = detalle.Monto
+        };
+    }
+
+
+    private void EliminarDetalle(
+        DetalleCuotaCreaActualizaDTO detalle)
+    {
+        cuotaActual.Detalles.Remove(detalle);
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+
+        mensaje = string.Empty;
+    }
+
+
+    private string ObtenerNombreSocio(int socioId)
+    {
+        return socioId switch
+        {
+            1 => "Juan Pérez",
+            2 => "María Gómez",
+            3 => "Pedro Rodríguez",
+            _ => "Socio"
+        };
+    }
 }
+```
