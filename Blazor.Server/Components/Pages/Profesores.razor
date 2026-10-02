@@ -1,5 +1,6 @@
 ﻿@page "/profesores"
 @using DTOs
+@using API.Clients
 
 <h3>Profesores</h3>
 
@@ -19,63 +20,110 @@
             <div class="col-md-6 mb-3">
                 <label>DNI</label>
                 <input class="form-control" @bind="profesorActual.Dni" />
+
+                @if (!string.IsNullOrEmpty(errorDni))
+                {
+                    <div class="text-danger">@errorDni</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Nombre</label>
                 <input class="form-control" @bind="profesorActual.Nombre" />
+
+                @if (!string.IsNullOrEmpty(errorNombre))
+                {
+                    <div class="text-danger">@errorNombre</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Apellido</label>
                 <input class="form-control" @bind="profesorActual.Apellido" />
+
+                @if (!string.IsNullOrEmpty(errorApellido))
+                {
+                    <div class="text-danger">@errorApellido</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Teléfono</label>
                 <input class="form-control" @bind="profesorActual.Telefono" />
+
+                @if (!string.IsNullOrEmpty(errorTelefono))
+                {
+                    <div class="text-danger">@errorTelefono</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Fecha de nacimiento</label>
                 <input type="date" class="form-control" @bind="profesorActual.FechaNac" />
+
+                @if (!string.IsNullOrEmpty(errorFechaNac))
+                {
+                    <div class="text-danger">@errorFechaNac</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Cargo</label>
                 <input class="form-control" @bind="profesorActual.Cargo" />
+
+                @if (!string.IsNullOrEmpty(errorCargo))
+                {
+                    <div class="text-danger">@errorCargo</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Username</label>
                 <input class="form-control" @bind="profesorActual.Username" />
+
+                @if (!string.IsNullOrEmpty(errorUsername))
+                {
+                    <div class="text-danger">@errorUsername</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Email</label>
                 <input type="email" class="form-control" @bind="profesorActual.Email" />
+
+                @if (!string.IsNullOrEmpty(errorEmail))
+                {
+                    <div class="text-danger">@errorEmail</div>
+                }
             </div>
 
             @if (!editando)
             {
                 <div class="col-md-6 mb-3">
                     <label>Password</label>
-                    <input type="password" class="form-control" @bind="profesorActual.Password" />
+                    <input type="password"
+                           class="form-control"
+                           @bind="profesorActual.Password" />
+
+                    @if (!string.IsNullOrEmpty(errorPassword))
+                    {
+                        <div class="text-danger">@errorPassword</div>
+                    }
                 </div>
             }
 
-        </div>
-
-        <div>
-            <button class="btn btn-success me-2" @onclick="Guardar">
-                Guardar
-            </button>
-
-            <button class="btn btn-secondary" @onclick="Cancelar">
-                Cancelar
-            </button>
-        </div>
     </div>
+
+    <div>
+        <button class="btn btn-success me-2" @onclick="Guardar">
+            Guardar
+        </button>
+
+        <button class="btn btn-secondary" @onclick="Cancelar">
+            Cancelar
+        </button>
+    </div>
+</div>
 }
 
 @if (!string.IsNullOrEmpty(mensaje))
@@ -98,7 +146,6 @@
             <th>Acciones</th>
         </tr>
     </thead>
-
     <tbody>
         @foreach (var profesor in profesores)
         {
@@ -129,47 +176,56 @@
 </table>
 
 @code {
-
-    private bool mostrarFormulario = false;
+private bool mostrarFormulario = false;
     private bool editando = false;
 
     private string mensaje = string.Empty;
+
+    private string errorDni = string.Empty;
+    private string errorNombre = string.Empty;
+    private string errorApellido = string.Empty;
+    private string errorTelefono = string.Empty;
+    private string errorFechaNac = string.Empty;
+    private string errorCargo = string.Empty;
+    private string errorUsername = string.Empty;
+    private string errorEmail = string.Empty;
+    private string errorPassword = string.Empty;
 
     private ProfesorCreaActualizaDTO profesorActual = new();
 
     private int idProfesorEditando;
 
-    private List<ProfesorMostrarDTO> profesores = new()
+    private List<ProfesorMostrarDTO> profesores = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        new ProfesorMostrarDTO
-        {
-            IdPersona = 1,
-            Dni = "11223344",
-            Nombre = "Carlos",
-            Apellido = "Rodríguez",
-            Telefono = "3400123456",
-            FechaNac = new DateTime(1990, 4, 15),
-            Cargo = "Profesor de musculación",
-            Username = "carlosrodriguez",
-            Email = "carlos@tpi-gimnasio.com",
-            UsuarioActivo = true
-        },
+        await CargarProfesores();
+    }
 
-        new ProfesorMostrarDTO
+    private async Task CargarProfesores()
+    {
+        try
         {
-            IdPersona = 2,
-            Dni = "55667788",
-            Nombre = "Laura",
-            Apellido = "Fernández",
-            Telefono = "3400987654",
-            FechaNac = new DateTime(1995, 7, 20),
-            Cargo = "Profesora de cardio",
-            Username = "laurafernandez",
-            Email = "laura@tpi-gimnasio.com",
-            UsuarioActivo = true
+            profesores = (await ProfesorApiClient.GetAllAsync()).ToList();
         }
-    };
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los profesores: {ex.Message}";
+        }
+    }
 
+    private void LimpiarErrores()
+    {
+        errorDni = string.Empty;
+        errorNombre = string.Empty;
+        errorApellido = string.Empty;
+        errorTelefono = string.Empty;
+        errorFechaNac = string.Empty;
+        errorCargo = string.Empty;
+        errorUsername = string.Empty;
+        errorEmail = string.Empty;
+        errorPassword = string.Empty;
+    }
 
     private void NuevoProfesor()
     {
@@ -178,8 +234,9 @@
         editando = false;
         mostrarFormulario = true;
         mensaje = string.Empty;
-    }
 
+        LimpiarErrores();
+    }
 
     private void EditarProfesor(ProfesorMostrarDTO profesor)
     {
@@ -200,66 +257,128 @@
         editando = true;
         mostrarFormulario = true;
         mensaje = string.Empty;
+
+        LimpiarErrores();
     }
 
-
-    private void Guardar()
+    private bool Validar()
     {
-        if (editando)
-        {
-            var profesor = profesores.FirstOrDefault(
-                p => p.IdPersona == idProfesorEditando);
+        LimpiarErrores();
 
-            if (profesor != null)
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(profesorActual.Dni))
+        {
+            errorDni = "Ingresá el DNI.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(profesorActual.Nombre))
+        {
+            errorNombre = "Ingresá el nombre.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(profesorActual.Apellido))
+        {
+            errorApellido = "Ingresá el apellido.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(profesorActual.Telefono))
+        {
+            errorTelefono = "Ingresá el teléfono.";
+            valido = false;
+        }
+
+        if (profesorActual.FechaNac == DateTime.MinValue)
+        {
+            errorFechaNac = "Ingresá la fecha de nacimiento.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(profesorActual.Cargo))
+        {
+            errorCargo = "Ingresá el cargo.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(profesorActual.Username))
+        {
+            errorUsername = "Ingresá el username.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(profesorActual.Email))
+        {
+            errorEmail = "Ingresá el email.";
+            valido = false;
+        }
+
+        if (!editando && string.IsNullOrWhiteSpace(profesorActual.Password))
+        {
+            errorPassword = "Ingresá una contraseña.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
             {
-                profesor.Dni = profesorActual.Dni;
-                profesor.Nombre = profesorActual.Nombre;
-                profesor.Apellido = profesorActual.Apellido;
-                profesor.Telefono = profesorActual.Telefono;
-                profesor.FechaNac = profesorActual.FechaNac;
-                profesor.Cargo = profesorActual.Cargo;
-                profesor.Username = profesorActual.Username;
-                profesor.Email = profesorActual.Email;
+                await ProfesorApiClient.UpdateAsync(
+                    idProfesorEditando,
+                    profesorActual);
+
+                mensaje = "Profesor modificado correctamente.";
+            }
+            else
+            {
+                await ProfesorApiClient.AddAsync(profesorActual);
+
+                mensaje = "Profesor creado correctamente.";
             }
 
-            mensaje = "Profesor modificado correctamente.";
+            await CargarProfesores();
+
+            mostrarFormulario = false;
         }
-        else
+        catch (Exception ex)
         {
-            var nuevoProfesor = new ProfesorMostrarDTO
-            {
-                IdPersona = profesores.Count + 1,
-                Dni = profesorActual.Dni,
-                Nombre = profesorActual.Nombre,
-                Apellido = profesorActual.Apellido,
-                Telefono = profesorActual.Telefono,
-                FechaNac = profesorActual.FechaNac,
-                Cargo = profesorActual.Cargo,
-                Username = profesorActual.Username,
-                Email = profesorActual.Email,
-                UsuarioActivo = true
-            };
-
-            profesores.Add(nuevoProfesor);
-
-            mensaje = "Profesor creado correctamente.";
+            mensaje = $"Error al guardar el profesor: {ex.Message}";
         }
-
-        mostrarFormulario = false;
     }
 
-
-    private void EliminarProfesor(ProfesorMostrarDTO profesor)
+    private async Task EliminarProfesor(ProfesorMostrarDTO profesor)
     {
-        profesores.Remove(profesor);
+        try
+        {
+            await ProfesorApiClient.DeleteAsync(profesor.IdPersona);
 
-        mensaje = "Profesor eliminado correctamente.";
+            await CargarProfesores();
+
+            mensaje = "Profesor eliminado correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el profesor: {ex.Message}";
+        }
     }
-
 
     private void Cancelar()
     {
         mostrarFormulario = false;
         mensaje = string.Empty;
+
+        LimpiarErrores();
     }
 }

@@ -3,7 +3,6 @@ using Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,7 +66,8 @@ namespace Data
 
         public async Task ActualizarAsync(Socio socio)
         {
-            var socioTrackeado = _context.Socios.Local.FirstOrDefault(s => s.PersonaId == socio.PersonaId);
+            var socioTrackeado = _context.Socios.Local
+                .FirstOrDefault(s => s.PersonaId == socio.PersonaId);
 
             if (socioTrackeado != null)
             {
@@ -75,17 +75,27 @@ namespace Data
             }
 
             _context.Socios.Update(socio);
+
             await _context.SaveChangesAsync();
         }
 
         public async Task EliminarAsync(int id)
         {
             Socio? socio = await _context.Socios
+                .Include(s => s.Usuario)
                 .FirstOrDefaultAsync(s => s.PersonaId == id);
 
             if (socio != null)
             {
+                var usuario = socio.Usuario;
+
                 _context.Socios.Remove(socio);
+
+                if (usuario != null)
+                {
+                    _context.Usuarios.Remove(usuario);
+                }
+
                 await _context.SaveChangesAsync();
             }
         }

@@ -2,6 +2,7 @@ using DTOs;
 using API.Clients;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -29,10 +30,13 @@ namespace WindowsFormsApp
 
                 this.dgv_cuotas.DataSource = null;
 
-                IEnumerable<CuotaMostrarDTO> cuotas = await CuotaApiClient.GetAllAsync();
+                IEnumerable<CuotaMostrarDTO> cuotas =
+                    await CuotaApiClient.GetAllAsync();
+
                 this.dgv_cuotas.DataSource = cuotas;
 
                 btn_agregar.Enabled = true;
+
                 if (this.dgv_cuotas.Rows.Count > 0)
                 {
                     this.dgv_cuotas.Rows[0].Selected = true;
@@ -42,16 +46,25 @@ namespace WindowsFormsApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar cuotas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    $"Error al cargar cuotas: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
         private async void btn_agregar_Click(object sender, EventArgs e)
         {
-            CuotaCreaActualizaDTO cuotaNueva = new CuotaCreaActualizaDTO();
-            cuotaNueva.Detalles = new List<DetalleCuotaCreaActualizaDTO>();
+            CuotaCreaActualizaDTO cuotaNueva =
+                new CuotaCreaActualizaDTO();
 
-            CuotaDetalle cuotaDetalle = new CuotaDetalle(cuotaNueva);
+            cuotaNueva.Detalles =
+                new List<DetalleCuotaCreaActualizaDTO>();
+
+            CuotaDetalle cuotaDetalle =
+                new CuotaDetalle(cuotaNueva);
+
             cuotaDetalle.ShowDialog();
 
             await this.LoadCuotas();
@@ -61,12 +74,24 @@ namespace WindowsFormsApp
         {
             try
             {
-                if (dgv_cuotas.SelectedRows.Count == 0) return;
+                if (dgv_cuotas.SelectedRows.Count == 0)
+                {
+                    return;
+                }
 
-                CuotaMostrarDTO seleccionada = (CuotaMostrarDTO)dgv_cuotas.SelectedRows[0].DataBoundItem;
+                CuotaMostrarDTO seleccionada =
+                    (CuotaMostrarDTO)dgv_cuotas
+                        .SelectedRows[0]
+                        .DataBoundItem;
 
-                var cuotaMostrar = await CuotaApiClient.GetAsync(seleccionada.CuotaId);
-                if (cuotaMostrar == null) return;
+                var cuotaMostrar =
+                    await CuotaApiClient.GetAsync(
+                        seleccionada.CuotaId);
+
+                if (cuotaMostrar == null)
+                {
+                    return;
+                }
 
                 var cuota = new CuotaCreaActualizaDTO
                 {
@@ -74,42 +99,70 @@ namespace WindowsFormsApp
                     SocioId = cuotaMostrar.SocioId,
                     MesAnio = cuotaMostrar.MesAnio,
                     FechaPago = cuotaMostrar.FechaPago,
-                    Detalles = cuotaMostrar.Detalles?.Select(d => new DetalleCuotaCreaActualizaDTO
-                    {
-                        Concepto = d.Concepto,
-                        Subtotal = d.Subtotal,
-                        Monto = d.Monto
-                    }).ToList() ?? new List<DetalleCuotaCreaActualizaDTO>()
+
+                    Detalles = cuotaMostrar.Detalles?
+                        .Select(d => new DetalleCuotaCreaActualizaDTO
+                        {
+                            DetalleCuotaId = d.DetalleCuotaId,
+                            Concepto = d.Concepto,
+                            Subtotal = d.Subtotal,
+                            Monto = d.Monto
+                        })
+                        .ToList()
+                        ?? new List<DetalleCuotaCreaActualizaDTO>()
                 };
 
-                CuotaDetalle cuotaDetalle = new CuotaDetalle(cuota);
+                CuotaDetalle cuotaDetalle =
+                    new CuotaDetalle(cuota);
+
                 cuotaDetalle.ShowDialog();
 
                 await this.LoadCuotas();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar cuota para actualizar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    $"Error al cargar cuota para actualizar: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
         private async void btn_eliminar_Click(object sender, EventArgs e)
         {
-            if (dgv_cuotas.SelectedRows.Count == 0) return;
+            if (dgv_cuotas.SelectedRows.Count == 0)
+            {
+                return;
+            }
 
-            CuotaMostrarDTO seleccionada = (CuotaMostrarDTO)dgv_cuotas.SelectedRows[0].DataBoundItem;
-            var result = MessageBox.Show($"¿Está seguro que desea eliminar la cuota #{seleccionada.CuotaId}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            CuotaMostrarDTO seleccionada =
+                (CuotaMostrarDTO)dgv_cuotas
+                    .SelectedRows[0]
+                    .DataBoundItem;
+
+            var result = MessageBox.Show(
+                $"¿Está seguro que desea eliminar la cuota #{seleccionada.CuotaId}?",
+                "Confirmar",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
                 try
                 {
-                    await CuotaApiClient.DeleteAsync(seleccionada.CuotaId);
+                    await CuotaApiClient.DeleteAsync(
+                        seleccionada.CuotaId);
+
                     await this.LoadCuotas();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al eliminar cuota: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(
+                        $"Error al eliminar cuota: {ex.Message}",
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                 }
             }
         }

@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -36,13 +37,16 @@
             dtp_mesAnio = new DateTimePicker();
             lbl_mesAnio = new Label();
             dtg_detalle = new DataGridView();
-            txt_valor = new TextBox();
             btn_modificarItem = new Button();
             btn_eliminarItem = new Button();
             btn_cancelar = new Button();
             bton_agregarItem = new Button();
+            dtp_fechaPago = new DateTimePicker();
+            lbl_fechaPago = new Label();
+
             ((System.ComponentModel.ISupportInitialize)dtg_detalle).BeginInit();
             SuspendLayout();
+
             // 
             // lbl_title
             // 
@@ -52,6 +56,7 @@
             lbl_title.Size = new Size(116, 15);
             lbl_title.TabIndex = 0;
             lbl_title.Text = "DATOS DE LA CUOTA";
+
             // 
             // cmb_socios
             // 
@@ -60,15 +65,17 @@
             cmb_socios.Name = "cmb_socios";
             cmb_socios.Size = new Size(121, 23);
             cmb_socios.TabIndex = 1;
+
             // 
             // lbl_total
             // 
             lbl_total.AutoSize = true;
-            lbl_total.Location = new Point(524, 52);
+            lbl_total.Location = new Point(600, 52);
             lbl_total.Name = "lbl_total";
             lbl_total.Size = new Size(39, 15);
             lbl_total.TabIndex = 3;
-            lbl_total.Text = "Valor: ";
+            lbl_total.Text = "Total: ";
+
             // 
             // lbl_socio
             // 
@@ -78,6 +85,7 @@
             lbl_socio.Size = new Size(39, 15);
             lbl_socio.TabIndex = 5;
             lbl_socio.Text = "Socio:";
+
             // 
             // btn_aceptar
             // 
@@ -88,6 +96,7 @@
             btn_aceptar.Text = "Aceptar";
             btn_aceptar.UseVisualStyleBackColor = true;
             btn_aceptar.Click += btn_aceptar_Click;
+
             // 
             // dtp_mesAnio
             // 
@@ -97,6 +106,7 @@
             dtp_mesAnio.Name = "dtp_mesAnio";
             dtp_mesAnio.Size = new Size(98, 23);
             dtp_mesAnio.TabIndex = 11;
+
             // 
             // lbl_mesAnio
             // 
@@ -105,7 +115,8 @@
             lbl_mesAnio.Name = "lbl_mesAnio";
             lbl_mesAnio.Size = new Size(62, 15);
             lbl_mesAnio.TabIndex = 12;
-            lbl_mesAnio.Text = "Mes/Año :";
+            lbl_mesAnio.Text = "Mes/Año:";
+
             // 
             // dtg_detalle
             // 
@@ -114,13 +125,7 @@
             dtg_detalle.Name = "dtg_detalle";
             dtg_detalle.Size = new Size(690, 169);
             dtg_detalle.TabIndex = 16;
-            // 
-            // txt_valor
-            // 
-            txt_valor.Location = new Point(581, 47);
-            txt_valor.Name = "txt_valor";
-            txt_valor.Size = new Size(100, 23);
-            txt_valor.TabIndex = 17;
+
             // 
             // btn_modificarItem
             // 
@@ -131,6 +136,7 @@
             btn_modificarItem.Text = "Modificar Item";
             btn_modificarItem.UseVisualStyleBackColor = true;
             btn_modificarItem.Click += btn_modificarItem_Click;
+
             // 
             // btn_eliminarItem
             // 
@@ -141,6 +147,7 @@
             btn_eliminarItem.Text = "Eliminar Item";
             btn_eliminarItem.UseVisualStyleBackColor = true;
             btn_eliminarItem.Click += btn_eliminarItem_Click;
+
             // 
             // btn_cancelar
             // 
@@ -151,6 +158,7 @@
             btn_cancelar.Text = "Cancelar";
             btn_cancelar.UseVisualStyleBackColor = true;
             btn_cancelar.Click += btn_cancelar_Click;
+
             // 
             // bton_agregarItem
             // 
@@ -161,17 +169,39 @@
             bton_agregarItem.Text = "Agregar Item";
             bton_agregarItem.UseVisualStyleBackColor = true;
             bton_agregarItem.Click += btn_agregar_item_Click;
+
+            // 
+            // dtp_fechaPago
+            // 
+            dtp_fechaPago.Format = DateTimePickerFormat.Short;
+            dtp_fechaPago.Location = new Point(570, 82);
+            dtp_fechaPago.Name = "dtp_fechaPago";
+            dtp_fechaPago.Size = new Size(111, 23);
+            dtp_fechaPago.TabIndex = 23;
+
+            // 
+            // lbl_fechaPago
+            // 
+            lbl_fechaPago.AutoSize = true;
+            lbl_fechaPago.Location = new Point(480, 85);
+            lbl_fechaPago.Name = "lbl_fechaPago";
+            lbl_fechaPago.Size = new Size(74, 15);
+            lbl_fechaPago.TabIndex = 24;
+            lbl_fechaPago.Text = "Fecha Pago:";
+
             // 
             // CuotaDetalle
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+
+            Controls.Add(lbl_fechaPago);
+            Controls.Add(dtp_fechaPago);
             Controls.Add(bton_agregarItem);
             Controls.Add(btn_cancelar);
             Controls.Add(btn_eliminarItem);
             Controls.Add(btn_modificarItem);
-            Controls.Add(txt_valor);
             Controls.Add(dtg_detalle);
             Controls.Add(lbl_mesAnio);
             Controls.Add(dtp_mesAnio);
@@ -180,9 +210,11 @@
             Controls.Add(lbl_total);
             Controls.Add(cmb_socios);
             Controls.Add(lbl_title);
+
             Name = "CuotaDetalle";
             Text = "CuotaDetalle";
             Load += CuotaDetalle_Load;
+
             ((System.ComponentModel.ISupportInitialize)dtg_detalle).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -194,16 +226,15 @@
         private ComboBox cmb_socios;
         private Label lbl_total;
         private Label lbl_socio;
-        private Button btn_agregar;
         private Button btn_aceptar;
         private DateTimePicker dtp_mesAnio;
         private Label lbl_mesAnio;
         private DataGridView dtg_detalle;
-        private TextBox txt_valor;
-        private Button button1;
         private Button btn_modificarItem;
         private Button btn_eliminarItem;
         private Button btn_cancelar;
         private Button bton_agregarItem;
+        private DateTimePicker dtp_fechaPago;
+        private Label lbl_fechaPago;
     }
 }

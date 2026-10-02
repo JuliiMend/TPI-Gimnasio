@@ -1,0 +1,28 @@
+﻿@using API.Clients
+@using Microsoft.AspNetCore.Components
+
+@if (autenticado)
+{
+    <RouteView RouteData="RouteData" DefaultLayout="typeof(Layout.MainLayout)" />
+}
+
+@code {
+    [Parameter]
+    public RouteData RouteData { get; set; } = default!;
+
+private bool autenticado;
+
+    protected override async Task OnInitializedAsync()
+    {
+        autenticado = await AuthServiceProvider.Instance.IsAuthenticatedAsync();
+
+        if (!autenticado)
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+}

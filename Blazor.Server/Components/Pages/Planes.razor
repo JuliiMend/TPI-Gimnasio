@@ -1,7 +1,15 @@
 ﻿@page "/planes"
 @using DTOs
+@using API.Clients
 
 <h3>Planes</h3>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
 
 <table class="table">
     <thead>
@@ -27,22 +35,23 @@
 </table>
 
 @code {
-    private List<PlanMostrarDTO> planes = new()
-    {
-        new PlanMostrarDTO
-        {
-            Nombre = "Premium",
-            Tipo = "Musculación",
-            Precio = 25000,
-            Descripcion = "Acceso al sector de musculación"
-        },
+    private List<PlanMostrarDTO> planes = new();
+    private string mensaje = string.Empty;
 
-        new PlanMostrarDTO
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarPlanes();
+    }
+
+    private async Task CargarPlanes()
+    {
+        try
         {
-            Nombre = "Básico",
-            Tipo = "Cardio",
-            Precio = 18000,
-            Descripcion = "Acceso al sector de cardio"
+            planes = (await PlanApiClient.GetAllAsync()).ToList();
         }
-    };
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los planes: {ex.Message}";
+        }
+    }
 }

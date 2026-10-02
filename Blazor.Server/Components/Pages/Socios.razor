@@ -1,5 +1,6 @@
 ﻿@page "/socios"
 @using DTOs
+@using API.Clients
 
 <h3>Socios</h3>
 
@@ -19,77 +20,143 @@
             <div class="col-md-6 mb-3">
                 <label>DNI</label>
                 <input class="form-control" @bind="socioActual.Dni" />
+
+                @if (!string.IsNullOrEmpty(errorDni))
+                {
+                    <div class="text-danger">@errorDni</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Nombre</label>
                 <input class="form-control" @bind="socioActual.Nombre" />
+
+                @if (!string.IsNullOrEmpty(errorNombre))
+                {
+                    <div class="text-danger">@errorNombre</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Apellido</label>
                 <input class="form-control" @bind="socioActual.Apellido" />
+
+                @if (!string.IsNullOrEmpty(errorApellido))
+                {
+                    <div class="text-danger">@errorApellido</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Teléfono</label>
                 <input class="form-control" @bind="socioActual.Telefono" />
+
+                @if (!string.IsNullOrEmpty(errorTelefono))
+                {
+                    <div class="text-danger">@errorTelefono</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Fecha de nacimiento</label>
-                <input type="date" class="form-control" @bind="socioActual.FechaNac" />
+                <input type="date"
+                       class="form-control"
+                       @bind="socioActual.FechaNac" />
+
+                @if (!string.IsNullOrEmpty(errorFechaNac))
+                {
+                    <div class="text-danger">@errorFechaNac</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Fecha de alta</label>
-                <input type="date" class="form-control" @bind="socioActual.FechaAlta" />
+                <input type="date"
+                       class="form-control"
+                       @bind="socioActual.FechaAlta" />
+
+                @if (!string.IsNullOrEmpty(errorFechaAlta))
+                {
+                    <div class="text-danger">@errorFechaAlta</div>
+                }
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Fecha de baja</label>
-                <input type="date" class="form-control" @bind="socioActual.FechaBaja" />
-            </div>
+            @if (editando)
+            {
+                <div class="col-md-6 mb-3">
+                    <label>Fecha de baja</label>
+                    <input type="date"
+                           class="form-control"
+                           @bind="socioActual.FechaBaja" />
+                </div>
+            }
 
             <div class="col-md-6 mb-3">
                 <label>Plan</label>
+
                 <select class="form-select" @bind="socioActual.IdPlan">
                     <option value="0">Seleccionar plan</option>
-                    <option value="1">Premium</option>
-                    <option value="2">Básico</option>
+                    <option value="1">Pase Libre</option>
+                    <option value="2">Premium</option>
+                    <option value="3">Básico</option>
                 </select>
+
+                @if (!string.IsNullOrEmpty(errorPlan))
+                {
+                    <div class="text-danger">@errorPlan</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Username</label>
                 <input class="form-control" @bind="socioActual.Username" />
+
+                @if (!string.IsNullOrEmpty(errorUsername))
+                {
+                    <div class="text-danger">@errorUsername</div>
+                }
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>Email</label>
-                <input type="email" class="form-control" @bind="socioActual.Email" />
+                <input type="email"
+                       class="form-control"
+                       @bind="socioActual.Email" />
+
+                @if (!string.IsNullOrEmpty(errorEmail))
+                {
+                    <div class="text-danger">@errorEmail</div>
+                }
             </div>
 
             @if (!editando)
             {
                 <div class="col-md-6 mb-3">
                     <label>Password</label>
-                    <input type="password" class="form-control" @bind="socioActual.Password" />
+                    <input type="password"
+                           class="form-control"
+                           @bind="socioActual.Password" />
+
+                    @if (!string.IsNullOrEmpty(errorPassword))
+                    {
+                        <div class="text-danger">@errorPassword</div>
+                    }
                 </div>
             }
 
-        </div>
-
-        <div>
-            <button class="btn btn-success me-2" @onclick="Guardar">
-                Guardar
-            </button>
-
-            <button class="btn btn-secondary" @onclick="Cancelar">
-                Cancelar
-            </button>
-        </div>
     </div>
+
+    <div>
+        <button class="btn btn-success me-2" @onclick="Guardar">
+            Guardar
+        </button>
+
+        <button class="btn btn-secondary" @onclick="Cancelar">
+            Cancelar
+        </button>
+    </div>
+</div>
+
 }
 
 @if (!string.IsNullOrEmpty(mensaje))
@@ -143,51 +210,58 @@
 </table>
 
 @code {
-
-    private bool mostrarFormulario = false;
+private bool mostrarFormulario = false;
     private bool editando = false;
 
     private string mensaje = string.Empty;
+
+    private string errorDni = string.Empty;
+    private string errorNombre = string.Empty;
+    private string errorApellido = string.Empty;
+    private string errorTelefono = string.Empty;
+    private string errorFechaNac = string.Empty;
+    private string errorFechaAlta = string.Empty;
+    private string errorPlan = string.Empty;
+    private string errorUsername = string.Empty;
+    private string errorEmail = string.Empty;
+    private string errorPassword = string.Empty;
 
     private SocioCreaActualizaDTO socioActual = new();
 
     private int idSocioEditando;
 
-    private List<SocioMostrarDTO> socios = new()
+    private List<SocioMostrarDTO> socios = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        new SocioMostrarDTO
-        {
-            IdPersona = 1,
-            Dni = "12345678",
-            Nombre = "Juan",
-            Apellido = "Pérez",
-            Telefono = "3400123456",
-            NombrePlan = "Premium",
-            IdPlan = 1,
-            FechaAlta = new DateTime(2026, 9, 1),
-            FechaNac = new DateTime(2000, 5, 10),
-            Username = "juanperez",
-            Email = "juan@gmail.com",
-            UsuarioActivo = true
-        },
+        await CargarSocios();
+    }
 
-        new SocioMostrarDTO
+    private async Task CargarSocios()
+    {
+        try
         {
-            IdPersona = 2,
-            Dni = "87654321",
-            Nombre = "María",
-            Apellido = "Gómez",
-            Telefono = "3400987654",
-            NombrePlan = "Básico",
-            IdPlan = 2,
-            FechaAlta = new DateTime(2026, 8, 15),
-            FechaNac = new DateTime(1999, 3, 20),
-            Username = "mariagomez",
-            Email = "maria@gmail.com",
-            UsuarioActivo = true
+            socios = (await SocioApiClient.GetAllAsync()).ToList();
         }
-    };
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los socios: {ex.Message}";
+        }
+    }
 
+    private void LimpiarErrores()
+    {
+        errorDni = string.Empty;
+        errorNombre = string.Empty;
+        errorApellido = string.Empty;
+        errorTelefono = string.Empty;
+        errorFechaNac = string.Empty;
+        errorFechaAlta = string.Empty;
+        errorPlan = string.Empty;
+        errorUsername = string.Empty;
+        errorEmail = string.Empty;
+        errorPassword = string.Empty;
+    }
 
     private void NuevoSocio()
     {
@@ -199,8 +273,9 @@
         editando = false;
         mostrarFormulario = true;
         mensaje = string.Empty;
-    }
 
+        LimpiarErrores();
+    }
 
     private void EditarSocio(SocioMostrarDTO socio)
     {
@@ -223,88 +298,134 @@
         editando = true;
         mostrarFormulario = true;
         mensaje = string.Empty;
+
+        LimpiarErrores();
     }
 
-
-    private void Guardar()
+    private bool Validar()
     {
-        if (editando)
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(socioActual.Dni))
         {
-            var socio = socios.FirstOrDefault(s => s.IdPersona == idSocioEditando);
+            errorDni = "Ingresá el DNI.";
+            valido = false;
+        }
 
-            if (socio != null)
+        if (string.IsNullOrWhiteSpace(socioActual.Nombre))
+        {
+            errorNombre = "Ingresá el nombre.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(socioActual.Apellido))
+        {
+            errorApellido = "Ingresá el apellido.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(socioActual.Telefono))
+        {
+            errorTelefono = "Ingresá el teléfono.";
+            valido = false;
+        }
+
+        if (socioActual.FechaNac == DateTime.MinValue)
+        {
+            errorFechaNac = "Ingresá la fecha de nacimiento.";
+            valido = false;
+        }
+
+        if (socioActual.FechaAlta == DateTime.MinValue)
+        {
+            errorFechaAlta = "Ingresá la fecha de alta.";
+            valido = false;
+        }
+
+        if (socioActual.IdPlan == 0)
+        {
+            errorPlan = "Seleccioná un plan.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(socioActual.Username))
+        {
+            errorUsername = "Ingresá el username.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(socioActual.Email))
+        {
+            errorEmail = "Ingresá el email.";
+            valido = false;
+        }
+
+        if (!editando && string.IsNullOrWhiteSpace(socioActual.Password))
+        {
+            errorPassword = "Ingresá una contraseña.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
             {
-                socio.Dni = socioActual.Dni;
-                socio.Nombre = socioActual.Nombre;
-                socio.Apellido = socioActual.Apellido;
-                socio.Telefono = socioActual.Telefono;
-                socio.FechaNac = socioActual.FechaNac;
-                socio.FechaAlta = socioActual.FechaAlta;
-                socio.FechaBaja = socioActual.FechaBaja;
-                socio.IdPlan = socioActual.IdPlan;
-                socio.Username = socioActual.Username;
-                socio.Email = socioActual.Email;
+                await SocioApiClient.UpdateAsync(
+                    idSocioEditando,
+                    socioActual);
 
-                socio.NombrePlan = ObtenerNombrePlan(socioActual.IdPlan);
+                mensaje = "Socio modificado correctamente.";
+            }
+            else
+            {
+                await SocioApiClient.AddAsync(socioActual);
+
+                mensaje = "Socio creado correctamente.";
             }
 
-            mensaje = "Socio modificado correctamente.";
+            await CargarSocios();
+
+            mostrarFormulario = false;
         }
-        else
+        catch (Exception ex)
         {
-            var nuevoSocio = new SocioMostrarDTO
-            {
-                IdPersona = socios.Count + 1,
-                Dni = socioActual.Dni,
-                Nombre = socioActual.Nombre,
-                Apellido = socioActual.Apellido,
-                Telefono = socioActual.Telefono,
-                FechaNac = socioActual.FechaNac,
-                FechaAlta = socioActual.FechaAlta,
-                FechaBaja = socioActual.FechaBaja,
-                IdPlan = socioActual.IdPlan,
-                NombrePlan = ObtenerNombrePlan(socioActual.IdPlan),
-                Username = socioActual.Username,
-                Email = socioActual.Email,
-                UsuarioActivo = true
-            };
-
-            socios.Add(nuevoSocio);
-
-            mensaje = "Socio creado correctamente.";
+            mensaje = $"Error al guardar el socio: {ex.Message}";
         }
-
-        mostrarFormulario = false;
     }
 
-
-    private void EliminarSocio(SocioMostrarDTO socio)
+    private async Task EliminarSocio(SocioMostrarDTO socio)
     {
-        socios.Remove(socio);
+        try
+        {
+            await SocioApiClient.DeleteAsync(socio.IdPersona);
 
-        mensaje = "Socio eliminado correctamente.";
+            await CargarSocios();
+
+            mensaje = "Socio eliminado correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el socio: {ex.Message}";
+        }
     }
-
 
     private void Cancelar()
     {
         mostrarFormulario = false;
         mensaje = string.Empty;
-    }
 
-
-    private string ObtenerNombrePlan(int idPlan)
-    {
-        if (idPlan == 1)
-        {
-            return "Premium";
-        }
-
-        if (idPlan == 2)
-        {
-            return "Básico";
-        }
-
-        return "Sin plan";
+        LimpiarErrores();
     }
 }

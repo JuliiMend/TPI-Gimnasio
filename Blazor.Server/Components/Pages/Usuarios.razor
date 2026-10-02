@@ -1,5 +1,7 @@
 ﻿@page "/usuarios"
 @using DTOs
+@using API.Clients
+@rendermode InteractiveServer
 
 <h3>Usuarios</h3>
 
@@ -8,6 +10,13 @@
         + Nuevo usuario
     </button>
 </div>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert @(esError ? "alert-danger" : "alert-info")">
+        @mensaje
+    </div>
+}
 
 @if (mostrarFormulario)
 {
@@ -23,6 +32,11 @@
                 <input type="text"
                        class="form-control"
                        @bind="usuarioActual.Username" />
+
+                @if (!string.IsNullOrEmpty(errorUsername))
+                {
+                    <div class="text-danger">@errorUsername</div>
+                }
             </div>
 
             <div class="col-md-4 mb-3">
@@ -31,6 +45,11 @@
                 <input type="email"
                        class="form-control"
                        @bind="usuarioActual.Email" />
+
+                @if (!string.IsNullOrEmpty(errorEmail))
+                {
+                    <div class="text-danger">@errorEmail</div>
+                }
             </div>
 
             <div class="col-md-4 mb-3">
@@ -39,6 +58,18 @@
                 <input type="password"
                        class="form-control"
                        @bind="usuarioActual.Password" />
+
+                @if (editando)
+                {
+                    <small class="text-muted">
+                        Dejá vacío si no querés cambiar la contraseña.
+                    </small>
+                }
+
+                @if (!string.IsNullOrEmpty(errorPassword))
+                {
+                    <div class="text-danger">@errorPassword</div>
+                }
             </div>
 
         </div>
@@ -58,87 +89,110 @@
     </div>
 }
 
-@if (!string.IsNullOrEmpty(mensaje))
+@if (cargando)
 {
-    <div class="alert alert-info">
-        @mensaje
-    </div>
+    <p>Cargando usuarios...</p>
 }
+else if (usuarios.Count == 0)
+{
+    <p>No hay usuarios registrados.</p>
+}
+else
+{
+    <table class="table">
 
-<table class="table">
-
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        @foreach (var usuario in usuarios)
-        {
+        <thead>
             <tr>
-
-                <td>@usuario.UsuarioId</td>
-
-                <td>@usuario.Username</td>
-
-                <td>
-
-                    <button class="btn btn-sm btn-warning me-2"
-                            @onclick="() => EditarUsuario(usuario)">
-                        Editar
-                    </button>
-
-                    <button class="btn btn-sm btn-danger"
-                            @onclick="() => EliminarUsuario(usuario)">
-                        Eliminar
-                    </button>
-
-                </td>
-
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
             </tr>
-        }
+        </thead>
 
-    </tbody>
+        <tbody>
 
-</table>
+            @foreach (var usuario in usuarios)
+            {
+                <tr>
 
+                    <td>@usuario.UsuarioId</td>
+
+                    <td>@usuario.Username</td>
+
+                    <td>@usuario.Email</td>
+
+                    <td>@usuario.Rol</td>
+
+                    <td>
+
+                        <button class="btn btn-sm btn-warning me-2"
+                                @onclick="() => EditarUsuario(usuario)">
+                            Editar
+                        </button>
+
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => EliminarUsuario(usuario)">
+                            Eliminar
+                        </button>
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+}
 
 @code {
 
     private bool mostrarFormulario = false;
     private bool editando = false;
+    private bool cargando = true;
 
     private string mensaje = string.Empty;
+    private bool esError = false;
+
+    private string errorUsername = string.Empty;
+    private string errorEmail = string.Empty;
+    private string errorPassword = string.Empty;
 
     private UsuarioCreaActualizaDTO usuarioActual = new();
 
     private int idUsuarioEditando;
 
+    private List<UsuarioMostrarDTO> usuarios = new();
 
-    private List<UsuarioMostrarDTO> usuarios = new()
+
+    protected override async Task OnInitializedAsync()
     {
-        new UsuarioMostrarDTO
-        {
-            UsuarioId = 1,
-            Username = "juanperez"
-        },
+        await CargarUsuarios();
+    }
 
-        new UsuarioMostrarDTO
-        {
-            UsuarioId = 2,
-            Username = "mariagomez"
-        },
 
-        new UsuarioMostrarDTO
+    private async Task CargarUsuarios()
+    {
+        try
         {
-            UsuarioId = 3,
-            Username = "admin"
+            cargando = true;
+
+            var resultado = await UsuarioApiClient.GetAllAsync();
+
+            usuarios = resultado.ToList();
         }
-    };
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los usuarios: {ex.Message}";
+            esError = true;
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
 
 
     private void NuevoUsuario()
@@ -148,7 +202,8 @@
         editando = false;
         mostrarFormulario = true;
 
-        mensaje = string.Empty;
+        LimpiarErrores();
+        LimpiarMensaje();
     }
 
 
@@ -159,53 +214,101 @@
         usuarioActual = new UsuarioCreaActualizaDTO
         {
             Username = usuario.Username,
-            Email = "",
-            Password = ""
+            Email = usuario.Email,
+            Password = string.Empty
         };
 
         editando = true;
         mostrarFormulario = true;
 
-        mensaje = string.Empty;
+        LimpiarErrores();
+        LimpiarMensaje();
     }
 
 
-    private void Guardar()
+    private async Task Guardar()
     {
-        if (editando)
-        {
-            var usuario = usuarios.FirstOrDefault(
-                u => u.UsuarioId == idUsuarioEditando);
+        LimpiarErrores();
+        LimpiarMensaje();
 
-            if (usuario != null)
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
             {
-                usuario.Username = usuarioActual.Username;
+                await UsuarioApiClient.UpdateAsync(
+                    idUsuarioEditando,
+                    usuarioActual);
+
+                mensaje = "Usuario modificado correctamente.";
+            }
+            else
+            {
+                await UsuarioApiClient.AddAsync(usuarioActual);
+
+                mensaje = "Usuario creado correctamente.";
             }
 
-            mensaje = "Usuario modificado correctamente.";
+            esError = false;
+            mostrarFormulario = false;
+
+            await CargarUsuarios();
         }
-        else
+        catch (Exception ex)
         {
-            var nuevoUsuario = new UsuarioMostrarDTO
-            {
-                UsuarioId = usuarios.Count + 1,
-                Username = usuarioActual.Username
-            };
-
-            usuarios.Add(nuevoUsuario);
-
-            mensaje = "Usuario creado correctamente.";
+            mensaje = $"Error al guardar el usuario: {ex.Message}";
+            esError = true;
         }
-
-        mostrarFormulario = false;
     }
 
 
-    private void EliminarUsuario(UsuarioMostrarDTO usuario)
+    private async Task EliminarUsuario(UsuarioMostrarDTO usuario)
     {
-        usuarios.Remove(usuario);
+        try
+        {
+            await UsuarioApiClient.DeleteAsync(usuario.UsuarioId);
 
-        mensaje = "Usuario eliminado correctamente.";
+            mensaje = "Usuario eliminado correctamente.";
+            esError = false;
+
+            await CargarUsuarios();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el usuario: {ex.Message}";
+            esError = true;
+        }
+    }
+
+
+    private bool Validar()
+    {
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(usuarioActual.Username))
+        {
+            errorUsername = "El username es obligatorio.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(usuarioActual.Email))
+        {
+            errorEmail = "El email es obligatorio.";
+            valido = false;
+        }
+
+        if (!editando &&
+            string.IsNullOrWhiteSpace(usuarioActual.Password))
+        {
+            errorPassword = "La contraseña es obligatoria.";
+            valido = false;
+        }
+
+        return valido;
     }
 
 
@@ -213,8 +316,22 @@
     {
         mostrarFormulario = false;
 
+        LimpiarErrores();
+        LimpiarMensaje();
+    }
+
+
+    private void LimpiarErrores()
+    {
+        errorUsername = string.Empty;
+        errorEmail = string.Empty;
+        errorPassword = string.Empty;
+    }
+
+
+    private void LimpiarMensaje()
+    {
         mensaje = string.Empty;
+        esError = false;
     }
 }
-
-

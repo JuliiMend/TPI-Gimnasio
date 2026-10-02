@@ -28,7 +28,11 @@ namespace WindowsFormsApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al inicializar ventana: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    $"Error al inicializar ventana: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -41,6 +45,7 @@ namespace WindowsFormsApp
             cmb_socios.DataSource = socios.ToList();
             cmb_socios.SelectedIndex = -1;
         }
+
         private void SetCuota()
         {
             if (this.cuota.CuotaId > 0)
@@ -48,11 +53,20 @@ namespace WindowsFormsApp
                 cmb_socios.SelectedValue = this.cuota.SocioId;
 
                 string periodo = this.cuota.MesAnio.ToString();
+
                 if (periodo.Length >= 4)
                 {
                     int anio = int.Parse(periodo.Substring(0, 4));
-                    int mes = periodo.Length == 6 ? int.Parse(periodo.Substring(4, 2)) : 1;
+                    int mes = periodo.Length == 6
+                        ? int.Parse(periodo.Substring(4, 2))
+                        : 1;
+
                     dtp_mesAnio.Value = new DateTime(anio, mes, 1);
+                }
+
+                if (this.cuota.FechaPago != DateTime.MinValue)
+                {
+                    dtp_fechaPago.Value = this.cuota.FechaPago;
                 }
 
                 itemsLocales = this.cuota.Detalles != null
@@ -62,6 +76,7 @@ namespace WindowsFormsApp
             else
             {
                 itemsLocales = new List<DetalleCuotaCreaActualizaDTO>();
+                dtp_fechaPago.Value = DateTime.Today;
             }
 
             RefreshItemsGrid();
@@ -69,8 +84,11 @@ namespace WindowsFormsApp
 
         private void btn_agregar_item_Click(object sender, EventArgs e)
         {
-            DetalleCuotaCreaActualizaDTO nuevoItem = new DetalleCuotaCreaActualizaDTO();
-            ItemCuotaDetalle itemDetalle = new ItemCuotaDetalle(nuevoItem);
+            DetalleCuotaCreaActualizaDTO nuevoItem =
+                new DetalleCuotaCreaActualizaDTO();
+
+            ItemCuotaDetalle itemDetalle =
+                new ItemCuotaDetalle(nuevoItem);
 
             if (itemDetalle.ShowDialog() == DialogResult.OK)
             {
@@ -83,13 +101,21 @@ namespace WindowsFormsApp
         {
             if (dtg_detalle.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Seleccioná un ítem de la lista para modificar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "Seleccioná un ítem de la lista para modificar.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
                 return;
             }
 
-            DetalleCuotaCreaActualizaDTO selectedItem = (DetalleCuotaCreaActualizaDTO)dtg_detalle.SelectedRows[0].DataBoundItem;
+            DetalleCuotaCreaActualizaDTO selectedItem =
+                (DetalleCuotaCreaActualizaDTO)
+                dtg_detalle.SelectedRows[0].DataBoundItem;
 
-            ItemCuotaDetalle itemDetalle = new ItemCuotaDetalle(selectedItem);
+            ItemCuotaDetalle itemDetalle =
+                new ItemCuotaDetalle(selectedItem);
 
             if (itemDetalle.ShowDialog() == DialogResult.OK)
             {
@@ -101,8 +127,12 @@ namespace WindowsFormsApp
         {
             if (dtg_detalle.SelectedRows.Count > 0)
             {
-                DetalleCuotaCreaActualizaDTO selectedItem = (DetalleCuotaCreaActualizaDTO)dtg_detalle.SelectedRows[0].DataBoundItem;
+                DetalleCuotaCreaActualizaDTO selectedItem =
+                    (DetalleCuotaCreaActualizaDTO)
+                    dtg_detalle.SelectedRows[0].DataBoundItem;
+
                 itemsLocales.Remove(selectedItem);
+
                 RefreshItemsGrid();
             }
         }
@@ -113,6 +143,7 @@ namespace WindowsFormsApp
             dtg_detalle.DataSource = itemsLocales;
 
             decimal total = itemsLocales.Sum(i => i.Monto);
+
             lbl_total.Text = $"Total: ${total:F2}";
         }
 
@@ -123,19 +154,28 @@ namespace WindowsFormsApp
                 MessageBox.Show("Debe seleccionar un socio.");
                 return;
             }
+
             if (itemsLocales.Count == 0)
             {
-                MessageBox.Show("Debe agregar al menos un detalle a la cuota.");
+                MessageBox.Show(
+                    "Debe agregar al menos un detalle a la cuota.");
+
                 return;
             }
 
             try
             {
-                this.cuota.SocioId = (int)cmb_socios.SelectedValue;
+                this.cuota.SocioId =
+                    (int)cmb_socios.SelectedValue;
 
-                this.cuota.MesAnio = int.Parse(dtp_mesAnio.Value.ToString("yyyyMM"));
+                this.cuota.MesAnio =
+                    int.Parse(dtp_mesAnio.Value.ToString("yyyyMM"));
 
-                this.cuota.Detalles = itemsLocales;
+                this.cuota.FechaPago =
+                    dtp_fechaPago.Value;
+
+                this.cuota.Detalles =
+                    itemsLocales;
 
                 btn_aceptar.Enabled = false;
 
@@ -153,7 +193,12 @@ namespace WindowsFormsApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al guardar cuota: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    $"Error al guardar cuota: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 btn_aceptar.Enabled = true;
             }
         }
@@ -163,6 +208,5 @@ namespace WindowsFormsApp
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-
     }
 }

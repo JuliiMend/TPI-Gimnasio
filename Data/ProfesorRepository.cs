@@ -1,6 +1,7 @@
 using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Data
@@ -31,12 +32,14 @@ namespace Data
         public async Task AgregarAsync(Profesor profesor)
         {
             await _context.Profesores.AddAsync(profesor);
+
             await _context.SaveChangesAsync();
         }
 
         public async Task ActualizarAsync(Profesor profesor)
         {
-            var profesorTrackeado = _context.Profesores.Local.FirstOrDefault(p => p.PersonaId == profesor.PersonaId);
+            var profesorTrackeado = _context.Profesores.Local
+                .FirstOrDefault(p => p.PersonaId == profesor.PersonaId);
 
             if (profesorTrackeado != null)
             {
@@ -44,17 +47,27 @@ namespace Data
             }
 
             _context.Profesores.Update(profesor);
+
             await _context.SaveChangesAsync();
         }
 
         public async Task EliminarAsync(int id)
         {
             Profesor? profesor = await _context.Profesores
+                .Include(p => p.Usuario)
                 .FirstOrDefaultAsync(p => p.PersonaId == id);
 
             if (profesor != null)
             {
+                var usuario = profesor.Usuario;
+
                 _context.Profesores.Remove(profesor);
+
+                if (usuario != null)
+                {
+                    _context.Usuarios.Remove(usuario);
+                }
+
                 await _context.SaveChangesAsync();
             }
         }

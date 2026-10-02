@@ -1,5 +1,74 @@
-﻿<h3>Login</h3>
+﻿@page "/login"
+@using API.Clients
+@rendermode InteractiveServer
+
+<PageTitle>Login</PageTitle>
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+
+        <div class="card p-4 mt-5">
+
+            <h3 class="text-center mb-4">Iniciar sesión</h3>
+
+            <div class="mb-3">
+                <label>Usuario</label>
+                <input class="form-control" @bind="username" />
+            </div>
+
+            <div class="mb-3">
+                <label>Contraseña</label>
+                <input type="password" class="form-control" @bind="password" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert alert-danger">
+                    @mensaje
+                </div>
+            }
+
+            <button class="btn btn-primary w-100"
+                    @onclick="IniciarSesion">
+                Iniciar sesión
+            </button>
+
+        </div>
+
+    </div>
+</div>
 
 @code {
 
+    private string username = string.Empty;
+    private string password = string.Empty;
+    private string mensaje = string.Empty;
+
+    private async Task IniciarSesion()
+    {
+        mensaje = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(username) ||
+            string.IsNullOrWhiteSpace(password))
+        {
+            mensaje = "Completá usuario y contraseña.";
+            return;
+        }
+
+        var authService = AuthServiceProvider.Instance;
+
+        var resultado = await authService.LoginAsync(username, password);
+
+        if (resultado)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            mensaje = "Usuario o contraseña incorrectos.";
+        }
+    }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
 }

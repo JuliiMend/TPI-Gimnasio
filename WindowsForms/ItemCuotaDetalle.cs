@@ -62,5 +62,10 @@ namespace WindowsFormsApp
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
+
+        private void ItemCuotaDetalle_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
