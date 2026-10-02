@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 namespace API.Clients
@@ -6,12 +6,15 @@ namespace API.Clients
     public class AuthService : IAuthService
     {
         private readonly AuthApiClient _apiClient = new AuthApiClient();
+        private string? _token;
+        private string? _username;
+        private string? _rol;
 
         public event Action<bool>? AuthenticationStateChanged;
 
-        public Task<bool> IsAuthenticatedAsync() => Task.FromResult(true);
-        public Task<string?> GetTokenAsync() => Task.FromResult<string?>("token_simulado");
-        public Task<string?> GetUsernameAsync() => Task.FromResult<string?>("SocioTest");
+        public Task<bool> IsAuthenticatedAsync() => Task.FromResult(!string.IsNullOrEmpty(_token));
+        public Task<string?> GetTokenAsync() => Task.FromResult(_token);
+        public Task<string?> GetUsernameAsync() => Task.FromResult(_username);
 
         public async Task<bool> LoginAsync(string username, string password)
         {
@@ -19,8 +22,11 @@ namespace API.Clients
 
             var response = await _apiClient.LoginAsync(request);
 
-            if (response != null)
+            if (response != null && response.Exito && !string.IsNullOrEmpty(response.Token))
             {
+                _token = response.Token;
+                _username = response.Username;
+                _rol = response.Rol;
                 AuthenticationStateChanged?.Invoke(true);
                 return true;
             }
@@ -28,7 +34,15 @@ namespace API.Clients
             return false;
         }
 
-        public Task LogoutAsync() => Task.CompletedTask;
+        public Task LogoutAsync()
+        {
+            _token = null;
+            _username = null;
+            _rol = null;
+            AuthenticationStateChanged?.Invoke(false);
+            return Task.CompletedTask;
+        }
+
         public Task CheckTokenExpirationAsync() => Task.CompletedTask;
         public Task<bool> HasPermissionAsync(string permission) => Task.FromResult(true);
     }

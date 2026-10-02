@@ -1,4 +1,4 @@
-﻿using Data;
+using Data;
 using Domain.Model;
 using DTOs;
 using System;
@@ -65,7 +65,7 @@ namespace Application.Services
             };
         }
 
-        public async Task AgregarAsync(CuotaCreaActualizaDTO cuotaDto)
+        public async Task<int> AgregarAsync(CuotaCreaActualizaDTO cuotaDto)
         {
             var cuota = new Cuota
             {
@@ -82,6 +82,7 @@ namespace Application.Services
             };
 
             await _cuotaRepository.AgregarAsync(cuota);
+            return cuota.CuotaId;
         }
 
         public async Task ActualizarAsync(int id, CuotaCreaActualizaDTO cuotaDto)

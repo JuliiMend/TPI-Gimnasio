@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using DTOs;
 using System;
 using System.Threading.Tasks; 
@@ -58,7 +58,7 @@ namespace WindowsFormsApp
             }
             else
             {
-                await TurnoApiClient.UpdateAsync(turnoDto);
+                await TurnoApiClient.UpdateAsync(_idTurno.Value, turnoDto);
 
                 MessageBox.Show(
                     "Turno modificado correctamente.",

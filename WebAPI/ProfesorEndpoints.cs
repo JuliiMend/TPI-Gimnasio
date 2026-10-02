@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using DTOs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -26,20 +26,21 @@ namespace WebAPI
 
             grupo.MapPost("/", async (ProfesorCreaActualizaDTO dto, IProfesorService profesorService) =>
             {
-                await profesorService.AgregarAsync(dto);
-                return Results.Ok("Profesor creado con éxito");
+                var id = await profesorService.AgregarAsync(dto);
+                var profesor = await profesorService.ObtenerPorIdAsync(id);
+                return Results.Created($"/api/profesores/{id}", profesor);
             });
 
             grupo.MapPut("/{id}", async (int id, ProfesorCreaActualizaDTO dto, IProfesorService profesorService) =>
             {
                 await profesorService.ActualizarAsync(id, dto);
-                return Results.Ok("Profesor actualizado con éxito");
+                return Results.NoContent();
             });
 
             grupo.MapDelete("/{id}", async (int id, IProfesorService profesorService) =>
             {
                 await profesorService.EliminarAsync(id);
-                return Results.Ok("Profesor eliminado con éxito");
+                return Results.NoContent();
             });
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ namespace Application.Services
 {
     public interface ISocioService
     {
-        Task<List<SocioMostrarDTO>> ObtenerTodosAsync(SocioCriteriaDTO criterios);
+        Task<List<SocioMostrarDTO>> ObtenerTodosAsync(SocioCriteriaDTO? criterios);
         Task<SocioMostrarDTO?> ObtenerPorIdAsync(int id);
         Task <int> AgregarAsync(SocioCreaActualizaDTO socioDto);
         Task ActualizarAsync(int id, SocioCreaActualizaDTO socioDto);

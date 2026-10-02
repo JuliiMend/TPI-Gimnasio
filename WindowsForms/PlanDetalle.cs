@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using DTOs;
 using System;
 using System.Globalization;
@@ -125,7 +125,7 @@ namespace WindowsFormsApp
             {
                 if (PlanId.HasValue)
                 {
-                    await PlanApiClient.UpdateAsync(planDto);
+                    await PlanApiClient.UpdateAsync(PlanId.Value, planDto);
 
                     MessageBox.Show(
                         "Plan actualizado correctamente.",

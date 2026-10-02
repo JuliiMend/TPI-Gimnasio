@@ -1,4 +1,4 @@
-﻿using Data;
+using Data;
 using Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,7 @@ namespace Data
         {
             var query = _context.Socios
                 .Include(s => s.Plan)
+                .Include(s => s.Usuario)
                 .AsQueryable();
 
             if (criterios != null)
@@ -54,6 +55,7 @@ namespace Data
         {
             return await _context.Socios
                 .Include(s => s.Plan)
+                .Include(s => s.Usuario)
                 .FirstOrDefaultAsync(s => s.PersonaId == id);
         }
 

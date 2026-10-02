@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using Data;
 using Domain.Model;
 using DTOs;
@@ -61,13 +61,21 @@ namespace Application.Services
             };
         }
 
-        public async Task AgregarAsync(ProfesorCreaActualizaDTO profesorDto)
+        public async Task<int> AgregarAsync(ProfesorCreaActualizaDTO profesorDto)
         {
+            var username = !string.IsNullOrWhiteSpace(profesorDto.Username)
+                ? profesorDto.Username.Trim()
+                : (!string.IsNullOrWhiteSpace(profesorDto.Dni) ? profesorDto.Dni.Trim() : $"prof_{Guid.NewGuid().ToString("N")[..8]}");
+
+            var password = !string.IsNullOrWhiteSpace(profesorDto.Password)
+                ? profesorDto.Password
+                : (!string.IsNullOrWhiteSpace(profesorDto.Dni) ? profesorDto.Dni.Trim() : "123456");
+
             var nuevoUsuario = new Usuario
             {
-                Username = profesorDto.Username,
+                Username = username,
                 Email = profesorDto.Email,
-                PasswordHash = profesorDto.Password, // despues se hashea
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
                 FechaCreacion = DateTime.Now,
                 Activo = true,
                 Rol = "Profesor"
@@ -85,22 +93,36 @@ namespace Application.Services
             };
 
             await _profesorRepository.AgregarAsync(profesor);
+            return profesor.PersonaId;
         }
 
         public async Task ActualizarAsync(int id, ProfesorCreaActualizaDTO profesorDto)
         {
-            var profesor = new Profesor
-            {
-                PersonaId = id,
-                Dni = profesorDto.Dni,
-                Nombre = profesorDto.Nombre,
-                Apellido = profesorDto.Apellido,
-                Telefono = profesorDto.Telefono,
-                FechaNac = profesorDto.FechaNac,
-                Cargo = profesorDto.Cargo
-            };
+            var profesor = await _profesorRepository.ObtenerPorIdAsync(id);
 
-            await _profesorRepository.ActualizarAsync(profesor);
+            if (profesor != null)
+            {
+                profesor.Dni = profesorDto.Dni;
+                profesor.Nombre = profesorDto.Nombre;
+                profesor.Apellido = profesorDto.Apellido;
+                profesor.Telefono = profesorDto.Telefono;
+                profesor.FechaNac = profesorDto.FechaNac;
+                profesor.Cargo = profesorDto.Cargo;
+
+                if (profesor.Usuario != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(profesorDto.Email))
+                    {
+                        profesor.Usuario.Email = profesorDto.Email;
+                    }
+                    if (!string.IsNullOrWhiteSpace(profesorDto.Password))
+                    {
+                        profesor.Usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(profesorDto.Password);
+                    }
+                }
+
+                await _profesorRepository.ActualizarAsync(profesor);
+            }
         }
 
         public async Task EliminarAsync(int id)

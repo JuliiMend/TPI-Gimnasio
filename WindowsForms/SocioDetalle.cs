@@ -1,8 +1,6 @@
-﻿using API.Clients;
+using API.Clients;
 using DTOs;
-using System;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace WindowsFormsApp
 {
@@ -116,8 +114,8 @@ namespace WindowsFormsApp
                     FechaAlta = dtpFechaAlta.Value,
                     FechaBaja = dtpFechaBaja.Checked ? dtpFechaBaja.Value : (DateTime?)null,
                     IdPlan = (int)cmbPlanes.SelectedValue,
-                    Username = string.Empty,
-                    Password = string.Empty
+                    Username = txtDni.Text.Trim(),
+                    Password = txtDni.Text.Trim()
                 };
 
                 if (_idSocio == null)
@@ -127,7 +125,7 @@ namespace WindowsFormsApp
                 }
                 else
                 {
-                    await SocioApiClient.UpdateAsync(socioDto);
+                    await SocioApiClient.UpdateAsync(_idSocio.Value, socioDto);
                     MessageBox.Show("Socio modificado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
@@ -149,5 +147,15 @@ namespace WindowsFormsApp
         private void dtpFechaNac_ValueChanged(object sender, EventArgs e) { }
         private void lblFechaNac_Click(object sender, EventArgs e) { }
         private void btnCancelar_Click_1(object sender, EventArgs e) { }
+
+        private void txtApellido_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtDni_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

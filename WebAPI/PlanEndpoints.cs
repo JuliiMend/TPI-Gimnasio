@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using DTOs;
 
 namespace WebAPI { 
@@ -22,8 +22,9 @@ namespace WebAPI {
     
             grupo.MapPost("/", async (PlanCreaActualizaDTO dto, IPlanService planService) =>
             {
-                await planService.CrearAsync(dto);
-                return Results.Created("/api/planes", null);
+                var id = await planService.CrearAsync(dto);
+                var plan = await planService.ObtenerPorIdAsync(id);
+                return Results.Created($"/api/planes/{id}", plan);
             });
     
             grupo.MapPut("/{id}", async (int id, PlanCreaActualizaDTO dto, IPlanService planService) =>
@@ -37,6 +38,12 @@ namespace WebAPI {
                 {
                     return Results.NotFound();
                 }
+            });
+
+            grupo.MapDelete("/{id}", async (int id, IPlanService planService) =>
+            {
+                await planService.EliminarAsync(id);
+                return Results.NoContent();
             });
         }
 

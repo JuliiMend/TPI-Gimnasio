@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             lblTitulo = new Label();
-            txtNombre = new TextBox();
             txtApellido = new TextBox();
+            txtNombre = new TextBox();
             txtDni = new TextBox();
             txtEmail = new TextBox();
             txtTelefono = new TextBox();
@@ -61,19 +61,20 @@
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "DATOS DEL SOCIO";
             // 
-            // txtNombre
-            // 
-            txtNombre.Location = new Point(150, 126);
-            txtNombre.Name = "txtNombre";
-            txtNombre.Size = new Size(200, 23);
-            txtNombre.TabIndex = 6;
-            // 
             // txtApellido
             // 
-            txtApellido.Location = new Point(150, 89);
+            txtApellido.Location = new Point(150, 126);
             txtApellido.Name = "txtApellido";
             txtApellido.Size = new Size(200, 23);
-            txtApellido.TabIndex = 4;
+            txtApellido.TabIndex = 6;
+            // 
+            // txtNombre
+            // 
+            txtNombre.Location = new Point(150, 89);
+            txtNombre.Name = "txtNombre";
+            txtNombre.Size = new Size(200, 23);
+            txtNombre.TabIndex = 4;
+            txtNombre.TextChanged += txtApellido_TextChanged;
             // 
             // txtDni
             // 
@@ -81,6 +82,7 @@
             txtDni.Name = "txtDni";
             txtDni.Size = new Size(200, 23);
             txtDni.TabIndex = 2;
+            txtDni.TextChanged += txtDni_TextChanged;
             // 
             // txtEmail
             // 
@@ -262,8 +264,8 @@
             Controls.Add(txtTelefono);
             Controls.Add(txtEmail);
             Controls.Add(txtDni);
-            Controls.Add(txtApellido);
             Controls.Add(txtNombre);
+            Controls.Add(txtApellido);
             Controls.Add(lblTitulo);
             Name = "SocioDetalle";
             Text = "SocioDetalle";
