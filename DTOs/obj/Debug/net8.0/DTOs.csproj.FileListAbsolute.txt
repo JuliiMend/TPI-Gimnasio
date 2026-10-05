@@ -1,24 +1,12 @@
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\bin\Debug\net8.0\DTOs.deps.json
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\bin\Debug\net8.0\DTOs.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\bin\Debug\net8.0\DTOs.pdb
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\obj\Debug\net8.0\DTOs.GeneratedMSBuildEditorConfig.editorconfig
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\obj\Debug\net8.0\DTOs.AssemblyInfoInputs.cache
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\obj\Debug\net8.0\DTOs.AssemblyInfo.cs
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\obj\Debug\net8.0\DTOs.csproj.CoreCompileInputs.cache
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\obj\Debug\net8.0\DTOs.sourcelink.json
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\obj\Debug\net8.0\DTOs.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\obj\Debug\net8.0\refint\DTOs.dll
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\obj\Debug\net8.0\DTOs.pdb
-G:\Formateo Ryzen 7\Programacion\Repos\TPI.NET\DTOs\obj\Debug\net8.0\ref\DTOs.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\bin\Debug\net8.0\DTOs.deps.json
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\bin\Debug\net8.0\DTOs.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\bin\Debug\net8.0\DTOs.pdb
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.AssemblyInfoInputs.cache
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.AssemblyInfo.cs
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.csproj.CoreCompileInputs.cache
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.sourcelink.json
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\refint\DTOs.dll
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.pdb
-C:\Users\Asus\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\ref\DTOs.dll
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\bin\Debug\net8.0\DTOs.deps.json
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\bin\Debug\net8.0\DTOs.dll
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\bin\Debug\net8.0\DTOs.pdb
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.AssemblyInfoInputs.cache
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.AssemblyInfo.cs
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.csproj.CoreCompileInputs.cache
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.sourcelink.json
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.dll
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\refint\DTOs.dll
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\DTOs.pdb
+C:\Users\julim\Source\Repos\TPI-Gimnasio\DTOs\obj\Debug\net8.0\ref\DTOs.dll

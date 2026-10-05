@@ -1,0 +1,312 @@
+﻿@page "/turnos"
+@using DTOs
+@using API.Clients
+
+<h3>Turnos</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoTurno">
+        + Nuevo turno
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar turno" : "Nuevo turno")</h4>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label>Día de la semana</label>
+
+                <select class="form-select" @bind="turnoActual.DiaSemana">
+                    <option value="">Seleccionar día</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                </select>
+
+                @if (!string.IsNullOrEmpty(errorDia))
+                {
+                    <div class="text-danger">@errorDia</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Hora desde</label>
+
+                <input type="time"
+                       class="form-control"
+                       value="@turnoActual.HoraDesde.ToString(@"hh\:mm")"
+                       @onchange="CambiarHoraDesde" />
+
+                @if (!string.IsNullOrEmpty(errorHoraDesde))
+                {
+                    <div class="text-danger">@errorHoraDesde</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Hora hasta</label>
+
+                <input type="time"
+                       class="form-control"
+                       value="@turnoActual.HoraHasta.ToString(@"hh\:mm")"
+                       @onchange="CambiarHoraHasta" />
+
+                @if (!string.IsNullOrEmpty(errorHoraHasta))
+                {
+                    <div class="text-danger">@errorHoraHasta</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Día</th>
+            <th>Hora desde</th>
+            <th>Hora hasta</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var turno in turnos)
+        {
+            <tr>
+                <td>@turno.DiaSemana</td>
+                <td>@turno.HoraDesde.ToString(@"hh\:mm")</td>
+                <td>@turno.HoraHasta.ToString(@"hh\:mm")</td>
+
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarTurno(turno)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarTurno(turno)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private string errorDia = string.Empty;
+    private string errorHoraDesde = string.Empty;
+    private string errorHoraHasta = string.Empty;
+
+    private TurnoCreaActualizaDTO turnoActual = new();
+
+    private int idTurnoEditando;
+
+    private List<TurnoMostrarDTO> turnos = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarTurnos();
+    }
+
+
+    private async Task CargarTurnos()
+    {
+        try
+        {
+            turnos = (await TurnoApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los turnos: {ex.Message}";
+        }
+    }
+
+
+    private void LimpiarErrores()
+    {
+        errorDia = string.Empty;
+        errorHoraDesde = string.Empty;
+        errorHoraHasta = string.Empty;
+    }
+
+
+    private void NuevoTurno()
+    {
+        turnoActual = new TurnoCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+
+    private void EditarTurno(TurnoMostrarDTO turno)
+    {
+        idTurnoEditando = turno.IdTurno;
+
+        turnoActual = new TurnoCreaActualizaDTO
+        {
+            DiaSemana = turno.DiaSemana,
+            HoraDesde = turno.HoraDesde,
+            HoraHasta = turno.HoraHasta
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+
+    private bool Validar()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(turnoActual.DiaSemana))
+        {
+            errorDia = "Seleccioná un día.";
+            valido = false;
+        }
+
+        if (turnoActual.HoraDesde == TimeSpan.Zero)
+        {
+            errorHoraDesde = "Ingresá la hora de inicio.";
+            valido = false;
+        }
+
+        if (turnoActual.HoraHasta == TimeSpan.Zero)
+        {
+            errorHoraHasta = "Ingresá la hora de finalización.";
+            valido = false;
+        }
+
+        if (turnoActual.HoraDesde != TimeSpan.Zero &&
+            turnoActual.HoraHasta != TimeSpan.Zero &&
+            turnoActual.HoraHasta <= turnoActual.HoraDesde)
+        {
+            errorHoraHasta = "La hora de finalización debe ser posterior a la hora de inicio.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await TurnoApiClient.UpdateAsync(
+                    idTurnoEditando,
+                    turnoActual);
+
+                mensaje = "Turno modificado correctamente.";
+            }
+            else
+            {
+                await TurnoApiClient.AddAsync(turnoActual);
+
+                mensaje = "Turno creado correctamente.";
+            }
+
+            await CargarTurnos();
+
+            mostrarFormulario = false;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar el turno: {ex.Message}";
+        }
+    }
+
+
+    private async Task EliminarTurno(TurnoMostrarDTO turno)
+    {
+        try
+        {
+            await TurnoApiClient.DeleteAsync(turno.IdTurno);
+
+            await CargarTurnos();
+
+            mensaje = "Turno eliminado correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el turno: {ex.Message}";
+        }
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+
+    private void CambiarHoraDesde(ChangeEventArgs e)
+    {
+        if (TimeSpan.TryParse(e.Value?.ToString(), out var hora))
+        {
+            turnoActual.HoraDesde = hora;
+        }
+    }
+
+
+    private void CambiarHoraHasta(ChangeEventArgs e)
+    {
+        if (TimeSpan.TryParse(e.Value?.ToString(), out var hora))
+        {
+            turnoActual.HoraHasta = hora;
+        }
+    }
+}

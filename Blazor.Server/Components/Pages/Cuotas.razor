@@ -1,0 +1,625 @@
+﻿@page "/cuotas"
+@using DTOs
+@using API.Clients
+
+<h3>Cuotas</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevaCuota">
+        + Nueva cuota
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+
+        <h4>@(editando ? "Editar cuota" : "Nueva cuota")</h4>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label>Socio</label>
+
+                <select class="form-select" @bind="cuotaActual.SocioId">
+                    <option value="0">Seleccionar socio</option>
+
+                    @foreach (var socio in socios)
+                    {
+                        <option value="@socio.IdPersona">
+                            @socio.Nombre @socio.Apellido
+                        </option>
+                    }
+                </select>
+
+                @if (!string.IsNullOrEmpty(errorSocio))
+                {
+                    <div class="text-danger">@errorSocio</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Mes y año</label>
+
+                <input type="number"
+                       class="form-control"
+                       @bind="cuotaActual.MesAnio" />
+
+                @if (!string.IsNullOrEmpty(errorMesAnio))
+                {
+                    <div class="text-danger">@errorMesAnio</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Fecha de pago</label>
+
+                <input type="date"
+                       class="form-control"
+                       @bind="cuotaActual.FechaPago" />
+
+                @if (!string.IsNullOrEmpty(errorFechaPago))
+                {
+                    <div class="text-danger">@errorFechaPago</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Valor</label>
+
+                <input type="number"
+                       step="0.01"
+                       class="form-control"
+                       @bind="cuotaActual.Valor" />
+
+                @if (!string.IsNullOrEmpty(errorValor))
+                {
+                    <div class="text-danger">@errorValor</div>
+                }
+            </div>
+
+        </div>
+
+        <hr />
+
+        <h5>Detalles de la cuota</h5>
+
+        <div class="row align-items-end">
+
+            <div class="col-md-4 mb-3">
+                <label>Concepto</label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="detalleActual.Concepto" />
+
+                @if (!string.IsNullOrEmpty(errorConcepto))
+                {
+                    <div class="text-danger">@errorConcepto</div>
+                }
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label>Subtotal</label>
+
+                <input type="number"
+                       step="0.01"
+                       class="form-control"
+                       @bind="detalleActual.Subtotal" />
+
+                @if (!string.IsNullOrEmpty(errorSubtotal))
+                {
+                    <div class="text-danger">@errorSubtotal</div>
+                }
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label>Monto</label>
+
+                <input type="number"
+                       step="0.01"
+                       class="form-control"
+                       @bind="detalleActual.Monto" />
+
+                @if (!string.IsNullOrEmpty(errorMonto))
+                {
+                    <div class="text-danger">@errorMonto</div>
+                }
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <button class="btn btn-info w-100"
+                        @onclick="AgregarDetalle">
+                    @(editandoDetalle ? "Modificar" : "Agregar")
+                </button>
+            </div>
+
+        </div>
+
+        @if (cuotaActual.Detalles.Any())
+        {
+            <table class="table table-sm">
+
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Subtotal</th>
+                        <th>Monto</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var detalle in cuotaActual.Detalles)
+                    {
+                        <tr>
+                            <td>@detalle.Concepto</td>
+                            <td>$ @detalle.Subtotal</td>
+                            <td>$ @detalle.Monto</td>
+
+                            <td>
+
+                                <button class="btn btn-sm btn-warning me-2"
+                                        @onclick="() => EditarDetalle(detalle)">
+                                    Editar
+                                </button>
+
+                                <button class="btn btn-sm btn-danger"
+                                        @onclick="() => EliminarDetalle(detalle)">
+                                    Eliminar
+                                </button>
+
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">
+                No hay detalles agregados.
+            </p>
+        }
+
+        @if (!string.IsNullOrEmpty(errorDetalles))
+        {
+            <div class="text-danger mb-3">
+                @errorDetalles
+            </div>
+        }
+
+        <div class="mt-3">
+
+            <button class="btn btn-success me-2"
+                    @onclick="Guardar">
+                Guardar cuota
+            </button>
+
+            <button class="btn btn-secondary"
+                    @onclick="Cancelar">
+                Cancelar
+            </button>
+
+        </div>
+
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>Socio</th>
+            <th>Mes/Año</th>
+            <th>Fecha de pago</th>
+            <th>Valor</th>
+            <th>Detalles</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var cuota in cuotas)
+        {
+            <tr>
+
+                <td>@cuota.SocioNombre</td>
+
+                <td>@cuota.MesAnio</td>
+
+                <td>@cuota.FechaPago.ToString("dd/MM/yyyy")</td>
+
+                <td>$ @cuota.Valor</td>
+
+                <td>
+                    @cuota.Detalles.Count
+                </td>
+
+                <td>
+
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarCuota(cuota)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarCuota(cuota)">
+                        Eliminar
+                    </button>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+
+@code {
+
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+    private bool editandoDetalle = false;
+
+    private string mensaje = string.Empty;
+
+    private string errorSocio = string.Empty;
+    private string errorMesAnio = string.Empty;
+    private string errorFechaPago = string.Empty;
+    private string errorValor = string.Empty;
+    private string errorConcepto = string.Empty;
+    private string errorSubtotal = string.Empty;
+    private string errorMonto = string.Empty;
+    private string errorDetalles = string.Empty;
+
+    private CuotaCreaActualizaDTO cuotaActual = new();
+
+    private DetalleCuotaCreaActualizaDTO detalleActual = new();
+
+    private int idCuotaEditando;
+
+    private List<CuotaMostrarDTO> cuotas = new();
+
+    private List<SocioMostrarDTO> socios = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarSocios();
+        await CargarCuotas();
+    }
+
+
+    private async Task CargarSocios()
+    {
+        try
+        {
+            socios = (await SocioApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los socios: {ex.Message}";
+        }
+    }
+
+
+    private async Task CargarCuotas()
+    {
+        try
+        {
+            cuotas = (await CuotaApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar las cuotas: {ex.Message}";
+        }
+    }
+
+
+    private void LimpiarErrores()
+    {
+        errorSocio = string.Empty;
+        errorMesAnio = string.Empty;
+        errorFechaPago = string.Empty;
+        errorValor = string.Empty;
+
+        errorConcepto = string.Empty;
+        errorSubtotal = string.Empty;
+        errorMonto = string.Empty;
+        errorDetalles = string.Empty;
+    }
+
+
+    private void NuevaCuota()
+    {
+        cuotaActual = new CuotaCreaActualizaDTO
+        {
+            FechaPago = DateTime.Today
+        };
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+
+        editando = false;
+        editandoDetalle = false;
+        mostrarFormulario = true;
+
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+
+    private void EditarCuota(CuotaMostrarDTO cuota)
+    {
+        idCuotaEditando = cuota.CuotaId;
+
+        cuotaActual = new CuotaCreaActualizaDTO
+        {
+            CuotaId = cuota.CuotaId,
+            SocioId = cuota.SocioId,
+            MesAnio = cuota.MesAnio,
+            FechaPago = cuota.FechaPago,
+            Valor = cuota.Valor,
+
+            Detalles = cuota.Detalles
+                .Select(d => new DetalleCuotaCreaActualizaDTO
+                {
+                    DetalleCuotaId = d.DetalleCuotaId,
+                    Concepto = d.Concepto,
+                    Subtotal = d.Subtotal,
+                    Monto = d.Monto
+                })
+                .ToList()
+        };
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+
+        editando = true;
+        editandoDetalle = false;
+        mostrarFormulario = true;
+
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+
+    private bool ValidarCuota()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (cuotaActual.SocioId == 0)
+        {
+            errorSocio = "Seleccioná un socio.";
+            valido = false;
+        }
+
+        if (cuotaActual.MesAnio < 100000 ||
+            cuotaActual.MesAnio > 999999)
+        {
+            errorMesAnio = "Ingresá el mes y año con formato MMAAAA.";
+            valido = false;
+        }
+        else
+        {
+            int mes = cuotaActual.MesAnio / 10000;
+
+            if (mes < 1 || mes > 12)
+            {
+                errorMesAnio = "El mes debe estar entre 01 y 12.";
+                valido = false;
+            }
+        }
+
+        if (cuotaActual.FechaPago == DateTime.MinValue)
+        {
+            errorFechaPago = "Ingresá la fecha de pago.";
+            valido = false;
+        }
+
+        if (cuotaActual.Valor <= 0)
+        {
+            errorValor = "El valor debe ser mayor a 0.";
+            valido = false;
+        }
+
+        if (!cuotaActual.Detalles.Any())
+        {
+            errorDetalles = "Agregá al menos un detalle a la cuota.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+
+    private bool ValidarDetalle()
+    {
+        errorConcepto = string.Empty;
+        errorSubtotal = string.Empty;
+        errorMonto = string.Empty;
+
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(detalleActual.Concepto))
+        {
+            errorConcepto = "Ingresá el concepto.";
+            valido = false;
+        }
+
+        if (detalleActual.Subtotal <= 0)
+        {
+            errorSubtotal = "El subtotal debe ser mayor a 0.";
+            valido = false;
+        }
+
+        if (detalleActual.Monto <= 0)
+        {
+            errorMonto = "El monto debe ser mayor a 0.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+
+    private async Task Guardar()
+    {
+        if (!ValidarCuota())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await CuotaApiClient.UpdateAsync(
+                    idCuotaEditando,
+                    cuotaActual);
+
+                mensaje = "Cuota modificada correctamente.";
+            }
+            else
+            {
+                await CuotaApiClient.AddAsync(cuotaActual);
+
+                mensaje = "Cuota creada correctamente.";
+            }
+
+            await CargarCuotas();
+
+            mostrarFormulario = false;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar la cuota: {ex.Message}";
+        }
+    }
+
+
+    private async Task EliminarCuota(CuotaMostrarDTO cuota)
+    {
+        try
+        {
+            await CuotaApiClient.DeleteAsync(cuota.CuotaId);
+
+            await CargarCuotas();
+
+            mensaje = "Cuota eliminada correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar la cuota: {ex.Message}";
+        }
+    }
+
+
+    private void AgregarDetalle()
+    {
+        if (!ValidarDetalle())
+        {
+            return;
+        }
+
+        if (editandoDetalle)
+        {
+            var detalle = cuotaActual.Detalles.FirstOrDefault(
+                d => d.DetalleCuotaId == detalleActual.DetalleCuotaId);
+
+            if (detalle != null)
+            {
+                detalle.Concepto = detalleActual.Concepto;
+                detalle.Subtotal = detalleActual.Subtotal;
+                detalle.Monto = detalleActual.Monto;
+            }
+        }
+        else
+        {
+            int nuevoId = cuotaActual.Detalles.Any()
+                ? cuotaActual.Detalles.Max(d => d.DetalleCuotaId) + 1
+                : 1;
+
+            cuotaActual.Detalles.Add(
+                new DetalleCuotaCreaActualizaDTO
+                {
+                    DetalleCuotaId = nuevoId,
+                    Concepto = detalleActual.Concepto,
+                    Subtotal = detalleActual.Subtotal,
+                    Monto = detalleActual.Monto
+                });
+        }
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+
+        editandoDetalle = false;
+
+        errorConcepto = string.Empty;
+        errorSubtotal = string.Empty;
+        errorMonto = string.Empty;
+    }
+
+
+    private void EditarDetalle(
+        DetalleCuotaCreaActualizaDTO detalle)
+    {
+        detalleActual = new DetalleCuotaCreaActualizaDTO
+        {
+            DetalleCuotaId = detalle.DetalleCuotaId,
+            Concepto = detalle.Concepto,
+            Subtotal = detalle.Subtotal,
+            Monto = detalle.Monto
+        };
+
+        editandoDetalle = true;
+
+        errorConcepto = string.Empty;
+        errorSubtotal = string.Empty;
+        errorMonto = string.Empty;
+    }
+
+
+    private void EliminarDetalle(
+        DetalleCuotaCreaActualizaDTO detalle)
+    {
+        cuotaActual.Detalles.Remove(detalle);
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+
+        editandoDetalle = false;
+
+        errorConcepto = string.Empty;
+        errorSubtotal = string.Empty;
+        errorMonto = string.Empty;
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+
+        detalleActual = new DetalleCuotaCreaActualizaDTO();
+
+        editandoDetalle = false;
+
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+}

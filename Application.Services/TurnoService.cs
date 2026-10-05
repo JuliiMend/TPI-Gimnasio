@@ -1,4 +1,4 @@
-﻿using Data;
+using Data;
 using Domain.Model;
 using DTOs;
 using System.Collections.Generic;
@@ -16,11 +16,11 @@ namespace Application.Services
             _turnoRepository = turnoRepository;
         }
 
-        public async Task<List<TurnoDTO>> ObtenerTodosAsync()
+        public async Task<List<TurnoMostrarDTO>> ObtenerTodosAsync()
         {
             var turnos = await _turnoRepository.ObtenerTodosAsync();
 
-            return turnos.Select(t => new TurnoDTO
+            return turnos.Select(t => new TurnoMostrarDTO
             {
                 IdTurno = t.IdTurno,
                 DiaSemana = t.DiaSemana,
@@ -29,7 +29,7 @@ namespace Application.Services
             }).ToList();
         }
 
-        public async Task<TurnoDTO?> ObtenerPorIdAsync(int id)
+        public async Task<TurnoMostrarDTO?> ObtenerPorIdAsync(int id)
         {
             var turno = await _turnoRepository.ObtenerPorIdAsync(id);
 
@@ -38,7 +38,7 @@ namespace Application.Services
                 return null;
             }
 
-            return new TurnoDTO
+            return new TurnoMostrarDTO
             {
                 IdTurno = turno.IdTurno,
                 DiaSemana = turno.DiaSemana,
@@ -47,7 +47,7 @@ namespace Application.Services
             };
         }
 
-        public async Task AgregarAsync(TurnoCreaActualizaDTO turnoDto)
+        public async Task<int> AgregarAsync(TurnoCreaActualizaDTO turnoDto)
         {
             var turno = new Turno
             {
@@ -57,6 +57,7 @@ namespace Application.Services
             };
 
             await _turnoRepository.AgregarAsync(turno);
+            return turno.IdTurno;
         }
 
         public async Task ActualizarAsync(int id, TurnoCreaActualizaDTO turnoDto)

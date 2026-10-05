@@ -29,38 +29,30 @@
         private void InitializeComponent()
         {
             lblTitulo = new Label();
-            lblDia = new Label();
             cmbDia = new ComboBox();
             lblHoraDesde = new Label();
             dtpHoraDesde = new DateTimePicker();
-            lblHoraHasta = new Label();
             dtpHoraHasta = new DateTimePicker();
-            btnGuardar = new Button();
+            label2 = new Label();
+            label1 = new Label();
+            btnLogin = new Button();
             SuspendLayout();
             // 
             // lblTitulo
             // 
             lblTitulo.AutoSize = true;
-            lblTitulo.Location = new Point(348, 29);
+            lblTitulo.Font = new Font("Times New Roman", 15F, FontStyle.Underline);
+            lblTitulo.Location = new Point(12, 20);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(109, 15);
+            lblTitulo.Size = new Size(185, 22);
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "DATOS DEL TURNO";
-            // 
-            // lblDia
-            // 
-            lblDia.AutoSize = true;
-            lblDia.Location = new Point(291, 97);
-            lblDia.Name = "lblDia";
-            lblDia.Size = new Size(87, 15);
-            lblDia.TabIndex = 1;
-            lblDia.Text = "Dia de semana:";
             // 
             // cmbDia
             // 
             cmbDia.FormattingEnabled = true;
             cmbDia.Items.AddRange(new object[] { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" });
-            cmbDia.Location = new Point(419, 89);
+            cmbDia.Location = new Point(147, 62);
             cmbDia.Name = "cmbDia";
             cmbDia.Size = new Size(121, 23);
             cmbDia.TabIndex = 2;
@@ -68,61 +60,74 @@
             // lblHoraDesde
             // 
             lblHoraDesde.AutoSize = true;
-            lblHoraDesde.Location = new Point(291, 138);
+            lblHoraDesde.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblHoraDesde.Location = new Point(15, 101);
             lblHoraDesde.Name = "lblHoraDesde";
-            lblHoraDesde.Size = new Size(71, 15);
+            lblHoraDesde.Size = new Size(102, 21);
             lblHoraDesde.TabIndex = 3;
             lblHoraDesde.Text = "Hora Desde:";
             // 
             // dtpHoraDesde
             // 
             dtpHoraDesde.Format = DateTimePickerFormat.Time;
-            dtpHoraDesde.Location = new Point(392, 138);
+            dtpHoraDesde.Location = new Point(147, 101);
             dtpHoraDesde.Name = "dtpHoraDesde";
             dtpHoraDesde.ShowUpDown = true;
             dtpHoraDesde.Size = new Size(200, 23);
             dtpHoraDesde.TabIndex = 4;
             // 
-            // lblHoraHasta
-            // 
-            lblHoraHasta.AutoSize = true;
-            lblHoraHasta.Location = new Point(291, 200);
-            lblHoraHasta.Name = "lblHoraHasta";
-            lblHoraHasta.Size = new Size(69, 15);
-            lblHoraHasta.TabIndex = 5;
-            lblHoraHasta.Text = "Hora Hasta:";
-            // 
             // dtpHoraHasta
             // 
             dtpHoraHasta.Format = DateTimePickerFormat.Time;
-            dtpHoraHasta.Location = new Point(392, 194);
+            dtpHoraHasta.Location = new Point(147, 149);
             dtpHoraHasta.Name = "dtpHoraHasta";
             dtpHoraHasta.ShowUpDown = true;
             dtpHoraHasta.Size = new Size(200, 23);
             dtpHoraHasta.TabIndex = 6;
             // 
-            // btnGuardar
+            // label2
             // 
-            btnGuardar.Location = new Point(452, 273);
-            btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new Size(75, 23);
-            btnGuardar.TabIndex = 7;
-            btnGuardar.Text = "Guardar";
-            btnGuardar.UseVisualStyleBackColor = true;
-            btnGuardar.Click += btnGuardar_Click;
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label2.Location = new Point(15, 149);
+            label2.Name = "label2";
+            label2.Size = new Size(98, 21);
+            label2.TabIndex = 9;
+            label2.Text = "Hora Hasta:";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label1.Location = new Point(15, 60);
+            label1.Name = "label1";
+            label1.Size = new Size(126, 21);
+            label1.TabIndex = 10;
+            label1.Text = "Dia de semana:";
+            // 
+            // btnLogin
+            // 
+            btnLogin.BackColor = Color.LightBlue;
+            btnLogin.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnLogin.Location = new Point(244, 195);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(103, 32);
+            btnLogin.TabIndex = 11;
+            btnLogin.Text = "Guardar";
+            btnLogin.UseVisualStyleBackColor = false;
             // 
             // TurnoDetalle
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btnGuardar);
+            Controls.Add(btnLogin);
+            Controls.Add(label1);
+            Controls.Add(label2);
             Controls.Add(dtpHoraHasta);
-            Controls.Add(lblHoraHasta);
             Controls.Add(dtpHoraDesde);
             Controls.Add(lblHoraDesde);
             Controls.Add(cmbDia);
-            Controls.Add(lblDia);
             Controls.Add(lblTitulo);
             Name = "TurnoDetalle";
             Text = "TurnoDetalle";
@@ -133,12 +138,12 @@
         #endregion
 
         private Label lblTitulo;
-        private Label lblDia;
         private ComboBox cmbDia;
         private Label lblHoraDesde;
         private DateTimePicker dtpHoraDesde;
-        private Label lblHoraHasta;
         private DateTimePicker dtpHoraHasta;
-        private Button btnGuardar;
+        private Label label2;
+        private Label label1;
+        private Button btnLogin;
     }
 }

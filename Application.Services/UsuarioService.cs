@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Data;
 using Domain.Model;
 using DTOs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -23,42 +24,63 @@ namespace Application.Services
             return usuarios.Select(u => new UsuarioMostrarDTO
             {
                 UsuarioId = u.UsuarioId,
-                Username = u.Username
+                Username = u.Username,
+                Email = u.Email,
+                Rol = u.Rol
             }).ToList();
         }
 
         public async Task<UsuarioMostrarDTO?> ObtenerPorIdAsync(int id)
         {
             var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
-            if (usuario == null) return null;
+
+            if (usuario == null)
+            {
+                return null;
+            }
 
             return new UsuarioMostrarDTO
             {
                 UsuarioId = usuario.UsuarioId,
-                Username = usuario.Username
+                Username = usuario.Username,
+                Email = usuario.Email,
+                Rol = usuario.Rol
             };
         }
 
-        public async Task AgregarAsync(UsuarioCreaActualizaDTO dto)
+        public async Task<int> AgregarAsync(UsuarioCreaActualizaDTO dto)
         {
             var usuario = new Usuario
             {
                 Username = dto.Username,
-                Password = dto.Password,
-                Activo = true 
+                Email = dto.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                FechaCreacion = DateTime.Now,
+                Activo = true,
+                Rol = "Administrativo"
             };
 
             await _usuarioRepository.AgregarAsync(usuario);
+
+            return usuario.UsuarioId;
         }
 
-        public async Task ActualizarAsync(int id, UsuarioCreaActualizaDTO dto)
+        public async Task ActualizarAsync(
+            int id,
+            UsuarioCreaActualizaDTO dto)
         {
             var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
 
             if (usuario != null)
             {
                 usuario.Username = dto.Username;
-                usuario.Password = dto.Password;
+                usuario.Email = dto.Email;
+
+                if (!string.IsNullOrWhiteSpace(dto.Password))
+                {
+                    usuario.PasswordHash =
+                        BCrypt.Net.BCrypt.HashPassword(dto.Password);
+                }
 
                 await _usuarioRepository.ActualizarAsync(usuario);
             }

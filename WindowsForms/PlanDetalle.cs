@@ -1,26 +1,27 @@
-﻿using Application.Services;
+using API.Clients;
 using DTOs;
-using System;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WindowsFormsApp
 {
     public partial class PlanDetalle : Form
     {
-        private readonly IPlanService _planService;
-
         public int? PlanId { get; set; }
 
-        public PlanDetalle(IPlanService planService)
+        public PlanDetalle()
         {
             InitializeComponent();
-            _planService = planService;
+
+            this.Load -= PlanDetalle_Load;
+            this.Load += PlanDetalle_Load;
+
+            btnGuardar.Click -= btnGuardar_Click;
+            btnGuardar.Click += btnGuardar_Click;
         }
 
-        private async void PlanDetalle_Load(object sender, EventArgs e)
+        private async void PlanDetalle_Load(object? sender, EventArgs e)
         {
             Text = PlanId.HasValue
                 ? "Modificar plan"
@@ -33,7 +34,7 @@ namespace WindowsFormsApp
 
             try
             {
-                var plan = await _planService.ObtenerPorIdAsync(PlanId.Value);
+                var plan = await PlanApiClient.GetAsync(PlanId.Value);
 
                 if (plan == null)
                 {
@@ -62,7 +63,7 @@ namespace WindowsFormsApp
             }
         }
 
-        private async void btnGuardar_Click(object sender, EventArgs e)
+        private async void btnGuardar_Click(object? sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(Nombre.Text))
             {
@@ -116,14 +117,15 @@ namespace WindowsFormsApp
             {
                 Nombre = Nombre.Text.Trim(),
                 Tipo = Tipo.Text.Trim(),
-                Precio = precio
+                Precio = precio,
+                Descripcion = Descripcion.Text.Trim()
             };
 
             try
             {
                 if (PlanId.HasValue)
                 {
-                    await _planService.ActualizarAsync(PlanId.Value, planDto);
+                    await PlanApiClient.UpdateAsync(PlanId.Value, planDto);
 
                     MessageBox.Show(
                         "Plan actualizado correctamente.",
@@ -133,7 +135,7 @@ namespace WindowsFormsApp
                 }
                 else
                 {
-                    await _planService.CrearAsync(planDto);
+                    await PlanApiClient.AddAsync(planDto);
 
                     MessageBox.Show(
                         "Plan registrado correctamente.",
@@ -154,5 +156,9 @@ namespace WindowsFormsApp
                     MessageBoxIcon.Error);
             }
         }
+
+        private void label1_Click(object sender, EventArgs e) { }
+        private void label3_Click(object sender, EventArgs e) { }
+        private void lblDni_Click(object sender, EventArgs e) { }
     }
 }

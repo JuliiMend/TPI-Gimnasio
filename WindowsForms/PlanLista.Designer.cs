@@ -2,85 +2,86 @@
 {
     partial class PlanLista
     {
-            /// <summary>
-            /// Required designer variable.
-            /// </summary>
-            private System.ComponentModel.IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
 
-            /// <summary>
-            /// Clean up any resources being used.
-            /// </summary>
-            /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-            protected override void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
             {
-                if (disposing && (components != null))
-                {
-                    components.Dispose();
-                }
-                base.Dispose(disposing);
+                components.Dispose();
             }
-
-            #region Windows Form Designer generated code
-
-            /// <summary>
-            /// Required method for Designer support - do not modify
-            /// the contents of this method with the code editor.
-            /// </summary>
-            private void InitializeComponent()
-            {
-                dgvPlanes = new DataGridView();
-                btnNuevo = new Button();
-                btnActualizar = new Button();
-                ((System.ComponentModel.ISupportInitialize)dgvPlanes).BeginInit();
-                SuspendLayout();
-                // 
-                // dgvPlanes
-                // 
-                dgvPlanes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-                dgvPlanes.Location = new Point(0, 0);
-                dgvPlanes.Name = "dgvPlanes";
-                dgvPlanes.Size = new Size(514, 438);
-                dgvPlanes.TabIndex = 0;
-                dgvPlanes.CellContentClick += dgvPlanes_CellContentClick;
-                // 
-                // btnNuevo
-                // 
-                btnNuevo.Location = new Point(530, 12);
-                btnNuevo.Name = "btnNuevo";
-                btnNuevo.Size = new Size(249, 48);
-                btnNuevo.TabIndex = 1;
-                btnNuevo.Text = "Registrar nuevo Plan";
-                btnNuevo.UseVisualStyleBackColor = true;
-                btnNuevo.Click += btnNuevo_Click_1;
-                // 
-                // btnActualizar
-                // 
-                btnActualizar.Location = new Point(530, 66);
-                btnActualizar.Name = "btnActualizar";
-                btnActualizar.Size = new Size(249, 46);
-                btnActualizar.TabIndex = 2;
-                btnActualizar.Text = "Actualizar un Plan";
-                btnActualizar.UseVisualStyleBackColor = true;
-                // 
-                // PlanListaForm
-                // 
-                AutoScaleDimensions = new SizeF(7F, 15F);
-                AutoScaleMode = AutoScaleMode.Font;
-                ClientSize = new Size(800, 450);
-                Controls.Add(btnActualizar);
-                Controls.Add(btnNuevo);
-                Controls.Add(dgvPlanes);
-                Name = "PlanListaForm";
-                Text = "PlanListaForm";
-                Load += PlanListaForm_Load_1;
-                ((System.ComponentModel.ISupportInitialize)dgvPlanes).EndInit();
-                ResumeLayout(false);
-            }
-
-            #endregion
-
-            private DataGridView dgvPlanes;
-            private Button btnNuevo;
-            private Button btnActualizar;
+            base.Dispose(disposing);
         }
+
+        #region Windows Form Designer generated code
+
+        private void InitializeComponent()
+        {
+            this.dgvPlanes = new System.Windows.Forms.DataGridView();
+            this.btnNuevo = new System.Windows.Forms.Button();
+            this.btnActualizar = new System.Windows.Forms.Button();
+            this.btnEliminar = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPlanes)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // dgvPlanes
+            // 
+            this.dgvPlanes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvPlanes.Location = new System.Drawing.Point(12, 50);
+            this.dgvPlanes.Name = "dgvPlanes";
+            this.dgvPlanes.Size = new System.Drawing.Size(600, 300);
+            this.dgvPlanes.TabIndex = 0;
+            // 
+            // btnNuevo
+            // 
+            this.btnNuevo.Location = new System.Drawing.Point(12, 12);
+            this.btnNuevo.Name = "btnNuevo";
+            this.btnNuevo.Size = new System.Drawing.Size(75, 23);
+            this.btnNuevo.TabIndex = 1;
+            this.btnNuevo.Text = "Nuevo";
+            this.btnNuevo.UseVisualStyleBackColor = true;
+            this.btnNuevo.Click += new System.EventHandler(this.btnNuevo_Click);
+            // 
+            // btnActualizar
+            // 
+            this.btnActualizar.Location = new System.Drawing.Point(93, 12);
+            this.btnActualizar.Name = "btnActualizar";
+            this.btnActualizar.Size = new System.Drawing.Size(75, 23);
+            this.btnActualizar.TabIndex = 2;
+            this.btnActualizar.Text = "Actualizar";
+            this.btnActualizar.UseVisualStyleBackColor = true;
+            this.btnActualizar.Click += new System.EventHandler(this.btnActualizar_Click);
+            // 
+            // btnEliminar
+            // 
+            this.btnEliminar.Location = new System.Drawing.Point(174, 12);
+            this.btnEliminar.Name = "btnEliminar";
+            this.btnEliminar.Size = new System.Drawing.Size(75, 23);
+            this.btnEliminar.TabIndex = 3;
+            this.btnEliminar.Text = "Eliminar";
+            this.btnEliminar.UseVisualStyleBackColor = true;
+            this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
+            // 
+            // PlanLista
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(624, 361);
+            this.Controls.Add(this.btnEliminar);
+            this.Controls.Add(this.btnActualizar);
+            this.Controls.Add(this.btnNuevo);
+            this.Controls.Add(this.dgvPlanes);
+            this.Name = "PlanLista";
+            this.Text = "Planes";
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPlanes)).EndInit();
+            this.ResumeLayout(false);
+        }
+
+        #endregion
+
+        private System.Windows.Forms.DataGridView dgvPlanes;
+        private System.Windows.Forms.Button btnNuevo;
+        private System.Windows.Forms.Button btnActualizar;
+        private System.Windows.Forms.Button btnEliminar;
     }
+}

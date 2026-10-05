@@ -1,0 +1,337 @@
+﻿@page "/usuarios"
+@using DTOs
+@using API.Clients
+@rendermode InteractiveServer
+
+<h3>Usuarios</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoUsuario">
+        + Nuevo usuario
+    </button>
+</div>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert @(esError ? "alert-danger" : "alert-info")">
+        @mensaje
+    </div>
+}
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+
+        <h4>@(editando ? "Editar usuario" : "Nuevo usuario")</h4>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label>Username</label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="usuarioActual.Username" />
+
+                @if (!string.IsNullOrEmpty(errorUsername))
+                {
+                    <div class="text-danger">@errorUsername</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Email</label>
+
+                <input type="email"
+                       class="form-control"
+                       @bind="usuarioActual.Email" />
+
+                @if (!string.IsNullOrEmpty(errorEmail))
+                {
+                    <div class="text-danger">@errorEmail</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Password</label>
+
+                <input type="password"
+                       class="form-control"
+                       @bind="usuarioActual.Password" />
+
+                @if (editando)
+                {
+                    <small class="text-muted">
+                        Dejá vacío si no querés cambiar la contraseña.
+                    </small>
+                }
+
+                @if (!string.IsNullOrEmpty(errorPassword))
+                {
+                    <div class="text-danger">@errorPassword</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2"
+                    @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary"
+                    @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+
+    </div>
+}
+
+@if (cargando)
+{
+    <p>Cargando usuarios...</p>
+}
+else if (usuarios.Count == 0)
+{
+    <p>No hay usuarios registrados.</p>
+}
+else
+{
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var usuario in usuarios)
+            {
+                <tr>
+
+                    <td>@usuario.UsuarioId</td>
+
+                    <td>@usuario.Username</td>
+
+                    <td>@usuario.Email</td>
+
+                    <td>@usuario.Rol</td>
+
+                    <td>
+
+                        <button class="btn btn-sm btn-warning me-2"
+                                @onclick="() => EditarUsuario(usuario)">
+                            Editar
+                        </button>
+
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => EliminarUsuario(usuario)">
+                            Eliminar
+                        </button>
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+}
+
+@code {
+
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+    private bool cargando = true;
+
+    private string mensaje = string.Empty;
+    private bool esError = false;
+
+    private string errorUsername = string.Empty;
+    private string errorEmail = string.Empty;
+    private string errorPassword = string.Empty;
+
+    private UsuarioCreaActualizaDTO usuarioActual = new();
+
+    private int idUsuarioEditando;
+
+    private List<UsuarioMostrarDTO> usuarios = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarUsuarios();
+    }
+
+
+    private async Task CargarUsuarios()
+    {
+        try
+        {
+            cargando = true;
+
+            var resultado = await UsuarioApiClient.GetAllAsync();
+
+            usuarios = resultado.ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los usuarios: {ex.Message}";
+            esError = true;
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+
+    private void NuevoUsuario()
+    {
+        usuarioActual = new UsuarioCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+
+        LimpiarErrores();
+        LimpiarMensaje();
+    }
+
+
+    private void EditarUsuario(UsuarioMostrarDTO usuario)
+    {
+        idUsuarioEditando = usuario.UsuarioId;
+
+        usuarioActual = new UsuarioCreaActualizaDTO
+        {
+            Username = usuario.Username,
+            Email = usuario.Email,
+            Password = string.Empty
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+
+        LimpiarErrores();
+        LimpiarMensaje();
+    }
+
+
+    private async Task Guardar()
+    {
+        LimpiarErrores();
+        LimpiarMensaje();
+
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await UsuarioApiClient.UpdateAsync(
+                    idUsuarioEditando,
+                    usuarioActual);
+
+                mensaje = "Usuario modificado correctamente.";
+            }
+            else
+            {
+                await UsuarioApiClient.AddAsync(usuarioActual);
+
+                mensaje = "Usuario creado correctamente.";
+            }
+
+            esError = false;
+            mostrarFormulario = false;
+
+            await CargarUsuarios();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar el usuario: {ex.Message}";
+            esError = true;
+        }
+    }
+
+
+    private async Task EliminarUsuario(UsuarioMostrarDTO usuario)
+    {
+        try
+        {
+            await UsuarioApiClient.DeleteAsync(usuario.UsuarioId);
+
+            mensaje = "Usuario eliminado correctamente.";
+            esError = false;
+
+            await CargarUsuarios();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el usuario: {ex.Message}";
+            esError = true;
+        }
+    }
+
+
+    private bool Validar()
+    {
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(usuarioActual.Username))
+        {
+            errorUsername = "El username es obligatorio.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(usuarioActual.Email))
+        {
+            errorEmail = "El email es obligatorio.";
+            valido = false;
+        }
+
+        if (!editando &&
+            string.IsNullOrWhiteSpace(usuarioActual.Password))
+        {
+            errorPassword = "La contraseña es obligatoria.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+
+        LimpiarErrores();
+        LimpiarMensaje();
+    }
+
+
+    private void LimpiarErrores()
+    {
+        errorUsername = string.Empty;
+        errorEmail = string.Empty;
+        errorPassword = string.Empty;
+    }
+
+
+    private void LimpiarMensaje()
+    {
+        mensaje = string.Empty;
+        esError = false;
+    }
+}

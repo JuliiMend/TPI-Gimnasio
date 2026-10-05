@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {}
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
         "projectName": "DTOs",
-        "projectPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
-        "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\obj\\",
+        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
+        "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\julim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

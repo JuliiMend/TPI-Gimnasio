@@ -17,20 +17,21 @@ namespace Application.Services
             _planRepository = planRepository;
         }
 
-        public async Task<List<PlanDTO>> ObtenerTodosAsync()
+        public async Task<List<PlanMostrarDTO>> ObtenerTodosAsync()
         {
             var planes = await _planRepository.ObtenerTodosAsync();
 
-            return planes.Select(p => new PlanDTO
+            return planes.Select(p => new PlanMostrarDTO
             {
                 IdPlan = p.PlanId,
                 Nombre = p.Nombre,
                 Tipo = p.Tipo,
-                Precio = p.Precio
+                Precio = p.Precio,
+                Descripcion = p.Descripcion ?? string.Empty
             }).ToList();
         }
 
-        public async Task<PlanDTO?> ObtenerPorIdAsync(int id)
+        public async Task<PlanMostrarDTO?> ObtenerPorIdAsync(int id)
         {
             var plan = await _planRepository.ObtenerPorIdAsync(id);
 
@@ -39,16 +40,17 @@ namespace Application.Services
                 return null;
             }
 
-            return new PlanDTO
+            return new PlanMostrarDTO
             {
                 IdPlan = plan.PlanId,
                 Nombre = plan.Nombre,
                 Tipo = plan.Tipo,
-                Precio = plan.Precio
+                Precio = plan.Precio,
+                Descripcion = plan.Descripcion ?? string.Empty
             };
         }
 
-        public async Task CrearAsync(PlanCreaActualizaDTO planDto)
+        public async Task<int> CrearAsync(PlanCreaActualizaDTO planDto)
         {
             var planNuevo = new Plan
             {
@@ -59,6 +61,7 @@ namespace Application.Services
             };
 
             await _planRepository.AgregarAsync(planNuevo);
+            return planNuevo.PlanId;
         }
 
         public async Task ActualizarAsync(int id, PlanCreaActualizaDTO planDto)
@@ -78,6 +81,11 @@ namespace Application.Services
             {
                 throw new Exception($"El plan con ID {id} no existe en la base de datos.");
             }
+        }
+
+        public async Task EliminarAsync(int id)
+        {
+            await _planRepository.EliminarAsync(id);
         }
     }
 }

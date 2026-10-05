@@ -1,9 +1,8 @@
-﻿using Data;
+using Data;
 using Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +19,10 @@ namespace Data
 
         public async Task<List<Socio>> ObtenerTodosAsync(SocioCriteria criterios)
         {
-            var query = _context.Socios.AsQueryable();
+            var query = _context.Socios
+                .Include(s => s.Plan)
+                .Include(s => s.Usuario)
+                .AsQueryable();
 
             if (criterios != null)
             {
@@ -51,6 +53,8 @@ namespace Data
         public async Task<Socio?> ObtenerPorIdAsync(int id)
         {
             return await _context.Socios
+                .Include(s => s.Plan)
+                .Include(s => s.Usuario)
                 .FirstOrDefaultAsync(s => s.PersonaId == id);
         }
 
@@ -62,18 +66,36 @@ namespace Data
 
         public async Task ActualizarAsync(Socio socio)
         {
+            var socioTrackeado = _context.Socios.Local
+                .FirstOrDefault(s => s.PersonaId == socio.PersonaId);
+
+            if (socioTrackeado != null)
+            {
+                _context.Entry(socioTrackeado).State = EntityState.Detached;
+            }
+
             _context.Socios.Update(socio);
+
             await _context.SaveChangesAsync();
         }
 
         public async Task EliminarAsync(int id)
         {
             Socio? socio = await _context.Socios
+                .Include(s => s.Usuario)
                 .FirstOrDefaultAsync(s => s.PersonaId == id);
 
             if (socio != null)
             {
+                var usuario = socio.Usuario;
+
                 _context.Socios.Remove(socio);
+
+                if (usuario != null)
+                {
+                    _context.Usuarios.Remove(usuario);
+                }
+
                 await _context.SaveChangesAsync();
             }
         }

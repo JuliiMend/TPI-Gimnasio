@@ -1,0 +1,20 @@
+﻿@using API.Clients
+@inject NavigationManager Navigation
+
+<Router AppAssembly="typeof(Program).Assembly">
+    <Found Context="routeData">
+
+    @if (routeData.PageType == typeof(Blazor.Server.Components.Pages.Login))
+    {
+        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+    }
+    else
+    {
+        <AuthenticatedRoute RouteData="routeData" />
+    }
+
+    <FocusOnNavigate RouteData="routeData" Selector="h1" />
+
+</Found>
+</Router>
+

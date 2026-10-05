@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {}
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
         "projectName": "Application.Services",
-        "projectPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
-        "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\obj\\",
+        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
+        "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\julim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,14 +32,14 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj": {
-                "projectPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj"
+              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj": {
+                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj"
               },
-              "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
-                "projectPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
+              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
               },
-              "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
-                "projectPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj"
+              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
+                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj"
               }
             }
           }
@@ -59,6 +59,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.2.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -79,20 +85,20 @@
         }
       }
     },
-    "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj": {
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
         "projectName": "Data",
-        "projectPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
-        "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Data\\obj\\",
+        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
+        "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\julim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -107,8 +113,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
-                "projectPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
+              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
               }
             }
           }
@@ -142,10 +148,6 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.11, )"
-            },
-            "Microsoft.Extensions.Configuration.Json": {
-              "target": "Package",
-              "version": "[8.0.0, )"
             }
           },
           "imports": [
@@ -168,20 +170,20 @@
         }
       }
     },
-    "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
         "projectName": "Domain.Model",
-        "projectPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
-        "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\obj\\",
+        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
+        "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\julim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -233,20 +235,20 @@
         }
       }
     },
-    "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
         "projectName": "DTOs",
-        "projectPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
-        "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asus\\Source\\Repos\\TPI-Gimnasio\\DTOs\\obj\\",
+        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
+        "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\julim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

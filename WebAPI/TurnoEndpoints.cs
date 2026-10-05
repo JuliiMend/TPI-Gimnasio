@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using DTOs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +10,7 @@ namespace WebAPI
     {
         public static void MapTurnoEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/turnos");
+            var grupo = app.MapGroup("/api/turnos").RequireAuthorization();
 
             grupo.MapGet("/", async (ITurnoService turnoService) =>
             {
@@ -26,20 +26,21 @@ namespace WebAPI
 
             grupo.MapPost("/", async (TurnoCreaActualizaDTO dto, ITurnoService turnoService) =>
             {
-                await turnoService.AgregarAsync(dto);
-                return Results.Ok("Turno creado con éxito");
+                var id = await turnoService.AgregarAsync(dto);
+                var turno = await turnoService.ObtenerPorIdAsync(id);
+                return Results.Created($"/api/turnos/{id}", turno);
             });
 
             grupo.MapPut("/{id}", async (int id, TurnoCreaActualizaDTO dto, ITurnoService turnoService) =>
             {
                 await turnoService.ActualizarAsync(id, dto);
-                return Results.Ok("Turno actualizado con éxito");
+                return Results.NoContent();
             });
 
             grupo.MapDelete("/{id}", async (int id, ITurnoService turnoService) =>
             {
                 await turnoService.EliminarAsync(id);
-                return Results.Ok("Turno eliminado con éxito");
+                return Results.NoContent();
             });
         }
     }
