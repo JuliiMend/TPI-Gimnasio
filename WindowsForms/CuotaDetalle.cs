@@ -2,6 +2,7 @@
 using API.Clients;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,7 +12,7 @@ namespace WindowsFormsApp
     public partial class CuotaDetalle : Form
     {
         private CuotaCreaActualizaDTO cuota;
-        private List<DetalleCuotaCreaActualizaDTO> itemsLocales;
+        private BindingList<DetalleCuotaCreaActualizaDTO> itemsLocales;
 
         public CuotaDetalle(CuotaCreaActualizaDTO cuota)
         {
@@ -70,12 +71,12 @@ namespace WindowsFormsApp
                 }
 
                 itemsLocales = this.cuota.Detalles != null
-                    ? this.cuota.Detalles.ToList()
-                    : new List<DetalleCuotaCreaActualizaDTO>();
+                    ? new BindingList<DetalleCuotaCreaActualizaDTO>(this.cuota.Detalles.ToList())
+                    : new BindingList<DetalleCuotaCreaActualizaDTO>();
             }
             else
             {
-                itemsLocales = new List<DetalleCuotaCreaActualizaDTO>();
+                itemsLocales = new BindingList<DetalleCuotaCreaActualizaDTO>();
                 dtp_fechaPago.Value = DateTime.Today;
             }
 
@@ -139,8 +140,12 @@ namespace WindowsFormsApp
 
         private void RefreshItemsGrid()
         {
-            dtg_detalle.DataSource = null;
-            dtg_detalle.DataSource = itemsLocales;
+            if (dtg_detalle.DataSource == null)
+            {
+                dtg_detalle.DataSource = itemsLocales;
+            }
+
+            dtg_detalle.Refresh();
 
             decimal total = itemsLocales.Sum(i => i.Monto);
 
@@ -175,7 +180,7 @@ namespace WindowsFormsApp
                     dtp_fechaPago.Value;
 
                 this.cuota.Detalles =
-                    itemsLocales;
+                    itemsLocales.ToList();
 
                 btn_aceptar.Enabled = false;
 

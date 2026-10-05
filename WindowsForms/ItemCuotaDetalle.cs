@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace WindowsFormsApp 
+namespace WindowsFormsApp
 {
     public partial class ItemCuotaDetalle : Form
     {

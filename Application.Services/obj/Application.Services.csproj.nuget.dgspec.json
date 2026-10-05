@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\neo\\source\\repos\\TPI\\Application.Services\\Application.Services.csproj": {}
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {}
   },
   "projects": {
-    "C:\\Users\\neo\\source\\repos\\TPI\\Application.Services\\Application.Services.csproj": {
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\neo\\source\\repos\\TPI\\Application.Services\\Application.Services.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
         "projectName": "Application.Services",
-        "projectPath": "C:\\Users\\neo\\source\\repos\\TPI\\Application.Services\\Application.Services.csproj",
-        "packagesPath": "C:\\Users\\neo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\neo\\source\\repos\\TPI\\Application.Services\\obj\\",
+        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\Application.Services.csproj",
+        "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Application.Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\neo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\julim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,14 +32,14 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\neo\\source\\repos\\TPI\\Data\\Data.csproj": {
-                "projectPath": "C:\\Users\\neo\\source\\repos\\TPI\\Data\\Data.csproj"
+              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj": {
+                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj"
               },
-              "C:\\Users\\neo\\source\\repos\\TPI\\Domain.Model\\Domain.Model.csproj": {
-                "projectPath": "C:\\Users\\neo\\source\\repos\\TPI\\Domain.Model\\Domain.Model.csproj"
+              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
               },
-              "C:\\Users\\neo\\source\\repos\\TPI\\DTOs\\DTOs.csproj": {
-                "projectPath": "C:\\Users\\neo\\source\\repos\\TPI\\DTOs\\DTOs.csproj"
+              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
+                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj"
               }
             }
           }
@@ -81,24 +81,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.317/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\neo\\source\\repos\\TPI\\Data\\Data.csproj": {
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\neo\\source\\repos\\TPI\\Data\\Data.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
         "projectName": "Data",
-        "projectPath": "C:\\Users\\neo\\source\\repos\\TPI\\Data\\Data.csproj",
-        "packagesPath": "C:\\Users\\neo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\neo\\source\\repos\\TPI\\Data\\obj\\",
+        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\Data.csproj",
+        "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\neo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\julim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -113,8 +113,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\neo\\source\\repos\\TPI\\Domain.Model\\Domain.Model.csproj": {
-                "projectPath": "C:\\Users\\neo\\source\\repos\\TPI\\Domain.Model\\Domain.Model.csproj"
+              "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
+                "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj"
               }
             }
           }
@@ -166,24 +166,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.317/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\neo\\source\\repos\\TPI\\Domain.Model\\Domain.Model.csproj": {
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\neo\\source\\repos\\TPI\\Domain.Model\\Domain.Model.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
         "projectName": "Domain.Model",
-        "projectPath": "C:\\Users\\neo\\source\\repos\\TPI\\Domain.Model\\Domain.Model.csproj",
-        "packagesPath": "C:\\Users\\neo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\neo\\source\\repos\\TPI\\Domain.Model\\obj\\",
+        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\Domain.Model.csproj",
+        "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\Domain.Model\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\neo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\julim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -231,24 +231,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.317/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\neo\\source\\repos\\TPI\\DTOs\\DTOs.csproj": {
+    "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\neo\\source\\repos\\TPI\\DTOs\\DTOs.csproj",
+        "projectUniqueName": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
         "projectName": "DTOs",
-        "projectPath": "C:\\Users\\neo\\source\\repos\\TPI\\DTOs\\DTOs.csproj",
-        "packagesPath": "C:\\Users\\neo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\neo\\source\\repos\\TPI\\DTOs\\obj\\",
+        "projectPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\DTOs.csproj",
+        "packagesPath": "C:\\Users\\julim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\julim\\Source\\Repos\\TPI-Gimnasio\\DTOs\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\neo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\julim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -296,7 +296,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.317/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -4,6 +4,73 @@
 
 <h3>Planes</h3>
 
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoPlan">
+        + Nuevo plan
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar plan" : "Nuevo plan")</h4>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>Nombre</label>
+                <input class="form-control" @bind="planActual.Nombre" />
+
+                @if (!string.IsNullOrEmpty(errorNombre))
+                {
+                    <div class="text-danger">@errorNombre</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Tipo</label>
+                <input class="form-control" @bind="planActual.Tipo" />
+
+                @if (!string.IsNullOrEmpty(errorTipo))
+                {
+                    <div class="text-danger">@errorTipo</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Precio</label>
+                <input type="number" step="0.01" class="form-control" @bind="planActual.Precio" />
+
+                @if (!string.IsNullOrEmpty(errorPrecio))
+                {
+                    <div class="text-danger">@errorPrecio</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Descripción</label>
+                <input class="form-control" @bind="planActual.Descripcion" />
+
+                @if (!string.IsNullOrEmpty(errorDescripcion))
+                {
+                    <div class="text-danger">@errorDescripcion</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
 @if (!string.IsNullOrEmpty(mensaje))
 {
     <div class="alert alert-info">
@@ -18,9 +85,9 @@
             <th>Tipo</th>
             <th>Precio</th>
             <th>Descripción</th>
+            <th>Acciones</th>
         </tr>
     </thead>
-
     <tbody>
         @foreach (var plan in planes)
         {
@@ -29,14 +96,38 @@
                 <td>@plan.Tipo</td>
                 <td>$@plan.Precio</td>
                 <td>@plan.Descripcion</td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarPlan(plan)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarPlan(plan)">
+                        Eliminar
+                    </button>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
 @code {
-    private List<PlanMostrarDTO> planes = new();
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
     private string mensaje = string.Empty;
+
+    private string errorNombre = string.Empty;
+    private string errorTipo = string.Empty;
+    private string errorPrecio = string.Empty;
+    private string errorDescripcion = string.Empty;
+
+    private PlanCreaActualizaDTO planActual = new();
+
+    private int idPlanEditando;
+
+    private List<PlanMostrarDTO> planes = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,5 +144,134 @@
         {
             mensaje = $"Error al cargar los planes: {ex.Message}";
         }
+    }
+
+    private void LimpiarErrores()
+    {
+        errorNombre = string.Empty;
+        errorTipo = string.Empty;
+        errorPrecio = string.Empty;
+        errorDescripcion = string.Empty;
+    }
+
+    private void NuevoPlan()
+    {
+        planActual = new PlanCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private void EditarPlan(PlanMostrarDTO plan)
+    {
+        idPlanEditando = plan.IdPlan;
+
+        planActual = new PlanCreaActualizaDTO
+        {
+            Nombre = plan.Nombre,
+            Tipo = plan.Tipo,
+            Precio = plan.Precio,
+            Descripcion = plan.Descripcion
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private bool Validar()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(planActual.Nombre))
+        {
+            errorNombre = "Ingresá el nombre.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(planActual.Tipo))
+        {
+            errorTipo = "Ingresá el tipo.";
+            valido = false;
+        }
+
+        if (planActual.Precio <= 0)
+        {
+            errorPrecio = "Ingresá un precio mayor a cero.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(planActual.Descripcion))
+        {
+            errorDescripcion = "Ingresá la descripción.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await PlanApiClient.UpdateAsync(
+                    idPlanEditando,
+                    planActual);
+
+                mensaje = "Plan modificado correctamente.";
+            }
+            else
+            {
+                await PlanApiClient.AddAsync(planActual);
+
+                mensaje = "Plan creado correctamente.";
+            }
+
+            await CargarPlanes();
+
+            mostrarFormulario = false;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar el plan: {ex.Message}";
+        }
+    }
+
+    private async Task EliminarPlan(PlanMostrarDTO plan)
+    {
+        try
+        {
+            await PlanApiClient.DeleteAsync(plan.IdPlan);
+
+            await CargarPlanes();
+
+            mensaje = "Plan eliminado correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el plan: {ex.Message}";
+        }
+    }
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
     }
 }

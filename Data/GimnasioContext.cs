@@ -87,15 +87,7 @@ namespace Data
                 .HasForeignKey(d => d.CuotaId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            // tenía la cadena de conexión de SQL Server hardcodeada para evitar conflictos.
-            // Hay que verificar que todos tengamos appsettings.json local bien configurado para que el contexto se inyecte correctamente desde el Program.cs
-            // if (!optionsBuilder.IsConfigured)
-            // {
-            //     optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=MSSQL-TPIGim;Trusted_Connection=True;...");
-            // }
-        }
+
     }
 }
 
