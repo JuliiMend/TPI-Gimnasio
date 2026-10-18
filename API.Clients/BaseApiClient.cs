@@ -12,9 +12,12 @@ namespace API.Clients
 
         protected static async Task<HttpClient> CreateHttpClientAsync()
         {
-            var handler = new HttpClientHandler
+            var handler = new SesionHandler
             {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                InnerHandler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                }
             };
 
             var client = new HttpClient(handler)
@@ -26,6 +29,8 @@ namespace API.Clients
             {
                 if (AuthServiceProvider.Instance != null)
                 {
+                    await AuthServiceProvider.Instance.CheckTokenExpirationAsync();
+
                     var token = await AuthServiceProvider.Instance.GetTokenAsync();
                     if (!string.IsNullOrWhiteSpace(token))
                     {
