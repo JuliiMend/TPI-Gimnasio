@@ -184,6 +184,33 @@ namespace Data.Migrations
                     b.ToTable("DetallesCuota");
                 });
 
+            modelBuilder.Entity("Domain.Model.Inscripcion", b =>
+                {
+                    b.Property<int>("IdInscripcion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdInscripcion"));
+
+                    b.Property<DateTime>("FechaInscripcion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdClase")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdSocio")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdInscripcion");
+
+                    b.HasIndex("IdClase");
+
+                    b.HasIndex("IdSocio", "IdClase")
+                        .IsUnique();
+
+                    b.ToTable("Inscripciones");
+                });
+
             modelBuilder.Entity("Domain.Model.Maquina", b =>
                 {
                     b.Property<int>("IdMaquina")
@@ -486,6 +513,25 @@ namespace Data.Migrations
                     b.Navigation("Cuota");
                 });
 
+            modelBuilder.Entity("Domain.Model.Inscripcion", b =>
+                {
+                    b.HasOne("Domain.Model.Clase", "Clase")
+                        .WithMany("Inscripciones")
+                        .HasForeignKey("IdClase")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Model.Socio", "Socio")
+                        .WithMany()
+                        .HasForeignKey("IdSocio")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Clase");
+
+                    b.Navigation("Socio");
+                });
+
             modelBuilder.Entity("Domain.Model.Profesor", b =>
                 {
                     b.HasOne("Domain.Model.Usuario", "Usuario")
@@ -512,6 +558,11 @@ namespace Data.Migrations
                     b.Navigation("Plan");
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Domain.Model.Clase", b =>
+                {
+                    b.Navigation("Inscripciones");
                 });
 
             modelBuilder.Entity("Domain.Model.Cuota", b =>

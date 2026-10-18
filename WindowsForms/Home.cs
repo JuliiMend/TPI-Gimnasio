@@ -83,6 +83,13 @@ namespace WindowsFormsApp
             claseForm.Show();
         }
 
+        private void inscripcionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var inscripcionForm = new InscripcionLista();
+            inscripcionForm.MdiParent = this;
+            inscripcionForm.Show();
+        }
+
         private void administradoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var administradorForm = new AdministradorLista();

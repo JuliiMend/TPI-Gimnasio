@@ -50,6 +50,12 @@ namespace Application.Services
 
             if (clase != null)
             {
+                if (claseDto.Cupo < clase.Inscripciones.Count)
+                {
+                    throw new ReglaNegocioException(
+                        $"El cupo no puede ser menor a la cantidad de inscriptos ({clase.Inscripciones.Count}).");
+                }
+
                 clase.IdActividad = claseDto.IdActividad;
                 clase.IdProfesor = claseDto.IdProfesor;
                 clase.IdTurno = claseDto.IdTurno;
@@ -77,7 +83,8 @@ namespace Application.Services
                 Turno = c.Turno != null
                     ? $"{c.Turno.DiaSemana} {c.Turno.HoraDesde:hh\\:mm} - {c.Turno.HoraHasta:hh\\:mm}"
                     : string.Empty,
-                Cupo = c.Cupo
+                Cupo = c.Cupo,
+                Inscriptos = c.Inscripciones.Count
             };
         }
     }

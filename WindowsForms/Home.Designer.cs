@@ -41,6 +41,7 @@
             materialesToolStripMenuItem = new ToolStripMenuItem();
             actividadesToolStripMenuItem = new ToolStripMenuItem();
             clasesToolStripMenuItem = new ToolStripMenuItem();
+            inscripcionesToolStripMenuItem = new ToolStripMenuItem();
             administradoresToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -70,7 +71,7 @@
             // 
             // gestionToolStripMenuItem
             // 
-            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem, actividadesToolStripMenuItem, clasesToolStripMenuItem, administradoresToolStripMenuItem });
+            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem, actividadesToolStripMenuItem, clasesToolStripMenuItem, inscripcionesToolStripMenuItem, administradoresToolStripMenuItem });
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(59, 20);
             gestionToolStripMenuItem.Text = "Gestion";
@@ -138,6 +139,13 @@
             clasesToolStripMenuItem.Text = "Clases";
             clasesToolStripMenuItem.Click += clasesToolStripMenuItem_Click;
             // 
+            // inscripcionesToolStripMenuItem
+            // 
+            inscripcionesToolStripMenuItem.Name = "inscripcionesToolStripMenuItem";
+            inscripcionesToolStripMenuItem.Size = new Size(180, 22);
+            inscripcionesToolStripMenuItem.Text = "Inscripciones";
+            inscripcionesToolStripMenuItem.Click += inscripcionesToolStripMenuItem_Click;
+            // 
             // administradoresToolStripMenuItem
             // 
             administradoresToolStripMenuItem.Name = "administradoresToolStripMenuItem";
@@ -172,6 +180,7 @@
         private ToolStripMenuItem materialesToolStripMenuItem;
         private ToolStripMenuItem actividadesToolStripMenuItem;
         private ToolStripMenuItem clasesToolStripMenuItem;
+        private ToolStripMenuItem inscripcionesToolStripMenuItem;
         private ToolStripMenuItem administradoresToolStripMenuItem;
     }
 }

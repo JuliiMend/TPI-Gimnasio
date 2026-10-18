@@ -35,6 +35,7 @@ namespace WindowsFormsApp
             colProfesor = new DataGridViewTextBoxColumn();
             colTurno = new DataGridViewTextBoxColumn();
             colCupo = new DataGridViewTextBoxColumn();
+            colInscriptos = new DataGridViewTextBoxColumn();
             btnEliminar = new Button();
             btnModificar = new Button();
             btnNuevo = new Button();
@@ -58,7 +59,7 @@ namespace WindowsFormsApp
             dgvClases.AutoGenerateColumns = false;
             dgvClases.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvClases.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvClases.Columns.AddRange(new DataGridViewColumn[] { colId, colActividad, colProfesor, colTurno, colCupo });
+            dgvClases.Columns.AddRange(new DataGridViewColumn[] { colId, colActividad, colProfesor, colTurno, colCupo, colInscriptos });
             dgvClases.Location = new Point(12, 45);
             dgvClases.MultiSelect = false;
             dgvClases.Name = "dgvClases";
@@ -101,6 +102,13 @@ namespace WindowsFormsApp
             colCupo.HeaderText = "Cupo";
             colCupo.Name = "colCupo";
             colCupo.ReadOnly = true;
+            // 
+            // colInscriptos
+            // 
+            colInscriptos.DataPropertyName = "Inscriptos";
+            colInscriptos.HeaderText = "Inscriptos";
+            colInscriptos.Name = "colInscriptos";
+            colInscriptos.ReadOnly = true;
             // 
             // btnEliminar
             // 
@@ -176,6 +184,7 @@ namespace WindowsFormsApp
         private DataGridViewTextBoxColumn colProfesor;
         private DataGridViewTextBoxColumn colTurno;
         private DataGridViewTextBoxColumn colCupo;
+        private DataGridViewTextBoxColumn colInscriptos;
         private Button btnEliminar;
         private Button btnModificar;
         private Button btnNuevo;

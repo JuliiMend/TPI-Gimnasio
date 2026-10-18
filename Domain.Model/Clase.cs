@@ -13,5 +13,7 @@ namespace Domain.Model
 
         public int IdTurno { get; set; }
         public Turno? Turno { get; set; }
+
+        public List<Inscripcion> Inscripciones { get; set; } = new();
     }
 }
