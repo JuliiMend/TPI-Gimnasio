@@ -41,9 +41,10 @@
             <div class="col-md-4 mb-3">
                 <label>Mes y año</label>
 
-                <input type="number"
+                <input type="month"
                        class="form-control"
-                       @bind="cuotaActual.MesAnio" />
+                       value="@MesAnioParaInput(cuotaActual.MesAnio)"
+                       @onchange="CambiarMesAnio" />
 
                 @if (!string.IsNullOrEmpty(errorMesAnio))
                 {
@@ -65,17 +66,12 @@
             </div>
 
             <div class="col-md-4 mb-3">
-                <label>Valor</label>
+                <label>Valor (total de los detalles)</label>
 
-                <input type="number"
-                       step="0.01"
+                <input type="text"
                        class="form-control"
-                       @bind="cuotaActual.Valor" />
-
-                @if (!string.IsNullOrEmpty(errorValor))
-                {
-                    <div class="text-danger">@errorValor</div>
-                }
+                       value="@($"$ {cuotaActual.Detalles.Sum(d => d.Monto)}")"
+                       readonly />
             </div>
 
         </div>
@@ -237,7 +233,7 @@
 
                 <td>@cuota.SocioNombre</td>
 
-                <td>@cuota.MesAnio</td>
+                <td>@FormatearMesAnio(cuota.MesAnio)</td>
 
                 <td>@cuota.FechaPago.ToString("dd/MM/yyyy")</td>
 
@@ -280,7 +276,6 @@
     private string errorSocio = string.Empty;
     private string errorMesAnio = string.Empty;
     private string errorFechaPago = string.Empty;
-    private string errorValor = string.Empty;
     private string errorConcepto = string.Empty;
     private string errorSubtotal = string.Empty;
     private string errorMonto = string.Empty;
@@ -335,7 +330,6 @@
         errorSocio = string.Empty;
         errorMesAnio = string.Empty;
         errorFechaPago = string.Empty;
-        errorValor = string.Empty;
 
         errorConcepto = string.Empty;
         errorSubtotal = string.Empty;
@@ -348,6 +342,7 @@
     {
         cuotaActual = new CuotaCreaActualizaDTO
         {
+            MesAnio = DateTime.Today.Year * 100 + DateTime.Today.Month,
             FechaPago = DateTime.Today
         };
 
@@ -410,32 +405,19 @@
             valido = false;
         }
 
-        if (cuotaActual.MesAnio < 100000 ||
-            cuotaActual.MesAnio > 999999)
-        {
-            errorMesAnio = "Ingresá el mes y año con formato MMAAAA.";
-            valido = false;
-        }
-        else
-        {
-            int mes = cuotaActual.MesAnio / 10000;
+        // MesAnio se guarda como AAAAMM (ej: 202601), igual que en WinForms
+        int mes = cuotaActual.MesAnio % 100;
+        int anio = cuotaActual.MesAnio / 100;
 
-            if (mes < 1 || mes > 12)
-            {
-                errorMesAnio = "El mes debe estar entre 01 y 12.";
-                valido = false;
-            }
+        if (anio < 2000 || anio > 2100 || mes < 1 || mes > 12)
+        {
+            errorMesAnio = "Seleccioná el mes y año de la cuota.";
+            valido = false;
         }
 
         if (cuotaActual.FechaPago == DateTime.MinValue)
         {
             errorFechaPago = "Ingresá la fecha de pago.";
-            valido = false;
-        }
-
-        if (cuotaActual.Valor <= 0)
-        {
-            errorValor = "El valor debe ser mayor a 0.";
             valido = false;
         }
 
@@ -485,6 +467,8 @@
         {
             return;
         }
+
+        cuotaActual.Valor = cuotaActual.Detalles.Sum(d => d.Monto);
 
         try
         {
@@ -552,9 +536,8 @@
         }
         else
         {
-            int nuevoId = cuotaActual.Detalles.Any()
-                ? cuotaActual.Detalles.Max(d => d.DetalleCuotaId) + 1
-                : 1;
+            // Id temporal negativo: así la API no lo confunde con un detalle que ya existe en la BD
+            int nuevoId = Math.Min(0, cuotaActual.Detalles.Select(d => d.DetalleCuotaId).DefaultIfEmpty(0).Min()) - 1;
 
             cuotaActual.Detalles.Add(
                 new DetalleCuotaCreaActualizaDTO
@@ -607,6 +590,36 @@
         errorConcepto = string.Empty;
         errorSubtotal = string.Empty;
         errorMonto = string.Empty;
+    }
+
+
+    private static string MesAnioParaInput(int mesAnio)
+    {
+        return mesAnio > 0 ? $"{mesAnio / 100:0000}-{mesAnio % 100:00}" : string.Empty;
+    }
+
+
+    private static string FormatearMesAnio(int mesAnio)
+    {
+        return $"{mesAnio % 100:00}/{mesAnio / 100}";
+    }
+
+
+    private void CambiarMesAnio(ChangeEventArgs e)
+    {
+        // El input type="month" devuelve "AAAA-MM"
+        var partes = e.Value?.ToString()?.Split('-');
+
+        if (partes?.Length == 2 &&
+            int.TryParse(partes[0], out var anio) &&
+            int.TryParse(partes[1], out var mes))
+        {
+            cuotaActual.MesAnio = anio * 100 + mes;
+        }
+        else
+        {
+            cuotaActual.MesAnio = 0;
+        }
     }
 
 

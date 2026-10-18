@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace API.Clients
@@ -38,6 +39,35 @@ namespace API.Clients
             }
 
             return client;
+        }
+
+        // Igual que EnsureSuccessStatusCode, pero usa el "mensaje" que devuelve la API cuando existe
+        protected static async Task EnsureSuccessAsync(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            string mensaje = $"Error {(int)response.StatusCode} ({response.ReasonPhrase}).";
+
+            try
+            {
+                var cuerpo = await response.Content.ReadAsStringAsync();
+                using var json = JsonDocument.Parse(cuerpo);
+
+                if (json.RootElement.ValueKind == JsonValueKind.Object &&
+                    json.RootElement.TryGetProperty("mensaje", out var detalle))
+                {
+                    mensaje = detalle.GetString() ?? mensaje;
+                }
+            }
+            catch (JsonException)
+            {
+                // El cuerpo no es JSON: se usa el mensaje genérico
+            }
+
+            throw new HttpRequestException(mensaje, null, response.StatusCode);
         }
     }
 }

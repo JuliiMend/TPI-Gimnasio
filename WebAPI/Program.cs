@@ -1,5 +1,6 @@
 using Application.Services;
 using Data;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using WebAPI;
 using WebAPI.Endpoints;
@@ -85,6 +86,27 @@ var app = builder.Build();
 // Habilitamos Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
+
+// Errores de integridad de la BD (FK o clave única) -> 409 con un mensaje legible en vez de un 500
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx)
+    {
+        var mensaje = sqlEx.Number switch
+        {
+            547 => "La operación no se puede realizar por una relación con otros datos: el registro tiene datos asociados (por ejemplo, un plan con socios o un socio con cuotas) o hace referencia a uno que no existe.",
+            2601 or 2627 => "Ya existe un registro con esos datos (por ejemplo, el username ya está en uso).",
+            _ => "No se pudo guardar el cambio en la base de datos."
+        };
+
+        context.Response.StatusCode = StatusCodes.Status409Conflict;
+        await context.Response.WriteAsJsonAsync(new { mensaje });
+    }
+});
 
 // Auth tiene que ir ANTES de mapear los endpoints
 app.UseAuthentication();

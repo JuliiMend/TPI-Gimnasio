@@ -17,56 +17,90 @@ namespace WindowsFormsApp
 
         public async Task CargarMaterialAsync(int id)
         {
-            var material = await MaterialApiClient.GetAsync(id);
+            try
+            {
+                var material = await MaterialApiClient.GetAsync(id);
 
-            if (material == null)
+                if (material == null)
+                {
+                    MessageBox.Show(
+                        "No se encontró el material.",
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+
+                    return;
+                }
+
+                _idMaterial = id;
+
+                txtDescripcion.Text = material.Descripcion;
+                // Clamp: si el stock supera el máximo del control, asignarlo directo lanza una excepción
+                numStock.Value = Math.Min(Math.Max(material.Stock, numStock.Minimum), numStock.Maximum);
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(
-                    "No se encontró el material.",
+                    $"Error al cargar el material: {ex.Message}",
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-
-                return;
             }
-
-            _idMaterial = id;
-
-            txtDescripcion.Text = material.Descripcion;
-            numStock.Value = material.Stock;
         }
 
         private async void btnGuardar_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtDescripcion.Text))
+            {
+                MessageBox.Show(
+                    "Ingresá la descripción.",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
             var materialDto = new MaterialCreaActualizaDTO
             {
-                Descripcion = txtDescripcion.Text,
+                Descripcion = txtDescripcion.Text.Trim(),
                 Stock = (int)numStock.Value
             };
 
-            if (_idMaterial == null)
+            try
             {
-                await MaterialApiClient.AddAsync(materialDto);
+                if (_idMaterial == null)
+                {
+                    await MaterialApiClient.AddAsync(materialDto);
 
-                MessageBox.Show(
-                    "Material creado correctamente.",
-                    "Éxito",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        "Material creado correctamente.",
+                        "Éxito",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    await MaterialApiClient.UpdateAsync(_idMaterial.Value, materialDto);
+
+                    MessageBox.Show(
+                        "Material modificado correctamente.",
+                        "Éxito",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+
+                DialogResult = DialogResult.OK;
+                Close();
             }
-            else
+            catch (Exception ex)
             {
-                await MaterialApiClient.UpdateAsync(_idMaterial.Value, materialDto);
-
                 MessageBox.Show(
-                    "Material modificado correctamente.",
-                    "Éxito",
+                    $"Error al guardar el material: {ex.Message}",
+                    "Error",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Error);
             }
-
-            DialogResult = DialogResult.OK;
-            Close();
         }
     }
 }
