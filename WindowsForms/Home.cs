@@ -68,5 +68,26 @@ namespace WindowsFormsApp
             materialForm.MdiParent = this;
             materialForm.Show();
         }
+
+        private void actividadesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var actividadForm = new ActividadLista();
+            actividadForm.MdiParent = this;
+            actividadForm.Show();
+        }
+
+        private void clasesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var claseForm = new ClaseLista();
+            claseForm.MdiParent = this;
+            claseForm.Show();
+        }
+
+        private void administradoresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var administradorForm = new AdministradorLista();
+            administradorForm.MdiParent = this;
+            administradorForm.Show();
+        }
     }
 }

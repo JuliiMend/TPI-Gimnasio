@@ -2,6 +2,7 @@ using API.Clients;
 using DTOs;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp
@@ -26,6 +27,22 @@ namespace WindowsFormsApp
             Text = PlanId.HasValue
                 ? "Modificar plan"
                 : "Registrar nuevo plan";
+
+            try
+            {
+                var actividades = await ActividadApiClient.GetAllAsync();
+
+                clbActividades.DisplayMember = "Tipo";
+                clbActividades.DataSource = actividades.ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Error al cargar las actividades: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
 
             if (!PlanId.HasValue)
             {
@@ -52,6 +69,12 @@ namespace WindowsFormsApp
                 Tipo.Text = plan.Tipo;
                 Precio.Text = plan.Precio.ToString(CultureInfo.CurrentCulture);
                 Descripcion.Text = plan.Descripcion;
+
+                for (int i = 0; i < clbActividades.Items.Count; i++)
+                {
+                    var actividad = (ActividadMostrarDTO)clbActividades.Items[i];
+                    clbActividades.SetItemChecked(i, plan.IdsActividades.Contains(actividad.IdActividad));
+                }
             }
             catch (Exception ex)
             {
@@ -118,7 +141,11 @@ namespace WindowsFormsApp
                 Nombre = Nombre.Text.Trim(),
                 Tipo = Tipo.Text.Trim(),
                 Precio = precio,
-                Descripcion = Descripcion.Text.Trim()
+                Descripcion = Descripcion.Text.Trim(),
+                IdsActividades = clbActividades.CheckedItems
+                    .Cast<ActividadMostrarDTO>()
+                    .Select(a => a.IdActividad)
+                    .ToList()
             };
 
             try

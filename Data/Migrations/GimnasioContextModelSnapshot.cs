@@ -22,6 +22,110 @@ namespace Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ActividadPlan", b =>
+                {
+                    b.Property<int>("ActividadesIdActividad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlanesPlanId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ActividadesIdActividad", "PlanesPlanId");
+
+                    b.HasIndex("PlanesPlanId");
+
+                    b.ToTable("PlanActividades", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Model.Actividad", b =>
+                {
+                    b.Property<int>("IdActividad")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdActividad"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdActividad");
+
+                    b.ToTable("Actividades");
+                });
+
+            modelBuilder.Entity("Domain.Model.Administrador", b =>
+                {
+                    b.Property<int>("PersonaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PersonaId"));
+
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Dni")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaNac")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PersonaId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Administradores");
+                });
+
+            modelBuilder.Entity("Domain.Model.Clase", b =>
+                {
+                    b.Property<int>("IdClase")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdClase"));
+
+                    b.Property<int>("Cupo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdActividad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdProfesor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTurno")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdClase");
+
+                    b.HasIndex("IdActividad");
+
+                    b.HasIndex("IdProfesor");
+
+                    b.HasIndex("IdTurno");
+
+                    b.ToTable("Clases");
+                });
+
             modelBuilder.Entity("Domain.Model.Cuota", b =>
                 {
                     b.Property<int>("CuotaId")
@@ -306,6 +410,58 @@ namespace Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("ActividadPlan", b =>
+                {
+                    b.HasOne("Domain.Model.Actividad", null)
+                        .WithMany()
+                        .HasForeignKey("ActividadesIdActividad")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Model.Plan", null)
+                        .WithMany()
+                        .HasForeignKey("PlanesPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Model.Administrador", b =>
+                {
+                    b.HasOne("Domain.Model.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Domain.Model.Clase", b =>
+                {
+                    b.HasOne("Domain.Model.Actividad", "Actividad")
+                        .WithMany()
+                        .HasForeignKey("IdActividad")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Model.Profesor", "Profesor")
+                        .WithMany()
+                        .HasForeignKey("IdProfesor")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Model.Turno", "Turno")
+                        .WithMany()
+                        .HasForeignKey("IdTurno")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Actividad");
+
+                    b.Navigation("Profesor");
+
+                    b.Navigation("Turno");
                 });
 
             modelBuilder.Entity("Domain.Model.Cuota", b =>
