@@ -32,6 +32,7 @@ namespace Data
         public DbSet<Administrador> Administradores { get; set; }
         public DbSet<Actividad> Actividades { get; set; }
         public DbSet<Clase> Clases { get; set; }
+        public DbSet<Inscripcion> Inscripciones { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -106,6 +107,24 @@ namespace Data
                 .HasOne(c => c.Turno)
                 .WithMany()
                 .HasForeignKey(c => c.IdTurno)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // inscripcion: socio se inscribe a clase (una sola vez por clase)
+            modelBuilder.Entity<Inscripcion>().HasKey(i => i.IdInscripcion);
+            modelBuilder.Entity<Inscripcion>()
+                .HasIndex(i => new { i.IdSocio, i.IdClase })
+                .IsUnique();
+
+            modelBuilder.Entity<Inscripcion>()
+                .HasOne(i => i.Socio)
+                .WithMany()
+                .HasForeignKey(i => i.IdSocio)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Inscripcion>()
+                .HasOne(i => i.Clase)
+                .WithMany(c => c.Inscripciones)
+                .HasForeignKey(i => i.IdClase)
                 .OnDelete(DeleteBehavior.Restrict);
 
 

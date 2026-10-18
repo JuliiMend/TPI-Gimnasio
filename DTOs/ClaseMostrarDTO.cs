@@ -10,5 +10,6 @@ namespace DTOs
         public int IdTurno { get; set; }
         public string Turno { get; set; } = string.Empty;
         public int Cupo { get; set; }
+        public int Inscriptos { get; set; }
     }
 }
