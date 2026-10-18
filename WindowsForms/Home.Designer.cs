@@ -46,6 +46,7 @@
             clasesToolStripMenuItem = new ToolStripMenuItem();
             inscripcionesToolStripMenuItem = new ToolStripMenuItem();
             administradoresToolStripMenuItem = new ToolStripMenuItem();
+            usuariosToolStripMenuItem = new ToolStripMenuItem();
             mantenimientosToolStripMenuItem = new ToolStripMenuItem();
             historicoSueldosToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
@@ -76,7 +77,7 @@
             // 
             // gestionToolStripMenuItem
             // 
-            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem, actividadesToolStripMenuItem, clasesToolStripMenuItem, inscripcionesToolStripMenuItem, administradoresToolStripMenuItem, mantenimientosToolStripMenuItem, historicoSueldosToolStripMenuItem });
+            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem, actividadesToolStripMenuItem, clasesToolStripMenuItem, inscripcionesToolStripMenuItem, administradoresToolStripMenuItem, usuariosToolStripMenuItem, mantenimientosToolStripMenuItem, historicoSueldosToolStripMenuItem });
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(59, 20);
             gestionToolStripMenuItem.Text = "Gestion";
@@ -179,6 +180,13 @@
             administradoresToolStripMenuItem.Text = "Administradores";
             administradoresToolStripMenuItem.Click += administradoresToolStripMenuItem_Click;
             // 
+            // usuariosToolStripMenuItem
+            // 
+            usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
+            usuariosToolStripMenuItem.Size = new Size(180, 22);
+            usuariosToolStripMenuItem.Text = "Usuarios";
+            usuariosToolStripMenuItem.Click += usuariosToolStripMenuItem_Click;
+            // 
             // mantenimientosToolStripMenuItem
             // 
             mantenimientosToolStripMenuItem.Name = "mantenimientosToolStripMenuItem";
@@ -225,6 +233,7 @@
         private ToolStripMenuItem clasesToolStripMenuItem;
         private ToolStripMenuItem inscripcionesToolStripMenuItem;
         private ToolStripMenuItem administradoresToolStripMenuItem;
+        private ToolStripMenuItem usuariosToolStripMenuItem;
         private ToolStripMenuItem mantenimientosToolStripMenuItem;
         private ToolStripMenuItem historicoSueldosToolStripMenuItem;
     }

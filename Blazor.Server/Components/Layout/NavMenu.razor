@@ -107,20 +107,26 @@
         itemsVisibles = items.Where(i => rol != null && i.Roles.Contains(rol)).ToList();
     }
 
-    // El menú vive en el layout y no se recrea al loguearse: se refresca con el evento
+    // El menú vive en el layout y no se recrea al loguearse: se refresca con el evento.
+    // Si la sesión se cerró (logout o token vencido), vuelve al login.
     private void AlCambiarSesion(bool autenticado)
     {
         _ = InvokeAsync(async () =>
         {
             await ActualizarMenu();
             StateHasChanged();
+
+            if (!autenticado)
+            {
+                Navigation.NavigateTo("/login");
+            }
         });
     }
 
+    // LogoutAsync dispara AuthenticationStateChanged, que lleva al login
     private async Task CerrarSesion()
     {
         await authService.LogoutAsync();
-        Navigation.NavigateTo("/login");
     }
 
     public void Dispose()
