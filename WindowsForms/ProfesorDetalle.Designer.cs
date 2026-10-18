@@ -185,6 +185,7 @@
             btnLogin.TabIndex = 16;
             btnLogin.Text = "Guardar";
             btnLogin.UseVisualStyleBackColor = false;
+            btnLogin.Click += btnGuardar_Click;
             // 
             // ProfesorDetalle
             // 
