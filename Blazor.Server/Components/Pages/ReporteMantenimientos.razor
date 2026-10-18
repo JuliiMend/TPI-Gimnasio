@@ -1,0 +1,172 @@
+@page "/reportes/mantenimientos"
+@attribute [RolesPermitidos(Roles.Admin)]
+@using API.Clients
+@inject IJSRuntime JS
+
+<PageTitle>Reporte de mantenimiento de máquinas</PageTitle>
+
+<h3>Reporte de mantenimiento de máquinas</h3>
+<p class="text-muted">Estado de los mantenimientos: fechas de inicio, fin esperado y fin real, y demoras.</p>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-danger">@mensaje</div>
+}
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label>Máquina</label>
+
+        <select class="form-select" value="@idMaquinaFiltro" @onchange="CambiarFiltro">
+            <option value="0">Todas las máquinas</option>
+
+            @foreach (var maquina in maquinas)
+            {
+                <option value="@maquina.IdMaquina">@maquina.Nombre</option>
+            }
+        </select>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card p-3" style="height: 320px;">
+            <canvas id="graficoMantenimientos"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Estado</th>
+                    <th>Cantidad</th>
+                    <th>Días de demora (total)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var estado in Estados)
+                {
+                    var delEstado = mantenimientos.Where(m => m.Estado == estado.Nombre).ToList();
+
+                    <tr>
+                        <td><span class="badge" style="background-color: @estado.Color">@estado.Nombre</span></td>
+                        <td>@delEstado.Count</td>
+                        <td>@delEstado.Sum(m => m.DiasDemora)</td>
+                    </tr>
+                }
+                <tr class="fw-bold">
+                    <td>Total</td>
+                    <td>@mantenimientos.Count</td>
+                    <td>@mantenimientos.Sum(m => m.DiasDemora)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h5>Detalle</h5>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Máquina</th>
+            <th>Descripción</th>
+            <th>Inicio</th>
+            <th>Fin esperado</th>
+            <th>Fin real</th>
+            <th>Estado</th>
+            <th>Días de demora</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var m in mantenimientos)
+        {
+            <tr>
+                <td>@m.Maquina</td>
+                <td>@m.Descripcion</td>
+                <td>@m.FechaInicio.ToString("dd/MM/yyyy")</td>
+                <td>@m.FechaFinEsperada.ToString("dd/MM/yyyy")</td>
+                <td>@(m.FechaFinReal?.ToString("dd/MM/yyyy") ?? "-")</td>
+                <td><span class="badge" style="background-color: @ColorDe(m.Estado)">@m.Estado</span></td>
+                <td>@m.DiasDemora</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private record EstadoReporte(string Nombre, string Color);
+
+    // Mismos estados que calcula MantenimientoService, con un color fijo para el gráfico y las etiquetas
+    private static readonly EstadoReporte[] Estados =
+    {
+        new("En curso", "#0d6efd"),
+        new("Demorado", "#dc3545"),
+        new("Finalizado", "#198754"),
+        new("Finalizado con demora", "#fd7e14")
+    };
+
+    private List<MantenimientoMostrarDTO> mantenimientos = new();
+    private List<MaquinaMostrarDTO> maquinas = new();
+    private int idMaquinaFiltro = 0;
+    private string mensaje = string.Empty;
+    private bool graficoPendiente;
+
+    private static string ColorDe(string estado) => Estados.FirstOrDefault(e => e.Nombre == estado)?.Color ?? "#6c757d";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            maquinas = (await MaquinaApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar las máquinas: {ex.Message}";
+        }
+
+        await CargarMantenimientos();
+    }
+
+    private async Task CargarMantenimientos()
+    {
+        try
+        {
+            mantenimientos = (await MantenimientoApiClient.GetAllAsync(idMaquinaFiltro > 0 ? idMaquinaFiltro : null)).ToList();
+            graficoPendiente = true;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los mantenimientos: {ex.Message}";
+        }
+    }
+
+    private async Task CambiarFiltro(ChangeEventArgs e)
+    {
+        idMaquinaFiltro = int.TryParse(e.Value?.ToString(), out var id) ? id : 0;
+        await CargarMantenimientos();
+    }
+
+    // El gráfico se dibuja con JS, así que tiene que ser después de renderizar el <canvas>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!graficoPendiente)
+        {
+            return;
+        }
+
+        graficoPendiente = false;
+
+        var conDatos = Estados
+            .Select(e => new { e.Nombre, e.Color, Cantidad = mantenimientos.Count(m => m.Estado == e.Nombre) })
+            .Where(e => e.Cantidad > 0)
+            .ToList();
+
+        await JS.InvokeVoidAsync("graficos.torta", "graficoMantenimientos",
+            conDatos.Select(e => e.Nombre).ToArray(),
+            conDatos.Select(e => e.Cantidad).ToArray(),
+            conDatos.Select(e => e.Color).ToArray(),
+            "Mantenimientos por estado");
+    }
+}

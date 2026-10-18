@@ -32,6 +32,9 @@
             sistemaToolStripMenuItem = new ToolStripMenuItem();
             cerrarSesionToolStripMenuItem = new ToolStripMenuItem();
             gestionToolStripMenuItem = new ToolStripMenuItem();
+            reportesToolStripMenuItem = new ToolStripMenuItem();
+            reporteOcupacionToolStripMenuItem = new ToolStripMenuItem();
+            reporteMantenimientosToolStripMenuItem = new ToolStripMenuItem();
             sociosToolStripMenuItem = new ToolStripMenuItem();
             planesToolStripMenuItem = new ToolStripMenuItem();
             turnosToolStripMenuItem = new ToolStripMenuItem();
@@ -50,7 +53,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { sistemaToolStripMenuItem, gestionToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { sistemaToolStripMenuItem, gestionToolStripMenuItem, reportesToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(800, 24);
@@ -77,6 +80,27 @@
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(59, 20);
             gestionToolStripMenuItem.Text = "Gestion";
+            // 
+            // reportesToolStripMenuItem
+            // 
+            reportesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { reporteOcupacionToolStripMenuItem, reporteMantenimientosToolStripMenuItem });
+            reportesToolStripMenuItem.Name = "reportesToolStripMenuItem";
+            reportesToolStripMenuItem.Size = new Size(65, 20);
+            reportesToolStripMenuItem.Text = "Reportes";
+            // 
+            // reporteOcupacionToolStripMenuItem
+            // 
+            reporteOcupacionToolStripMenuItem.Name = "reporteOcupacionToolStripMenuItem";
+            reporteOcupacionToolStripMenuItem.Size = new Size(230, 22);
+            reporteOcupacionToolStripMenuItem.Text = "Ocupacion de clases";
+            reporteOcupacionToolStripMenuItem.Click += reporteOcupacionToolStripMenuItem_Click;
+            // 
+            // reporteMantenimientosToolStripMenuItem
+            // 
+            reporteMantenimientosToolStripMenuItem.Name = "reporteMantenimientosToolStripMenuItem";
+            reporteMantenimientosToolStripMenuItem.Size = new Size(230, 22);
+            reporteMantenimientosToolStripMenuItem.Text = "Mantenimiento de maquinas";
+            reporteMantenimientosToolStripMenuItem.Click += reporteMantenimientosToolStripMenuItem_Click;
             // 
             // sociosToolStripMenuItem
             // 
@@ -187,6 +211,9 @@
         private ToolStripMenuItem sistemaToolStripMenuItem;
         private ToolStripMenuItem cerrarSesionToolStripMenuItem;
         private ToolStripMenuItem gestionToolStripMenuItem;
+        private ToolStripMenuItem reportesToolStripMenuItem;
+        private ToolStripMenuItem reporteOcupacionToolStripMenuItem;
+        private ToolStripMenuItem reporteMantenimientosToolStripMenuItem;
         private ToolStripMenuItem sociosToolStripMenuItem;
         private ToolStripMenuItem planesToolStripMenuItem;
         private ToolStripMenuItem turnosToolStripMenuItem;

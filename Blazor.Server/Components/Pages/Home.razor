@@ -36,6 +36,8 @@
     private static readonly Tarjeta[] tarjetas =
     {
         // Admin
+        new("/reportes/ocupacion-clases", "📊 Ocupación de clases", "Reporte con gráfico de inscriptos vs. cupo por clase.", "Ver reporte", new[] { Roles.Admin }),
+        new("/reportes/mantenimientos", "📈 Mantenimiento de máquinas", "Reporte con gráfico de mantenimientos por estado y demoras.", "Ver reporte", new[] { Roles.Admin }),
         new("/planes", "Planes", "Consultar los planes disponibles del gimnasio.", "Ver planes", new[] { Roles.Admin }),
         new("/actividades", "Actividades", "Gestionar los tipos de actividad que incluyen los planes.", "Gestionar actividades", new[] { Roles.Admin }),
         new("/clases", "Clases", "Gestionar las clases: actividad, profesor, turno y cupo.", "Gestionar clases", new[] { Roles.Admin }),
