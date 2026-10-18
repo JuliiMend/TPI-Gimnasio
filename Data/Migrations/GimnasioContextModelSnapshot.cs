@@ -184,6 +184,32 @@ namespace Data.Migrations
                     b.ToTable("DetallesCuota");
                 });
 
+            modelBuilder.Entity("Domain.Model.HistoricoSueldo", b =>
+                {
+                    b.Property<int>("IdHistoricoSueldo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdHistoricoSueldo"));
+
+                    b.Property<DateTime>("FechaDesde")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdProfesor")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("IdHistoricoSueldo");
+
+                    b.HasIndex("IdProfesor", "FechaDesde")
+                        .IsUnique();
+
+                    b.ToTable("HistoricoSueldos");
+                });
+
             modelBuilder.Entity("Domain.Model.Inscripcion", b =>
                 {
                     b.Property<int>("IdInscripcion")
@@ -209,6 +235,37 @@ namespace Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Inscripciones");
+                });
+
+            modelBuilder.Entity("Domain.Model.Mantenimiento", b =>
+                {
+                    b.Property<int>("IdMantenimiento")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMantenimiento"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaFinEsperada")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaFinReal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdMaquina")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdMantenimiento");
+
+                    b.HasIndex("IdMaquina");
+
+                    b.ToTable("Mantenimientos");
                 });
 
             modelBuilder.Entity("Domain.Model.Maquina", b =>
@@ -513,6 +570,17 @@ namespace Data.Migrations
                     b.Navigation("Cuota");
                 });
 
+            modelBuilder.Entity("Domain.Model.HistoricoSueldo", b =>
+                {
+                    b.HasOne("Domain.Model.Profesor", "Profesor")
+                        .WithMany()
+                        .HasForeignKey("IdProfesor")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Profesor");
+                });
+
             modelBuilder.Entity("Domain.Model.Inscripcion", b =>
                 {
                     b.HasOne("Domain.Model.Clase", "Clase")
@@ -530,6 +598,17 @@ namespace Data.Migrations
                     b.Navigation("Clase");
 
                     b.Navigation("Socio");
+                });
+
+            modelBuilder.Entity("Domain.Model.Mantenimiento", b =>
+                {
+                    b.HasOne("Domain.Model.Maquina", "Maquina")
+                        .WithMany()
+                        .HasForeignKey("IdMaquina")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Maquina");
                 });
 
             modelBuilder.Entity("Domain.Model.Profesor", b =>
