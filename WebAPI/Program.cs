@@ -88,6 +88,10 @@ builder.Services.AddScoped<IClaseRepository, ClaseRepository>();
 builder.Services.AddScoped<IClaseService, ClaseService>();
 builder.Services.AddScoped<IInscripcionRepository, InscripcionRepository>();
 builder.Services.AddScoped<IInscripcionService, InscripcionService>();
+builder.Services.AddScoped<IMantenimientoRepository, MantenimientoRepository>();
+builder.Services.AddScoped<IMantenimientoService, MantenimientoService>();
+builder.Services.AddScoped<IHistoricoSueldoRepository, HistoricoSueldoRepository>();
+builder.Services.AddScoped<IHistoricoSueldoService, HistoricoSueldoService>();
 
 var app = builder.Build();
 
@@ -102,8 +106,12 @@ app.Use(async (context, next) =>
     {
         await next();
     }
-    catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx)
+    // EF envuelve la SqlException en DbUpdateException; los repositorios ADO.NET (Máquinas, Materiales) la lanzan directa
+    catch (Exception ex) when ((ex as DbUpdateException)?.InnerException is SqlException ||
+                               ex is SqlException { Number: 547 or 2601 or 2627 })
     {
+        var sqlEx = ex as SqlException ?? (SqlException)ex.InnerException!;
+
         var mensaje = sqlEx.Number switch
         {
             547 => "La operación no se puede realizar por una relación con otros datos: el registro tiene datos asociados (por ejemplo, un plan con socios o un socio con cuotas) o hace referencia a uno que no existe.",
@@ -139,5 +147,7 @@ app.MapAdministradorEndpoints();
 app.MapActividadEndpoints();
 app.MapClaseEndpoints();
 app.MapInscripcionEndpoints();
+app.MapMantenimientoEndpoints();
+app.MapHistoricoSueldoEndpoints();
 
 app.Run();

@@ -33,6 +33,8 @@ namespace Data
         public DbSet<Actividad> Actividades { get; set; }
         public DbSet<Clase> Clases { get; set; }
         public DbSet<Inscripcion> Inscripciones { get; set; }
+        public DbSet<Mantenimiento> Mantenimientos { get; set; }
+        public DbSet<HistoricoSueldo> HistoricoSueldos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -125,6 +127,26 @@ namespace Data
                 .HasOne(i => i.Clase)
                 .WithMany(c => c.Inscripciones)
                 .HasForeignKey(i => i.IdClase)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // mantenimiento: una maquina registra varios mantenimientos
+            modelBuilder.Entity<Mantenimiento>().HasKey(m => m.IdMantenimiento);
+            modelBuilder.Entity<Mantenimiento>()
+                .HasOne(m => m.Maquina)
+                .WithMany()
+                .HasForeignKey(m => m.IdMaquina)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // historico de sueldos: un profesor tiene varios, uno por fecha desde
+            modelBuilder.Entity<HistoricoSueldo>().HasKey(h => h.IdHistoricoSueldo);
+            modelBuilder.Entity<HistoricoSueldo>().Property(h => h.Valor).HasPrecision(18, 2);
+            modelBuilder.Entity<HistoricoSueldo>()
+                .HasIndex(h => new { h.IdProfesor, h.FechaDesde })
+                .IsUnique();
+            modelBuilder.Entity<HistoricoSueldo>()
+                .HasOne(h => h.Profesor)
+                .WithMany()
+                .HasForeignKey(h => h.IdProfesor)
                 .OnDelete(DeleteBehavior.Restrict);
 
 
