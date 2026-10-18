@@ -15,12 +15,19 @@ namespace Data
             _context = context;
         }
 
-        public async Task<List<Cuota>> ObtenerTodosAsync()
+        public async Task<List<Cuota>> ObtenerTodosAsync(int? idSocio = null)
         {
-            return await _context.Cuotas
+            var query = _context.Cuotas
                 .Include(c => c.Socio)
                 .Include(c => c.Detalles)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (idSocio.HasValue)
+            {
+                query = query.Where(c => c.SocioId == idSocio.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Cuota?> ObtenerPorIdAsync(int id)

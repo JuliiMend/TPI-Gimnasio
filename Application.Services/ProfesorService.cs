@@ -61,6 +61,13 @@ namespace Application.Services
             };
         }
 
+        public async Task<ProfesorMostrarDTO?> ObtenerPorUsuarioAsync(int usuarioId)
+        {
+            var profesor = await _profesorRepository.ObtenerPorUsuarioIdAsync(usuarioId);
+
+            return profesor == null ? null : await ObtenerPorIdAsync(profesor.PersonaId);
+        }
+
         public async Task<int> AgregarAsync(ProfesorCreaActualizaDTO profesorDto)
         {
             var username = !string.IsNullOrWhiteSpace(profesorDto.Username)
@@ -78,7 +85,7 @@ namespace Application.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
                 FechaCreacion = DateTime.Now,
                 Activo = true,
-                Rol = "Profesor"
+                Rol = Roles.Profesor
             };
 
             var profesor = new Profesor

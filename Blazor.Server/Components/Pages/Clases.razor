@@ -2,13 +2,16 @@
 @using DTOs
 @using API.Clients
 
-<h3>Clases</h3>
+<h3>@(esProfesor ? "Mis clases" : "Clases")</h3>
 
-<div class="mb-3">
-    <button class="btn btn-primary" @onclick="NuevaClase">
-        + Nueva clase
-    </button>
-</div>
+@if (esAdmin)
+{
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="NuevaClase">
+            + Nueva clase
+        </button>
+    </div>
+}
 
 @if (mostrarFormulario)
 {
@@ -111,7 +114,10 @@
             <th>Profesor</th>
             <th>Turno</th>
             <th>Inscriptos / Cupo</th>
-            <th>Acciones</th>
+            @if (esAdmin)
+            {
+                <th>Acciones</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -122,17 +128,20 @@
                 <td>@clase.Profesor</td>
                 <td>@clase.Turno</td>
                 <td>@clase.Inscriptos / @clase.Cupo</td>
-                <td>
-                    <button class="btn btn-sm btn-warning me-2"
-                            @onclick="() => EditarClase(clase)">
-                        Editar
-                    </button>
+                @if (esAdmin)
+                {
+                    <td>
+                        <button class="btn btn-sm btn-warning me-2"
+                                @onclick="() => EditarClase(clase)">
+                            Editar
+                        </button>
 
-                    <button class="btn btn-sm btn-danger"
-                            @onclick="() => EliminarClase(clase)">
-                        Eliminar
-                    </button>
-                </td>
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => EliminarClase(clase)">
+                            Eliminar
+                        </button>
+                    </td>
+                }
             </tr>
         }
     </tbody>
@@ -158,17 +167,27 @@
     private List<ProfesorMostrarDTO> profesores = new();
     private List<TurnoMostrarDTO> turnos = new();
 
+    // Profesor y Socio solo consultan (el profesor ve solo sus clases: lo filtra la API)
+    private bool esAdmin;
+    private bool esProfesor;
+
     protected override async Task OnInitializedAsync()
     {
-        try
+        esAdmin = await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin);
+        esProfesor = await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Profesor);
+
+        if (esAdmin)
         {
-            actividades = (await ActividadApiClient.GetAllAsync()).ToList();
-            profesores = (await ProfesorApiClient.GetAllAsync()).ToList();
-            turnos = (await TurnoApiClient.GetAllAsync()).ToList();
-        }
-        catch (Exception ex)
-        {
-            mensaje = $"Error al cargar actividades, profesores o turnos: {ex.Message}";
+            try
+            {
+                actividades = (await ActividadApiClient.GetAllAsync()).ToList();
+                profesores = (await ProfesorApiClient.GetAllAsync()).ToList();
+                turnos = (await TurnoApiClient.GetAllAsync()).ToList();
+            }
+            catch (Exception ex)
+            {
+                mensaje = $"Error al cargar actividades, profesores o turnos: {ex.Message}";
+            }
         }
 
         await CargarClases();

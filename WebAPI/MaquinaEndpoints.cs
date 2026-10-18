@@ -10,7 +10,7 @@ namespace WebAPI
     {
         public static void MapMaquinaEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/maquinas").RequireAuthorization();
+            var grupo = app.MapGroup("/api/maquinas").RequireAuthorization(Politicas.SoloAdmin);
 
             grupo.MapGet("/", async (IMaquinaService maquinaService) =>
             {

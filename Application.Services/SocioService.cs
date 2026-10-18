@@ -75,6 +75,13 @@ namespace Application.Services
             };
         }
 
+        public async Task<SocioMostrarDTO?> ObtenerPorUsuarioAsync(int usuarioId)
+        {
+            var socio = await _socioRepository.ObtenerPorUsuarioIdAsync(usuarioId);
+
+            return socio == null ? null : await ObtenerPorIdAsync(socio.PersonaId);
+        }
+
         public async Task<int> AgregarAsync(SocioCreaActualizaDTO dto)
         {
             var username = !string.IsNullOrWhiteSpace(dto.Username)
@@ -92,7 +99,7 @@ namespace Application.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
                 FechaCreacion = DateTime.Now,
                 Activo = true,
-                Rol = "Socio"
+                Rol = Roles.Socio
             };
 
             var socio = new Socio

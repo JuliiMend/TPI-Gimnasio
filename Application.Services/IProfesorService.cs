@@ -11,6 +11,7 @@ namespace Application.Services
     {
         Task<List<ProfesorMostrarDTO>> ObtenerTodosAsync();
         Task<ProfesorMostrarDTO?> ObtenerPorIdAsync(int id);
+        Task<ProfesorMostrarDTO?> ObtenerPorUsuarioAsync(int usuarioId);
         Task<int> AgregarAsync(ProfesorCreaActualizaDTO profesorDto);
         Task ActualizarAsync(int id, ProfesorCreaActualizaDTO profesorDto);
         Task EliminarAsync(int id);

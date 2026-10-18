@@ -11,6 +11,7 @@ namespace Data
     {
         Task<List<Profesor>> ObtenerTodosAsync();
         Task<Profesor?> ObtenerPorIdAsync(int id);
+        Task<Profesor?> ObtenerPorUsuarioIdAsync(int usuarioId);
         Task AgregarAsync(Profesor profesor);
         Task ActualizarAsync(Profesor profesor);
         Task EliminarAsync(int id);

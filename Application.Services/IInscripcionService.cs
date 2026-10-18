@@ -6,7 +6,7 @@ namespace Application.Services
 {
     public interface IInscripcionService
     {
-        Task<List<InscripcionMostrarDTO>> ObtenerTodosAsync(int? idClase);
+        Task<List<InscripcionMostrarDTO>> ObtenerTodosAsync(int? idClase, int? idSocio = null, int? idProfesor = null);
         Task<InscripcionMostrarDTO?> ObtenerPorIdAsync(int id);
         Task<int> InscribirAsync(InscripcionCreaDTO inscripcionDto);
         Task EliminarAsync(int id);

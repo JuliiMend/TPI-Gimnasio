@@ -17,20 +17,36 @@ namespace WindowsFormsApp
             _idClaseInicial = idClaseInicial;
         }
 
+        // El socio se inscribe a sí mismo: no elige socio (la API usa el del token)
+        private bool _esSocio;
+
         private async void InscripcionDetalle_Load(object? sender, EventArgs e)
         {
+            _esSocio = await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Socio);
+
+            if (_esSocio)
+            {
+                lblSocio.Visible = cmbSocio.Visible = false;
+                lblTitulo.Text = "INSCRIBIRME A UNA CLASE";
+            }
+
             try
             {
-                var socios = await SocioApiClient.GetAllAsync();
-                var clases = await ClaseApiClient.GetAllAsync();
+                if (!_esSocio)
+                {
+                    var socios = await SocioApiClient.GetAllAsync();
 
-                // Los socios dados de baja no pueden inscribirse
-                cmbSocio.DisplayMember = "Texto";
-                cmbSocio.ValueMember = "Id";
-                cmbSocio.DataSource = socios
-                    .Where(s => s.FechaBaja == null || s.FechaBaja.Value.Date > DateTime.Today)
-                    .Select(s => new { Id = s.IdPersona, Texto = $"{s.Nombre} {s.Apellido} (DNI {s.Dni})" })
-                    .ToList();
+                    // Los socios dados de baja no pueden inscribirse
+                    cmbSocio.DisplayMember = "Texto";
+                    cmbSocio.ValueMember = "Id";
+                    cmbSocio.DataSource = socios
+                        .Where(s => s.FechaBaja == null || s.FechaBaja.Value.Date > DateTime.Today)
+                        .Select(s => new { Id = s.IdPersona, Texto = $"{s.Nombre} {s.Apellido} (DNI {s.Dni})" })
+                        .ToList();
+                    cmbSocio.SelectedIndex = -1;
+                }
+
+                var clases = await ClaseApiClient.GetAllAsync();
 
                 cmbClase.DisplayMember = "Texto";
                 cmbClase.ValueMember = "Id";
@@ -42,7 +58,6 @@ namespace WindowsFormsApp
                     })
                     .ToList();
 
-                cmbSocio.SelectedIndex = -1;
                 cmbClase.SelectedIndex = -1;
 
                 if (_idClaseInicial.HasValue)
@@ -62,16 +77,24 @@ namespace WindowsFormsApp
 
         private async void btnInscribir_Click(object? sender, EventArgs e)
         {
-            if (cmbSocio.SelectedValue is not int idSocio ||
+            // Para el socio el IdSocio no importa: la API lo reemplaza por el del usuario logueado
+            int idSocio = 0;
+
+            if ((!_esSocio && cmbSocio.SelectedValue is not int) ||
                 cmbClase.SelectedValue is not int idClase)
             {
                 MessageBox.Show(
-                    "Seleccioná el socio y la clase.",
+                    _esSocio ? "Seleccioná la clase." : "Seleccioná el socio y la clase.",
                     "Validación",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
                 return;
+            }
+
+            if (!_esSocio)
+            {
+                idSocio = (int)cmbSocio.SelectedValue!;
             }
 
             try

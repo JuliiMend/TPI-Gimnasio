@@ -15,6 +15,7 @@ namespace API.Clients
         public Task<bool> IsAuthenticatedAsync() => Task.FromResult(!string.IsNullOrEmpty(_token));
         public Task<string?> GetTokenAsync() => Task.FromResult(_token);
         public Task<string?> GetUsernameAsync() => Task.FromResult(_username);
+        public Task<string?> GetRolAsync() => Task.FromResult(_rol);
 
         public async Task<bool> LoginAsync(string username, string password)
         {
@@ -44,6 +45,6 @@ namespace API.Clients
         }
 
         public Task CheckTokenExpirationAsync() => Task.CompletedTask;
-        public Task<bool> HasPermissionAsync(string permission) => Task.FromResult(true);
+        public Task<bool> HasPermissionAsync(params string[] roles) => Task.FromResult(_rol != null && roles.Contains(_rol));
     }
 }
