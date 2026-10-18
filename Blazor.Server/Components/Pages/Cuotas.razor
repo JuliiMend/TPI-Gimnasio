@@ -1,14 +1,18 @@
 ﻿@page "/cuotas"
+@attribute [RolesPermitidos(Roles.Admin, Roles.Socio)]
 @using DTOs
 @using API.Clients
 
-<h3>Cuotas</h3>
+<h3>@(esAdmin ? "Cuotas" : "Mis cuotas")</h3>
 
-<div class="mb-3">
-    <button class="btn btn-primary" @onclick="NuevaCuota">
-        + Nueva cuota
-    </button>
-</div>
+@if (esAdmin)
+{
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="NuevaCuota">
+            + Nueva cuota
+        </button>
+    </div>
+}
 
 @if (mostrarFormulario)
 {
@@ -221,7 +225,10 @@
             <th>Fecha de pago</th>
             <th>Valor</th>
             <th>Detalles</th>
-            <th>Acciones</th>
+            @if (esAdmin)
+            {
+                <th>Acciones</th>
+            }
         </tr>
     </thead>
 
@@ -240,22 +247,25 @@
                 <td>$ @cuota.Valor</td>
 
                 <td>
-                    @cuota.Detalles.Count
+                    @string.Join(", ", cuota.Detalles.Select(d => d.Concepto))
                 </td>
 
-                <td>
+                @if (esAdmin)
+                {
+                    <td>
 
-                    <button class="btn btn-sm btn-warning me-2"
-                            @onclick="() => EditarCuota(cuota)">
-                        Editar
-                    </button>
+                        <button class="btn btn-sm btn-warning me-2"
+                                @onclick="() => EditarCuota(cuota)">
+                            Editar
+                        </button>
 
-                    <button class="btn btn-sm btn-danger"
-                            @onclick="() => EliminarCuota(cuota)">
-                        Eliminar
-                    </button>
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => EliminarCuota(cuota)">
+                            Eliminar
+                        </button>
 
-                </td>
+                    </td>
+                }
 
             </tr>
         }
@@ -292,9 +302,18 @@
     private List<SocioMostrarDTO> socios = new();
 
 
+    // El socio ve solo sus cuotas (la API ya las filtra) y en modo lectura
+    private bool esAdmin;
+
     protected override async Task OnInitializedAsync()
     {
-        await CargarSocios();
+        esAdmin = await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin);
+
+        if (esAdmin)
+        {
+            await CargarSocios();
+        }
+
         await CargarCuotas();
     }
 

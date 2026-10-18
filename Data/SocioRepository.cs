@@ -58,6 +58,14 @@ namespace Data
                 .FirstOrDefaultAsync(s => s.PersonaId == id);
         }
 
+        public async Task<Socio?> ObtenerPorUsuarioIdAsync(int usuarioId)
+        {
+            return await _context.Socios
+                .Include(s => s.Plan)
+                .Include(s => s.Usuario)
+                .FirstOrDefaultAsync(s => s.UsuarioId == usuarioId);
+        }
+
         public async Task AgregarAsync(Socio socio)
         {
             await _context.Socios.AddAsync(socio);

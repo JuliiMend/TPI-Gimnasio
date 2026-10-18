@@ -1,5 +1,7 @@
 ﻿using API.Clients;
+using DTOs;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp
@@ -24,8 +26,40 @@ namespace WindowsFormsApp
             planForm.Show();
         }
 
-        private void Home_Load(object sender, EventArgs e)
+        private async void Home_Load(object sender, EventArgs e)
         {
+            var authService = AuthServiceProvider.Instance;
+            var rol = await authService.GetRolAsync();
+
+            Text = $"Gimnasio - {await authService.GetUsernameAsync()} ({rol})";
+
+            if (rol == Roles.Admin)
+            {
+                return;
+            }
+
+            // Profesor y Socio solo ven sus opciones (misma matriz que valida la API)
+            var visibles = rol == Roles.Profesor
+                ? new ToolStripMenuItem[] { clasesToolStripMenuItem, inscripcionesToolStripMenuItem, historicoSueldosToolStripMenuItem }
+                : new ToolStripMenuItem[] { planesToolStripMenuItem, clasesToolStripMenuItem, inscripcionesToolStripMenuItem, cuotasToolStripMenuItem };
+
+            foreach (ToolStripItem item in gestionToolStripMenuItem.DropDownItems)
+            {
+                item.Visible = visibles.Contains(item);
+            }
+
+            if (rol == Roles.Profesor)
+            {
+                clasesToolStripMenuItem.Text = "Mis clases";
+                inscripcionesToolStripMenuItem.Text = "Inscriptos a mis clases";
+                historicoSueldosToolStripMenuItem.Text = "Mi historico de sueldos";
+            }
+            else
+            {
+                planesToolStripMenuItem.Text = "Mi plan";
+                inscripcionesToolStripMenuItem.Text = "Mis inscripciones";
+                cuotasToolStripMenuItem.Text = "Mis cuotas";
+            }
         }
 
         private void turnosToolStripMenuItem_Click(object sender, EventArgs e)

@@ -17,9 +17,9 @@ namespace Application.Services
             _cuotaRepository = cuotaRepository;
         }
 
-        public async Task<List<CuotaMostrarDTO>> ObtenerTodosAsync()
+        public async Task<List<CuotaMostrarDTO>> ObtenerTodosAsync(int? idSocio = null)
         {
-            var cuotas = await _cuotaRepository.ObtenerTodosAsync();
+            var cuotas = await _cuotaRepository.ObtenerTodosAsync(idSocio);
 
             return cuotas.Select(c => new CuotaMostrarDTO
             {

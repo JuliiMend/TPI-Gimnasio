@@ -76,7 +76,7 @@ namespace Application.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
                 FechaCreacion = DateTime.Now,
                 Activo = true,
-                Rol = "Admin"
+                Rol = Roles.Admin
             };
 
             var administrador = new Administrador

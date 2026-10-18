@@ -16,9 +16,9 @@ namespace Application.Services
             _claseRepository = claseRepository;
         }
 
-        public async Task<List<ClaseMostrarDTO>> ObtenerTodosAsync()
+        public async Task<List<ClaseMostrarDTO>> ObtenerTodosAsync(int? idProfesor = null)
         {
-            var clases = await _claseRepository.ObtenerTodosAsync();
+            var clases = await _claseRepository.ObtenerTodosAsync(idProfesor);
 
             return clases.Select(MapearAMostrar).ToList();
         }

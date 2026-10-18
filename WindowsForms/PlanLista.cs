@@ -28,6 +28,13 @@ namespace WindowsFormsApp
 
         private async void PlanLista_Load(object? sender, EventArgs e)
         {
+            // El socio ve solo su plan (lo filtra la API) y no puede modificarlo
+            if (!await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin))
+            {
+                Text = "Mi plan";
+                btnNuevo.Visible = btnActualizar.Visible = btnEliminar.Visible = false;
+            }
+
             await CargarPlanesAsync();
         }
 
