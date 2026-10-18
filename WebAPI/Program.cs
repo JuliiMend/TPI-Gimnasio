@@ -80,6 +80,12 @@ builder.Services.AddScoped<IMaquinaRepository, MaquinaRepository>();
 builder.Services.AddScoped<IMaquinaService, MaquinaService>();
 builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
 builder.Services.AddScoped<IMaterialService, MaterialService>();
+builder.Services.AddScoped<IAdministradorRepository, AdministradorRepository>();
+builder.Services.AddScoped<IAdministradorService, AdministradorService>();
+builder.Services.AddScoped<IActividadRepository, ActividadRepository>();
+builder.Services.AddScoped<IActividadService, ActividadService>();
+builder.Services.AddScoped<IClaseRepository, ClaseRepository>();
+builder.Services.AddScoped<IClaseService, ClaseService>();
 
 var app = builder.Build();
 
@@ -122,5 +128,8 @@ app.MapUsuarioEndpoints();
 app.MapCuotaEndpoints();
 app.MapMaquinaEndpoints();
 app.MapMaterialEndpoints();
+app.MapAdministradorEndpoints();
+app.MapActividadEndpoints();
+app.MapClaseEndpoints();
 
 app.Run();
