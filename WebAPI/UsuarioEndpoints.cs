@@ -29,7 +29,7 @@ namespace WebAPI
                 var id = await usuarioService.AgregarAsync(dto);
                 var usuario = await usuarioService.ObtenerPorIdAsync(id);
                 return Results.Created($"/api/usuarios/{id}", usuario);
-            }).AllowAnonymous();
+            });
 
             grupo.MapPut("/{id}", async (int id, UsuarioCreaActualizaDTO dto, IUsuarioService usuarioService) =>
             {

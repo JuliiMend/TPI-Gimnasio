@@ -32,7 +32,7 @@ namespace API.Clients
             var response = await client.PostAsJsonAsync(
                 "api/usuarios", usuario);
 
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task UpdateAsync(
@@ -44,7 +44,7 @@ namespace API.Clients
             var response = await client.PutAsJsonAsync(
                 $"api/usuarios/{id}", usuario);
 
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task DeleteAsync(int id)
@@ -54,7 +54,7 @@ namespace API.Clients
             var response = await client.DeleteAsync(
                 $"api/usuarios/{id}");
 
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
     }
 }
