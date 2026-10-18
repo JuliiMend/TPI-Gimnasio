@@ -75,12 +75,20 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICuotaService, CuotaService>();
 builder.Services.AddScoped<ICuotaRepository, CuotaRepository>();
+builder.Services.AddScoped<IMaquinaRepository, MaquinaRepository>();
+builder.Services.AddScoped<IMaquinaService, MaquinaService>();
+builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
+builder.Services.AddScoped<IMaterialService, MaterialService>();
 
 var app = builder.Build();
 
 // Habilitamos Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
+
+// Auth tiene que ir ANTES de mapear los endpoints
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Mapeamos los Endpoints usando los archivos estáticos
 app.MapPlanEndpoints();
@@ -90,6 +98,7 @@ app.MapProfesorEndpoints();
 app.MapAuthEndpoints();
 app.MapUsuarioEndpoints();
 app.MapCuotaEndpoints();
-app.UseAuthentication();
-app.UseAuthorization();
+app.MapMaquinaEndpoints();
+app.MapMaterialEndpoints();
+
 app.Run();

@@ -37,6 +37,8 @@
             turnosToolStripMenuItem = new ToolStripMenuItem();
             profesoresToolStripMenuItem = new ToolStripMenuItem();
             cuotasToolStripMenuItem = new ToolStripMenuItem();
+            maquinasToolStripMenuItem = new ToolStripMenuItem();
+            materialesToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -65,7 +67,7 @@
             // 
             // gestionToolStripMenuItem
             // 
-            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem });
+            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem });
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(59, 20);
             gestionToolStripMenuItem.Text = "Gestion";
@@ -105,6 +107,20 @@
             cuotasToolStripMenuItem.Text = "Cuotas";
             cuotasToolStripMenuItem.Click += cuotasToolStripMenuItem_Click;
             // 
+            // maquinasToolStripMenuItem
+            // 
+            maquinasToolStripMenuItem.Name = "maquinasToolStripMenuItem";
+            maquinasToolStripMenuItem.Size = new Size(180, 22);
+            maquinasToolStripMenuItem.Text = "Maquinas";
+            maquinasToolStripMenuItem.Click += maquinasToolStripMenuItem_Click;
+            // 
+            // materialesToolStripMenuItem
+            // 
+            materialesToolStripMenuItem.Name = "materialesToolStripMenuItem";
+            materialesToolStripMenuItem.Size = new Size(180, 22);
+            materialesToolStripMenuItem.Text = "Materiales";
+            materialesToolStripMenuItem.Click += materialesToolStripMenuItem_Click;
+            // 
             // Home
             // 
             ClientSize = new Size(800, 450);
@@ -128,6 +144,8 @@
         private ToolStripMenuItem turnosToolStripMenuItem;
         private ToolStripMenuItem profesoresToolStripMenuItem;
         private ToolStripMenuItem cuotasToolStripMenuItem;
+        private ToolStripMenuItem maquinasToolStripMenuItem;
+        private ToolStripMenuItem materialesToolStripMenuItem;
     }
 }
 

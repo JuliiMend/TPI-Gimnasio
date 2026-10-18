@@ -80,6 +80,55 @@ namespace Data.Migrations
                     b.ToTable("DetallesCuota");
                 });
 
+            modelBuilder.Entity("Domain.Model.Maquina", b =>
+                {
+                    b.Property<int>("IdMaquina")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMaquina"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdMaquina");
+
+                    b.ToTable("Maquinas");
+                });
+
+            modelBuilder.Entity("Domain.Model.Material", b =>
+                {
+                    b.Property<int>("IdMaterial")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMaterial"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdMaterial");
+
+                    b.ToTable("Materiales");
+                });
+
             modelBuilder.Entity("Domain.Model.Plan", b =>
                 {
                     b.Property<int>("PlanId")
