@@ -95,6 +95,16 @@ builder.Services.AddScoped<IHistoricoSueldoService, HistoricoSueldoService>();
 
 var app = builder.Build();
 
+// Aplica las migraciones pendientes y, si la base no tiene usuarios, carga los datos de prueba
+if (builder.Configuration.GetValue("DatosDePrueba:Cargar", false))
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<GimnasioContext>();
+
+    await context.Database.MigrateAsync();
+    await DatosDePrueba.CargarAsync(context);
+}
+
 // Habilitamos Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
