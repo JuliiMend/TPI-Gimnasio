@@ -27,10 +27,13 @@ namespace Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Cuota> Cuotas { get; set; }
         public DbSet<DetalleCuota> DetallesCuota { get; set; }
+        public DbSet<Maquina> Maquinas { get; set; }
+        public DbSet<Material> Materiales { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
 
             // Claves de la herencia Persona
             modelBuilder.Entity<Profesor>().HasKey(p => p.PersonaId);
@@ -46,6 +49,9 @@ namespace Data
             modelBuilder.Entity<Cuota>().Property(c => c.Valor).HasPrecision(18, 2);
             modelBuilder.Entity<DetalleCuota>().Property(d => d.Monto).HasPrecision(18, 2);
             modelBuilder.Entity<DetalleCuota>().Property(d => d.Subtotal).HasPrecision(18, 2);
+
+            modelBuilder.Entity<Maquina>().HasKey(m => m.IdMaquina);
+            modelBuilder.Entity<Material>().HasKey(m => m.IdMaterial);
 
 
             // Claves de Usuario

@@ -53,5 +53,18 @@ namespace WindowsFormsApp
             cuotaForm.MdiParent = this;
             cuotaForm.Show();
         }
+        private void maquinasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var maquinaForm = new MaquinaLista();
+            maquinaForm.MdiParent = this;
+            maquinaForm.Show();
+        }
+
+        private void materialesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var materialForm = new MaterialLista();
+            materialForm.MdiParent = this;
+            materialForm.Show();
+        }
     }
 }

@@ -1,0 +1,245 @@
+﻿@page "/materiales"
+@using DTOs
+@using API.Clients
+
+<h3>Materiales</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoMaterial">
+        + Nuevo material
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar material" : "Nuevo material")</h4>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>Descripción</label>
+                <input type="text" class="form-control" @bind="materialActual.Descripcion" />
+                @if (!string.IsNullOrEmpty(errorDescripcion))
+                {
+                    <div class="text-danger">@errorDescripcion</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Stock</label>
+                <input type="number" class="form-control" @bind="materialActual.Stock" />
+                @if (!string.IsNullOrEmpty(errorStock))
+                {
+                    <div class="text-danger">@errorStock</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Descripción</th>
+            <th>Stock</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var material in materiales)
+        {
+            <tr>
+                <td>@material.Descripcion</td>
+                <td>@material.Stock</td>
+
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarMaterial(material)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarMaterial(material)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private string errorDescripcion = string.Empty;
+    private string errorStock = string.Empty;
+
+    private MaterialCreaActualizaDTO materialActual = new();
+
+    private int idMaterialEditando;
+
+    private List<MaterialMostrarDTO> materiales = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarMateriales();
+    }
+
+
+    private async Task CargarMateriales()
+    {
+        try
+        {
+            materiales = (await MaterialApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los materiales: {ex.Message}";
+        }
+    }
+
+
+    private void LimpiarErrores()
+    {
+        errorDescripcion = string.Empty;
+        errorStock = string.Empty;
+    }
+
+
+    private void NuevoMaterial()
+    {
+        materialActual = new MaterialCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+
+    private void EditarMaterial(MaterialMostrarDTO material)
+    {
+        idMaterialEditando = material.IdMaterial;
+
+        materialActual = new MaterialCreaActualizaDTO
+        {
+            Descripcion = material.Descripcion,
+            Stock = material.Stock
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+
+    private bool Validar()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(materialActual.Descripcion))
+        {
+            errorDescripcion = "Ingresá la descripción.";
+            valido = false;
+        }
+
+        if (materialActual.Stock < 0)
+        {
+            errorStock = "El stock no puede ser negativo.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await MaterialApiClient.UpdateAsync(
+                    idMaterialEditando,
+                    materialActual);
+
+                mensaje = "Material modificado correctamente.";
+            }
+            else
+            {
+                await MaterialApiClient.AddAsync(materialActual);
+
+                mensaje = "Material creado correctamente.";
+            }
+
+            await CargarMateriales();
+
+            mostrarFormulario = false;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar el material: {ex.Message}";
+        }
+    }
+
+
+    private async Task EliminarMaterial(MaterialMostrarDTO material)
+    {
+        try
+        {
+            await MaterialApiClient.DeleteAsync(material.IdMaterial);
+
+            await CargarMateriales();
+
+            mensaje = "Material eliminado correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el material: {ex.Message}";
+        }
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+}
