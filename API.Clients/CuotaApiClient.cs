@@ -24,14 +24,14 @@ namespace API.Clients
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PostAsJsonAsync("api/cuotas", cuota);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task UpdateAsync(int id, CuotaCreaActualizaDTO cuota)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PutAsJsonAsync($"api/cuotas/{id}", cuota);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task UpdateAsync(CuotaCreaActualizaDTO cuota)
@@ -43,7 +43,7 @@ namespace API.Clients
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.DeleteAsync($"api/cuotas/{id}");
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
     }
 }

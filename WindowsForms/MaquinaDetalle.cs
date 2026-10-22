@@ -17,60 +17,96 @@ namespace WindowsFormsApp
 
         public async Task CargarMaquinaAsync(int id)
         {
-            var maquina = await MaquinaApiClient.GetAsync(id);
+            try
+            {
+                var maquina = await MaquinaApiClient.GetAsync(id);
 
-            if (maquina == null)
+                if (maquina == null)
+                {
+                    MessageBox.Show(
+                        "No se encontró la máquina.",
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+
+                    return;
+                }
+
+                _idMaquina = id;
+
+                txtNombre.Text = maquina.Nombre;
+                txtDescripcion.Text = maquina.Descripcion;
+                txtTipo.Text = maquina.Tipo;
+                cmbEstado.Text = maquina.Estado;
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(
-                    "No se encontró la máquina.",
+                    $"Error al cargar la máquina: {ex.Message}",
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-
-                return;
             }
-
-            _idMaquina = id;
-
-            txtNombre.Text = maquina.Nombre;
-            txtDescripcion.Text = maquina.Descripcion;
-            txtTipo.Text = maquina.Tipo;
-            cmbEstado.Text = maquina.Estado;
         }
 
         private async void btnGuardar_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                string.IsNullOrWhiteSpace(txtDescripcion.Text) ||
+                string.IsNullOrWhiteSpace(txtTipo.Text) ||
+                string.IsNullOrWhiteSpace(cmbEstado.Text))
+            {
+                MessageBox.Show(
+                    "Completá todos los campos.",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
             var maquinaDto = new MaquinaCreaActualizaDTO
             {
-                Nombre = txtNombre.Text,
-                Descripcion = txtDescripcion.Text,
-                Tipo = txtTipo.Text,
+                Nombre = txtNombre.Text.Trim(),
+                Descripcion = txtDescripcion.Text.Trim(),
+                Tipo = txtTipo.Text.Trim(),
                 Estado = cmbEstado.Text
             };
 
-            if (_idMaquina == null)
+            try
             {
-                await MaquinaApiClient.AddAsync(maquinaDto);
+                if (_idMaquina == null)
+                {
+                    await MaquinaApiClient.AddAsync(maquinaDto);
 
-                MessageBox.Show(
-                    "Máquina creada correctamente.",
-                    "Éxito",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        "Máquina creada correctamente.",
+                        "Éxito",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    await MaquinaApiClient.UpdateAsync(_idMaquina.Value, maquinaDto);
+
+                    MessageBox.Show(
+                        "Máquina modificada correctamente.",
+                        "Éxito",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+
+                DialogResult = DialogResult.OK;
+                Close();
             }
-            else
+            catch (Exception ex)
             {
-                await MaquinaApiClient.UpdateAsync(_idMaquina.Value, maquinaDto);
-
                 MessageBox.Show(
-                    "Máquina modificada correctamente.",
-                    "Éxito",
+                    $"Error al guardar la máquina: {ex.Message}",
+                    "Error",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Error);
             }
-
-            DialogResult = DialogResult.OK;
-            Close();
         }
     }
 }
