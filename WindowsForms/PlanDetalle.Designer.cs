@@ -38,6 +38,8 @@
             label3 = new Label();
             label4 = new Label();
             btnGuardar = new Button();
+            lblActividades = new Label();
+            clbActividades = new CheckedListBox();
             SuspendLayout();
             // 
             // Nombre
@@ -125,7 +127,7 @@
             // 
             btnGuardar.BackColor = Color.LightBlue;
             btnGuardar.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnGuardar.Location = new Point(179, 245);
+            btnGuardar.Location = new Point(179, 330);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(103, 32);
             btnGuardar.TabIndex = 12;
@@ -137,6 +139,26 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            //
+            // lblActividades
+            //
+            lblActividades.AutoSize = true;
+            lblActividades.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblActividades.Location = new Point(12, 220);
+            lblActividades.Name = "lblActividades";
+            lblActividades.Size = new Size(100, 21);
+            lblActividades.TabIndex = 13;
+            lblActividades.Text = "Actividades:";
+            //
+            // clbActividades
+            //
+            clbActividades.CheckOnClick = true;
+            clbActividades.Location = new Point(148, 220);
+            clbActividades.Name = "clbActividades";
+            clbActividades.Size = new Size(134, 94);
+            clbActividades.TabIndex = 5;
+            Controls.Add(clbActividades);
+            Controls.Add(lblActividades);
             Controls.Add(btnGuardar);
             Controls.Add(label4);
             Controls.Add(label3);
@@ -167,6 +189,8 @@
         private Label label3;
         private Label label4;
         private Button btnGuardar;
+        private Label lblActividades;
+        private CheckedListBox clbActividades;
     }
 
 }

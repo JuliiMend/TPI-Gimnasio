@@ -13,5 +13,6 @@ namespace Domain.Model
         public string Tipo { get; set; } = string.Empty;
         public decimal Precio { get; set; }
         public string Descripcion { get; set; } = string.Empty;
+        public List<Actividad> Actividades { get; set; } = new();
     }
 }
