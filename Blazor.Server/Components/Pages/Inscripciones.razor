@@ -2,13 +2,16 @@
 @using DTOs
 @using API.Clients
 
-<h3>Inscripciones a clases</h3>
+<h3>@(esSocio ? "Mis inscripciones" : esProfesor ? "Inscriptos a mis clases" : "Inscripciones a clases")</h3>
 
-<div class="mb-3">
-    <button class="btn btn-primary" @onclick="NuevaInscripcion">
-        + Nueva inscripción
-    </button>
-</div>
+@if (puedeInscribir)
+{
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="NuevaInscripcion">
+            @(esSocio ? "+ Inscribirme a una clase" : "+ Nueva inscripción")
+        </button>
+    </div>
+}
 
 @if (mostrarFormulario)
 {
@@ -17,23 +20,27 @@
 
         <div class="row">
 
-            <div class="col-md-6 mb-3">
-                <label>Socio</label>
+            @* El socio se inscribe a sí mismo: no elige socio *@
+            @if (!esSocio)
+            {
+                <div class="col-md-6 mb-3">
+                    <label>Socio</label>
 
-                <select class="form-select" @bind="inscripcionActual.IdSocio">
-                    <option value="0">Seleccionar socio</option>
+                    <select class="form-select" @bind="inscripcionActual.IdSocio">
+                        <option value="0">Seleccionar socio</option>
 
-                    @foreach (var socio in sociosActivos)
+                        @foreach (var socio in sociosActivos)
+                        {
+                            <option value="@socio.IdPersona">@socio.Nombre @socio.Apellido (DNI @socio.Dni)</option>
+                        }
+                    </select>
+
+                    @if (!string.IsNullOrEmpty(errorSocio))
                     {
-                        <option value="@socio.IdPersona">@socio.Nombre @socio.Apellido (DNI @socio.Dni)</option>
+                        <div class="text-danger">@errorSocio</div>
                     }
-                </select>
-
-                @if (!string.IsNullOrEmpty(errorSocio))
-                {
-                    <div class="text-danger">@errorSocio</div>
-                }
-            </div>
+                </div>
+            }
 
             <div class="col-md-6 mb-3">
                 <label>Clase</label>
@@ -97,7 +104,10 @@
             <th>Socio</th>
             <th>Clase</th>
             <th>Fecha de inscripción</th>
-            <th>Acciones</th>
+            @if (puedeInscribir)
+            {
+                <th>Acciones</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -107,12 +117,15 @@
                 <td>@inscripcion.Socio</td>
                 <td>@inscripcion.Clase</td>
                 <td>@inscripcion.FechaInscripcion.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>
-                    <button class="btn btn-sm btn-danger"
-                            @onclick="() => CancelarInscripcion(inscripcion)">
-                        Cancelar inscripción
-                    </button>
-                </td>
+                @if (puedeInscribir)
+                {
+                    <td>
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => CancelarInscripcion(inscripcion)">
+                            Cancelar inscripción
+                        </button>
+                    </td>
+                }
             </tr>
         }
     </tbody>
@@ -135,20 +148,34 @@
     private List<ClaseMostrarDTO> clases = new();
     private List<SocioMostrarDTO> sociosActivos = new();
 
+    // Admin: todo. Socio: se inscribe a sí mismo y cancela las suyas. Profesor: solo consulta las de sus clases.
+    // Qué inscripciones y clases ve cada uno lo filtra la API.
+    private bool esSocio;
+    private bool esProfesor;
+    private bool puedeInscribir;
+
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            var socios = await SocioApiClient.GetAllAsync();
+        var authService = AuthServiceProvider.Instance;
+        esSocio = await authService.HasPermissionAsync(Roles.Socio);
+        esProfesor = await authService.HasPermissionAsync(Roles.Profesor);
+        puedeInscribir = await authService.HasPermissionAsync(Roles.Admin, Roles.Socio);
 
-            // Los socios dados de baja no pueden inscribirse
-            sociosActivos = socios
-                .Where(s => s.FechaBaja == null || s.FechaBaja.Value.Date > DateTime.Today)
-                .ToList();
-        }
-        catch (Exception ex)
+        if (await authService.HasPermissionAsync(Roles.Admin))
         {
-            MostrarError($"Error al cargar los socios: {ex.Message}");
+            try
+            {
+                var socios = await SocioApiClient.GetAllAsync();
+
+                // Los socios dados de baja no pueden inscribirse
+                sociosActivos = socios
+                    .Where(s => s.FechaBaja == null || s.FechaBaja.Value.Date > DateTime.Today)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                MostrarError($"Error al cargar los socios: {ex.Message}");
+            }
         }
 
         await CargarClases();
@@ -207,7 +234,7 @@
 
         bool valido = true;
 
-        if (inscripcionActual.IdSocio == 0)
+        if (!esSocio && inscripcionActual.IdSocio == 0)
         {
             errorSocio = "Seleccioná un socio.";
             valido = false;

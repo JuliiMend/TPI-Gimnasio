@@ -6,7 +6,7 @@ namespace Data
 {
     public interface IInscripcionRepository
     {
-        Task<List<Inscripcion>> ObtenerTodosAsync(int? idClase);
+        Task<List<Inscripcion>> ObtenerTodosAsync(int? idClase, int? idSocio = null, int? idProfesor = null);
         Task<Inscripcion?> ObtenerPorIdAsync(int id);
         Task<int> ContarPorClaseAsync(int idClase);
         Task<bool> ExisteAsync(int idSocio, int idClase);

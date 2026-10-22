@@ -17,6 +17,20 @@ namespace WindowsFormsApp
 
         private async void InscripcionLista_Load(object sender, EventArgs e)
         {
+            // Profesor: solo consulta los inscriptos a sus clases. Socio: se inscribe y cancela solo las suyas
+            var authService = AuthServiceProvider.Instance;
+
+            if (await authService.HasPermissionAsync(Roles.Profesor))
+            {
+                Text = lblTitulo.Text = "Inscriptos a mis clases";
+                btnNuevo.Visible = btnCancelarInscripcion.Visible = lblOpciones.Visible = false;
+            }
+            else if (await authService.HasPermissionAsync(Roles.Socio))
+            {
+                Text = lblTitulo.Text = "Mis inscripciones";
+                btnNuevo.Text = "Inscribirme a una clase";
+            }
+
             try
             {
                 var clases = await ClaseApiClient.GetAllAsync();

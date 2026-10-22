@@ -6,7 +6,7 @@ namespace Data
 {
     public interface ICuotaRepository
     {
-        Task<List<Cuota>> ObtenerTodosAsync();
+        Task<List<Cuota>> ObtenerTodosAsync(int? idSocio = null);
         Task<Cuota?> ObtenerPorIdAsync(int id);
         Task AgregarAsync(Cuota cuota);
         Task ActualizarAsync(Cuota cuota);

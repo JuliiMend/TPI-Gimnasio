@@ -3,6 +3,7 @@ using DTOs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using System.Security.Claims;
 
 namespace WebAPI
 {
@@ -10,10 +11,18 @@ namespace WebAPI
     {
         public static void MapHistoricoSueldoEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/historico-sueldos").RequireAuthorization();
+            // Consultar: Admin (todos) y Profesor (solo el suyo). Registrar: solo Admin
+            var grupo = app.MapGroup("/api/historico-sueldos").RequireAuthorization(Politicas.AdminOProfesor);
 
-            grupo.MapGet("/", async (int? idProfesor, IHistoricoSueldoService historicoSueldoService) =>
+            grupo.MapGet("/", async (int? idProfesor, ClaimsPrincipal user, IHistoricoSueldoService historicoSueldoService,
+                IProfesorService profesorService) =>
             {
+                // Un profesor solo ve su propio histórico, sin importar el filtro que mande
+                if (user.EsProfesor())
+                {
+                    idProfesor = await user.IdProfesorAsync(profesorService);
+                }
+
                 var sueldos = await historicoSueldoService.ObtenerTodosAsync(idProfesor);
                 return Results.Ok(sueldos);
             });
@@ -23,7 +32,7 @@ namespace WebAPI
             {
                 var id = await historicoSueldoService.RegistrarAsync(dto);
                 return Results.Created($"/api/historico-sueldos/{id}", new { idHistoricoSueldo = id });
-            });
+            }).RequireAuthorization(Politicas.SoloAdmin);
         }
     }
 }

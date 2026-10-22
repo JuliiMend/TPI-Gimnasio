@@ -11,6 +11,7 @@ namespace Data
     {
         Task<List<Socio>> ObtenerTodosAsync(SocioCriteria criterios);
         Task<Socio?> ObtenerPorIdAsync(int id);
+        Task<Socio?> ObtenerPorUsuarioIdAsync(int usuarioId);
         Task AgregarAsync(Socio socio);
         Task ActualizarAsync(Socio socio);
         Task EliminarAsync(int id);

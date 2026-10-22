@@ -1,28 +1,44 @@
 ﻿@using API.Clients
+@using System.Reflection
 @using Microsoft.AspNetCore.Components
 
-@if (autenticado)
+@if (autenticado && permitido)
 {
     <RouteView RouteData="RouteData" DefaultLayout="typeof(Layout.MainLayout)" />
+}
+else if (autenticado)
+{
+    <LayoutView Layout="typeof(Layout.MainLayout)">
+        <div class="alert alert-warning mt-4">
+            No tenés permisos para acceder a esta sección.
+        </div>
+    </LayoutView>
 }
 
 @code {
     [Parameter]
     public RouteData RouteData { get; set; } = default!;
 
-private bool autenticado;
+    private bool autenticado;
+    private bool permitido;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        autenticado = await AuthServiceProvider.Instance.IsAuthenticatedAsync();
+        var authService = AuthServiceProvider.Instance;
+
+        autenticado = await authService.IsAuthenticatedAsync();
 
         if (!autenticado)
         {
             Navigation.NavigateTo("/login");
+            return;
         }
+
+        var roles = RouteData.PageType.GetCustomAttribute<RolesPermitidosAttribute>()?.Roles;
+
+        permitido = roles == null || await authService.HasPermissionAsync(roles);
     }
 
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
-
 }

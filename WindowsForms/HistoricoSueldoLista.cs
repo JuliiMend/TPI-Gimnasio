@@ -1,4 +1,5 @@
 using API.Clients;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,16 @@ namespace WindowsFormsApp
 
         private async void HistoricoSueldoLista_Load(object sender, EventArgs e)
         {
+            // El profesor ve solo su histórico (lo filtra la API), sin filtro ni alta
+            if (!await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin))
+            {
+                Text = lblTitulo.Text = "Mi histórico de sueldos";
+                btnRegistrar.Visible = lblProfesor.Visible = cmbFiltroProfesor.Visible = false;
+
+                await CargarSueldosAsync();
+                return;
+            }
+
             try
             {
                 var profesores = await ProfesorApiClient.GetAllAsync();

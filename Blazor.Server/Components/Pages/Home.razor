@@ -1,208 +1,76 @@
 ﻿@page "/"
+@using API.Clients
 
 <PageTitle>Inicio</PageTitle>
 
 <div class="text-center mb-5">
     <h1>Gimnasio</h1>
     <p class="lead">
-        Panel de administración
+        @(rol == Roles.Admin ? "Panel de administración" : $"Bienvenido/a, {username}")
     </p>
 </div>
 
 <div class="row">
 
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Planes</h4>
-                <p>Consultar los planes disponibles del gimnasio.</p>
+    @foreach (var tarjeta in tarjetasVisibles)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4>@tarjeta.Titulo</h4>
+                    <p>@tarjeta.Descripcion</p>
 
-                <a href="/planes" class="btn btn-primary">
-                    Ver planes
-                </a>
+                    <a href="@tarjeta.Href" class="btn btn-primary">
+                        @tarjeta.Boton
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Actividades</h4>
-                <p>Gestionar los tipos de actividad que incluyen los planes.</p>
-
-                <a href="/actividades" class="btn btn-primary">
-                    Gestionar actividades
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Clases</h4>
-                <p>Gestionar las clases: actividad, profesor, turno y cupo.</p>
-
-                <a href="/clases" class="btn btn-primary">
-                    Gestionar clases
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Inscripciones</h4>
-                <p>Inscribir socios a clases controlando el cupo.</p>
-
-                <a href="/inscripciones" class="btn btn-primary">
-                    Gestionar inscripciones
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Socios</h4>
-                <p>Gestionar los socios del gimnasio.</p>
-
-                <a href="/socios" class="btn btn-primary">
-                    Gestionar socios
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Profesores</h4>
-                <p>Gestionar los profesores del gimnasio.</p>
-
-                <a href="/profesores" class="btn btn-primary">
-                    Gestionar profesores
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Turnos</h4>
-                <p>Gestionar los turnos disponibles.</p>
-
-                <a href="/turnos" class="btn btn-primary">
-                    Gestionar turnos
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Cuotas</h4>
-                <p>Gestionar las cuotas y sus detalles.</p>
-
-                <a href="/cuotas" class="btn btn-primary">
-                    Gestionar cuotas
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Administradores</h4>
-                <p>Gestionar los administradores del gimnasio.</p>
-
-                <a href="/administradores" class="btn btn-primary">
-                    Gestionar administradores
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Usuarios</h4>
-                <p>Gestionar los usuarios del sistema.</p>
-
-                <a href="/usuarios" class="btn btn-primary">
-                    Gestionar usuarios
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Máquinas</h4>
-                <p>Gestionar las máquinas del gimnasio.</p>
-
-                <a href="/maquinas" class="btn btn-primary">
-                    Gestionar máquinas
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Materiales</h4>
-                <p>Gestionar los materiales del gimnasio.</p>
-
-                <a href="/materiales" class="btn btn-primary">
-                    Gestionar materiales
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Mantenimientos</h4>
-                <p>Registrar mantenimientos y ver el reporte por máquina.</p>
-
-                <a href="/mantenimientos" class="btn btn-primary">
-                    Ver mantenimientos
-                </a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h4>Histórico de sueldos</h4>
-                <p>Consultar el histórico de sueldos de los profesores.</p>
-
-                <a href="/historico-sueldos" class="btn btn-primary">
-                    Ver histórico
-                </a>
-            </div>
-        </div>
-    </div>
+    }
 
 </div>
+
+@code {
+    private record Tarjeta(string Href, string Titulo, string Descripcion, string Boton, string[] Roles);
+
+    private static readonly Tarjeta[] tarjetas =
+    {
+        // Admin
+        new("/planes", "Planes", "Consultar los planes disponibles del gimnasio.", "Ver planes", new[] { Roles.Admin }),
+        new("/actividades", "Actividades", "Gestionar los tipos de actividad que incluyen los planes.", "Gestionar actividades", new[] { Roles.Admin }),
+        new("/clases", "Clases", "Gestionar las clases: actividad, profesor, turno y cupo.", "Gestionar clases", new[] { Roles.Admin }),
+        new("/inscripciones", "Inscripciones", "Inscribir socios a clases controlando el cupo.", "Gestionar inscripciones", new[] { Roles.Admin }),
+        new("/socios", "Socios", "Gestionar los socios del gimnasio.", "Gestionar socios", new[] { Roles.Admin }),
+        new("/profesores", "Profesores", "Gestionar los profesores del gimnasio.", "Gestionar profesores", new[] { Roles.Admin }),
+        new("/turnos", "Turnos", "Gestionar los turnos disponibles.", "Gestionar turnos", new[] { Roles.Admin }),
+        new("/cuotas", "Cuotas", "Gestionar las cuotas y sus detalles.", "Gestionar cuotas", new[] { Roles.Admin }),
+        new("/administradores", "Administradores", "Gestionar los administradores del gimnasio.", "Gestionar administradores", new[] { Roles.Admin }),
+        new("/usuarios", "Usuarios", "Gestionar los usuarios del sistema.", "Gestionar usuarios", new[] { Roles.Admin }),
+        new("/maquinas", "Máquinas", "Gestionar las máquinas del gimnasio.", "Gestionar máquinas", new[] { Roles.Admin }),
+        new("/materiales", "Materiales", "Gestionar los materiales del gimnasio.", "Gestionar materiales", new[] { Roles.Admin }),
+        new("/mantenimientos", "Mantenimientos", "Registrar mantenimientos y ver el reporte por máquina.", "Ver mantenimientos", new[] { Roles.Admin }),
+        new("/historico-sueldos", "Histórico de sueldos", "Consultar el histórico de sueldos de los profesores.", "Ver histórico", new[] { Roles.Admin }),
+
+        // Profesor
+        new("/clases", "Mis clases", "Consultar las clases que tenés a cargo.", "Ver mis clases", new[] { Roles.Profesor }),
+        new("/inscripciones", "Inscriptos", "Ver los socios inscriptos a tus clases.", "Ver inscriptos", new[] { Roles.Profesor }),
+        new("/historico-sueldos", "Mi histórico de sueldos", "Consultar tus sueldos vigentes y anteriores.", "Ver mis sueldos", new[] { Roles.Profesor }),
+
+        // Socio
+        new("/planes", "Mi plan", "Ver tu plan y las actividades que incluye.", "Ver mi plan", new[] { Roles.Socio }),
+        new("/clases", "Clases", "Ver las clases disponibles y su cupo.", "Ver clases", new[] { Roles.Socio }),
+        new("/inscripciones", "Mis inscripciones", "Inscribirte a clases o cancelar tus inscripciones.", "Ver mis inscripciones", new[] { Roles.Socio }),
+        new("/cuotas", "Mis cuotas", "Consultar tus cuotas pagas.", "Ver mis cuotas", new[] { Roles.Socio })
+    };
+
+    private string? rol;
+    private string? username;
+    private IEnumerable<Tarjeta> tarjetasVisibles = Enumerable.Empty<Tarjeta>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        rol = await AuthServiceProvider.Instance.GetRolAsync();
+        username = await AuthServiceProvider.Instance.GetUsernameAsync();
+        tarjetasVisibles = tarjetas.Where(t => rol != null && t.Roles.Contains(rol)).ToList();
+    }
+}

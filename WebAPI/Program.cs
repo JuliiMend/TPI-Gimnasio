@@ -1,4 +1,5 @@
 using Application.Services;
+using DTOs;
 using Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!))
         };
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Politicas.SoloAdmin, p => p.RequireRole(Roles.Admin));
+    options.AddPolicy(Politicas.AdminOSocio, p => p.RequireRole(Roles.Admin, Roles.Socio));
+    options.AddPolicy(Politicas.AdminOProfesor, p => p.RequireRole(Roles.Admin, Roles.Profesor));
+});
 
 // Configuramos Swagger
 builder.Services.AddEndpointsApiExplorer();
