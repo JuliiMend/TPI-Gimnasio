@@ -9,10 +9,12 @@ namespace API.Clients
         private string? _token;
         private string? _username;
         private string? _rol;
+        private DateTime? _expiraUtc;
 
         public event Action<bool>? AuthenticationStateChanged;
 
-        public Task<bool> IsAuthenticatedAsync() => Task.FromResult(!string.IsNullOrEmpty(_token));
+        // Un token vencido cuenta como sesión cerrada
+        public Task<bool> IsAuthenticatedAsync() => Task.FromResult(!string.IsNullOrEmpty(_token) && !TokenVencido());
         public Task<string?> GetTokenAsync() => Task.FromResult(_token);
         public Task<string?> GetUsernameAsync() => Task.FromResult(_username);
         public Task<string?> GetRolAsync() => Task.FromResult(_rol);
@@ -28,6 +30,7 @@ namespace API.Clients
                 _token = response.Token;
                 _username = response.Username;
                 _rol = response.Rol;
+                _expiraUtc = response.ExpiresAt;
                 AuthenticationStateChanged?.Invoke(true);
                 return true;
             }
@@ -40,11 +43,22 @@ namespace API.Clients
             _token = null;
             _username = null;
             _rol = null;
+            _expiraUtc = null;
             AuthenticationStateChanged?.Invoke(false);
             return Task.CompletedTask;
         }
 
-        public Task CheckTokenExpirationAsync() => Task.CompletedTask;
+        // Si el token venció, cierra la sesión (avisa con AuthenticationStateChanged)
+        public async Task CheckTokenExpirationAsync()
+        {
+            if (!string.IsNullOrEmpty(_token) && TokenVencido())
+            {
+                await LogoutAsync();
+            }
+        }
+
+        private bool TokenVencido() => _expiraUtc.HasValue && DateTime.UtcNow >= _expiraUtc.Value;
+
         public Task<bool> HasPermissionAsync(params string[] roles) => Task.FromResult(_rol != null && roles.Contains(_rol));
     }
 }

@@ -11,12 +11,33 @@ namespace WindowsFormsApp
         public Home()
         {
             InitializeComponent();
+
+            // Si la sesión se cierra (logout o token vencido) se cierra Home y LoginForm vuelve a mostrarse
+            AuthServiceProvider.Instance.AuthenticationStateChanged += AlCambiarSesion;
+            FormClosed += (s, e) => AuthServiceProvider.Instance.AuthenticationStateChanged -= AlCambiarSesion;
         }
 
+        private void AlCambiarSesion(bool autenticado)
+        {
+            if (autenticado || IsDisposed)
+            {
+                return;
+            }
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(Close);
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        // LogoutAsync dispara AuthenticationStateChanged, que cierra Home
         private async void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await AuthServiceProvider.Instance.LogoutAsync();
-            this.Close();
         }
 
         private void planesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -153,6 +174,13 @@ namespace WindowsFormsApp
             var historicoForm = new HistoricoSueldoLista();
             historicoForm.MdiParent = this;
             historicoForm.Show();
+        }
+
+        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var usuarioForm = new UsuarioLista();
+            usuarioForm.MdiParent = this;
+            usuarioForm.Show();
         }
 
         private void administradoresToolStripMenuItem_Click(object sender, EventArgs e)
