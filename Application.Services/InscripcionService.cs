@@ -24,9 +24,9 @@ namespace Application.Services
             _socioRepository = socioRepository;
         }
 
-        public async Task<List<InscripcionMostrarDTO>> ObtenerTodosAsync(int? idClase)
+        public async Task<List<InscripcionMostrarDTO>> ObtenerTodosAsync(int? idClase, int? idSocio = null, int? idProfesor = null)
         {
-            var inscripciones = await _inscripcionRepository.ObtenerTodosAsync(idClase);
+            var inscripciones = await _inscripcionRepository.ObtenerTodosAsync(idClase, idSocio, idProfesor);
 
             return inscripciones.Select(MapearAMostrar).ToList();
         }

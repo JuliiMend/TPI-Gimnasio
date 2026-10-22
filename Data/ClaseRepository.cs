@@ -15,14 +15,21 @@ namespace Data
             _context = context;
         }
 
-        public async Task<List<Clase>> ObtenerTodosAsync()
+        public async Task<List<Clase>> ObtenerTodosAsync(int? idProfesor = null)
         {
-            return await _context.Clases
+            var query = _context.Clases
                 .Include(c => c.Actividad)
                 .Include(c => c.Profesor)
                 .Include(c => c.Turno)
                 .Include(c => c.Inscripciones)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (idProfesor.HasValue)
+            {
+                query = query.Where(c => c.IdProfesor == idProfesor.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Clase?> ObtenerPorIdAsync(int id)

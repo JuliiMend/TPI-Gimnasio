@@ -15,7 +15,7 @@ namespace Data
             _context = context;
         }
 
-        public async Task<List<Inscripcion>> ObtenerTodosAsync(int? idClase)
+        public async Task<List<Inscripcion>> ObtenerTodosAsync(int? idClase, int? idSocio = null, int? idProfesor = null)
         {
             var query = _context.Inscripciones
                 .Include(i => i.Socio)
@@ -26,6 +26,16 @@ namespace Data
             if (idClase.HasValue && idClase.Value > 0)
             {
                 query = query.Where(i => i.IdClase == idClase.Value);
+            }
+
+            if (idSocio.HasValue)
+            {
+                query = query.Where(i => i.IdSocio == idSocio.Value);
+            }
+
+            if (idProfesor.HasValue)
+            {
+                query = query.Where(i => i.Clase!.IdProfesor == idProfesor.Value);
             }
 
             return await query

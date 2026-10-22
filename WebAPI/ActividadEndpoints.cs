@@ -10,7 +10,7 @@ namespace WebAPI
     {
         public static void MapActividadEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/actividades").RequireAuthorization();
+            var grupo = app.MapGroup("/api/actividades").RequireAuthorization(Politicas.SoloAdmin);
 
             grupo.MapGet("/", async (IActividadService actividadService) =>
             {

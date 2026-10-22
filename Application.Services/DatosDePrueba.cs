@@ -1,5 +1,6 @@
 using Data;
 using Domain.Model;
+using DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace Application.Services
             {
                 Dni = "20111222", Nombre = "Ana", Apellido = "Pérez", Telefono = "3415550001",
                 FechaNac = new DateTime(1985, 3, 14),
-                Usuario = NuevoUsuario("admin", "admin@gimnasio.com", PasswordAdmin, "Admin")
+                Usuario = NuevoUsuario("admin", "admin@gimnasio.com", PasswordAdmin, Roles.Admin)
             });
 
             // ---------- Profesores con su histórico de sueldos ----------
@@ -221,7 +222,7 @@ namespace Application.Services
             {
                 Dni = dni, Nombre = nombre, Apellido = apellido, Cargo = cargo,
                 Telefono = "34155" + dni[^5..], FechaNac = fechaNac,
-                Usuario = NuevoUsuario(username, $"{username}@gimnasio.com", PasswordProfesor, "Profesor")
+                Usuario = NuevoUsuario(username, $"{username}@gimnasio.com", PasswordProfesor, Roles.Profesor)
             };
         }
 
@@ -233,7 +234,7 @@ namespace Application.Services
                 Telefono = "34166" + dni[^5..],
                 FechaNac = new DateTime(1990 + numero, numero, 10 + numero),
                 FechaAlta = fechaAlta, FechaBaja = fechaBaja, Plan = plan,
-                Usuario = NuevoUsuario($"socio{numero}", $"socio{numero}@mail.com", PasswordSocio, "Socio")
+                Usuario = NuevoUsuario($"socio{numero}", $"socio{numero}@mail.com", PasswordSocio, Roles.Socio)
             };
         }
 

@@ -6,7 +6,7 @@ namespace Data
 {
     public interface IClaseRepository
     {
-        Task<List<Clase>> ObtenerTodosAsync();
+        Task<List<Clase>> ObtenerTodosAsync(int? idProfesor = null);
         Task<Clase?> ObtenerPorIdAsync(int id);
         Task AgregarAsync(Clase clase);
         Task ActualizarAsync(Clase clase);

@@ -57,7 +57,7 @@ namespace Application.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FechaCreacion = DateTime.Now,
                 Activo = true,
-                Rol = "Administrativo"
+                Rol = Roles.Admin
             };
 
             await _usuarioRepository.AgregarAsync(usuario);

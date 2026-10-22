@@ -1,14 +1,18 @@
 ﻿@page "/planes"
+@attribute [RolesPermitidos(Roles.Admin, Roles.Socio)]
 @using DTOs
 @using API.Clients
 
-<h3>Planes</h3>
+<h3>@(esAdmin ? "Planes" : "Mi plan")</h3>
 
-<div class="mb-3">
-    <button class="btn btn-primary" @onclick="NuevoPlan">
-        + Nuevo plan
-    </button>
-</div>
+@if (esAdmin)
+{
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="NuevoPlan">
+            + Nuevo plan
+        </button>
+    </div>
+}
 
 @if (mostrarFormulario)
 {
@@ -109,7 +113,10 @@
             <th>Precio</th>
             <th>Descripción</th>
             <th>Actividades</th>
-            <th>Acciones</th>
+            @if (esAdmin)
+            {
+                <th>Acciones</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -121,17 +128,20 @@
                 <td>$@plan.Precio</td>
                 <td>@plan.Descripcion</td>
                 <td>@plan.Actividades</td>
-                <td>
-                    <button class="btn btn-sm btn-warning me-2"
-                            @onclick="() => EditarPlan(plan)">
-                        Editar
-                    </button>
+                @if (esAdmin)
+                {
+                    <td>
+                        <button class="btn btn-sm btn-warning me-2"
+                                @onclick="() => EditarPlan(plan)">
+                            Editar
+                        </button>
 
-                    <button class="btn btn-sm btn-danger"
-                            @onclick="() => EliminarPlan(plan)">
-                        Eliminar
-                    </button>
-                </td>
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => EliminarPlan(plan)">
+                            Eliminar
+                        </button>
+                    </td>
+                }
             </tr>
         }
     </tbody>
@@ -156,15 +166,23 @@
 
     private List<ActividadMostrarDTO> actividades = new();
 
+    // El socio ve solo su plan (la API ya lo filtra) y en modo lectura
+    private bool esAdmin;
+
     protected override async Task OnInitializedAsync()
     {
-        try
+        esAdmin = await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin);
+
+        if (esAdmin)
         {
-            actividades = (await ActividadApiClient.GetAllAsync()).ToList();
-        }
-        catch (Exception ex)
-        {
-            mensaje = $"Error al cargar las actividades: {ex.Message}";
+            try
+            {
+                actividades = (await ActividadApiClient.GetAllAsync()).ToList();
+            }
+            catch (Exception ex)
+            {
+                mensaje = $"Error al cargar las actividades: {ex.Message}";
+            }
         }
 
         await CargarPlanes();
