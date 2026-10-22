@@ -1,4 +1,4 @@
-using DTOs;
+锘縰sing DTOs;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows.Forms;
@@ -26,7 +26,7 @@ namespace WindowsFormsApp
             try
             {
                 btnLogin.Enabled = false;
-                btnLogin.Text = "Iniciando sesi髇...";
+                btnLogin.Text = "Iniciando sesi贸n...";
 
                 bool exito = await _authService.LoginAsync(txtUsername.Text, txtPassword.Text);
 
@@ -34,12 +34,24 @@ namespace WindowsFormsApp
                 {
                     this.Hide();
                     var homeForm = Program.ServiceProvider.GetRequiredService<Home>();
-                    homeForm.FormClosed += (s, args) => this.Close();
+                    homeForm.FormClosed += async (s, args) =>
+                    {
+                        // Si se cerr贸 sesi贸n, se vuelve al login; si se cerr贸 la ventana, se sale de la app
+                        if (await _authService.IsAuthenticatedAsync())
+                        {
+                            this.Close();
+                        }
+                        else
+                        {
+                            txtPassword.Clear();
+                            this.Show();
+                        }
+                    };
                     homeForm.Show();
                 }
                 else
                 {
-                    MessageBox.Show("Usuario o contrase馻 incorrectos.", "Error de autenticaci髇", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Usuario o contrase帽a incorrectos.", "Error de autenticaci贸n", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtPassword.Clear();
                     txtPassword.Focus();
                 }
@@ -51,7 +63,7 @@ namespace WindowsFormsApp
             finally
             {
                 btnLogin.Enabled = true;
-                btnLogin.Text = "Iniciar Sesi髇";
+                btnLogin.Text = "Iniciar Sesi贸n";
             }
         }
 
@@ -70,7 +82,7 @@ namespace WindowsFormsApp
 
             if (string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                errorProvider1.SetError(txtPassword, "La contrase馻 es requerida");
+                errorProvider1.SetError(txtPassword, "La contrase帽a es requerida");
                 isValid = false;
             }
 

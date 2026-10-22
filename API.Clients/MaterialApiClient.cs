@@ -24,21 +24,21 @@ namespace API.Clients
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PostAsJsonAsync("api/materiales", material);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task UpdateAsync(int id, MaterialCreaActualizaDTO material)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PutAsJsonAsync($"api/materiales/{id}", material);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task DeleteAsync(int id)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.DeleteAsync($"api/materiales/{id}");
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
     }
 }

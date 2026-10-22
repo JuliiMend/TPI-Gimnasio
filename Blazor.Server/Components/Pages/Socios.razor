@@ -96,9 +96,11 @@
 
                 <select class="form-select" @bind="socioActual.IdPlan">
                     <option value="0">Seleccionar plan</option>
-                    <option value="1">Pase Libre</option>
-                    <option value="2">Premium</option>
-                    <option value="3">Básico</option>
+
+                    @foreach (var plan in planes)
+                    {
+                        <option value="@plan.IdPlan">@plan.Nombre</option>
+                    }
                 </select>
 
                 @if (!string.IsNullOrEmpty(errorPlan))
@@ -232,9 +234,24 @@ private bool mostrarFormulario = false;
 
     private List<SocioMostrarDTO> socios = new();
 
+    private List<PlanMostrarDTO> planes = new();
+
     protected override async Task OnInitializedAsync()
     {
+        await CargarPlanes();
         await CargarSocios();
+    }
+
+    private async Task CargarPlanes()
+    {
+        try
+        {
+            planes = (await PlanApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los planes: {ex.Message}";
+        }
     }
 
     private async Task CargarSocios()

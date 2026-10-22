@@ -24,21 +24,21 @@ namespace API.Clients
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PostAsJsonAsync("api/planes", plan);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task UpdateAsync(int id, PlanCreaActualizaDTO plan)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PutAsJsonAsync($"api/planes/{id}", plan);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task DeleteAsync(int id)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.DeleteAsync($"api/planes/{id}");
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
     }
 }

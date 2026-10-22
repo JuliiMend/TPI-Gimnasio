@@ -1,4 +1,5 @@
-﻿using System;
+﻿using API.Clients;
+using System;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp
@@ -10,8 +11,9 @@ namespace WindowsFormsApp
             InitializeComponent();
         }
 
-        private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            await AuthServiceProvider.Instance.LogoutAsync();
             this.Close();
         }
 
