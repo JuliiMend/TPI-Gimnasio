@@ -12,6 +12,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// HS256 necesita una clave de al menos 32 bytes: si falta, mejor frenar acá que en el primer login
+var jwtSecretKey = builder.Configuration["JwtSettings:SecretKey"];
+if (string.IsNullOrWhiteSpace(jwtSecretKey) || Encoding.UTF8.GetByteCount(jwtSecretKey) < 32)
+{
+    throw new InvalidOperationException(
+        "Falta configurar JwtSettings:SecretKey (mínimo 32 caracteres). " +
+        "Para desarrollo viene en appsettings.Development.json; también se puede definir con " +
+        "'dotnet user-secrets set \"JwtSettings:SecretKey\" \"<clave>\"' en el proyecto WebAPI.");
+}
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -22,7 +32,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
         };
     });
 builder.Services.AddAuthorization(options =>
