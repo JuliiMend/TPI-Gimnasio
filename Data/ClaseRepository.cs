@@ -21,6 +21,7 @@ namespace Data
                 .Include(c => c.Actividad)
                 .Include(c => c.Profesor)
                 .Include(c => c.Turno)
+                .Include(c => c.Inscripciones)
                 .ToListAsync();
         }
 
@@ -30,6 +31,7 @@ namespace Data
                 .Include(c => c.Actividad)
                 .Include(c => c.Profesor)
                 .Include(c => c.Turno)
+                .Include(c => c.Inscripciones)
                 .FirstOrDefaultAsync(c => c.IdClase == id);
         }
 

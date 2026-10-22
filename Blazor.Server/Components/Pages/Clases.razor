@@ -110,7 +110,7 @@
             <th>Actividad</th>
             <th>Profesor</th>
             <th>Turno</th>
-            <th>Cupo</th>
+            <th>Inscriptos / Cupo</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -121,7 +121,7 @@
                 <td>@clase.Actividad</td>
                 <td>@clase.Profesor</td>
                 <td>@clase.Turno</td>
-                <td>@clase.Cupo</td>
+                <td>@clase.Inscriptos / @clase.Cupo</td>
                 <td>
                     <button class="btn btn-sm btn-warning me-2"
                             @onclick="() => EditarClase(clase)">
