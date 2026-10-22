@@ -38,6 +38,9 @@ namespace WindowsFormsApp
                 return;
             }
 
+            // Los reportes son solo para el Admin
+            reportesToolStripMenuItem.Visible = false;
+
             // Profesor y Socio solo ven sus opciones (misma matriz que valida la API)
             var visibles = rol == Roles.Profesor
                 ? new ToolStripMenuItem[] { clasesToolStripMenuItem, inscripcionesToolStripMenuItem, historicoSueldosToolStripMenuItem }
@@ -122,6 +125,20 @@ namespace WindowsFormsApp
             var inscripcionForm = new InscripcionLista();
             inscripcionForm.MdiParent = this;
             inscripcionForm.Show();
+        }
+
+        private void reporteOcupacionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var reporteForm = new ReporteOcupacionClases();
+            reporteForm.MdiParent = this;
+            reporteForm.Show();
+        }
+
+        private void reporteMantenimientosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var reporteForm = new ReporteMantenimientos();
+            reporteForm.MdiParent = this;
+            reporteForm.Show();
         }
 
         private void mantenimientosToolStripMenuItem_Click(object sender, EventArgs e)
