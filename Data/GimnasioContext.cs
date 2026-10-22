@@ -29,6 +29,9 @@ namespace Data
         public DbSet<DetalleCuota> DetallesCuota { get; set; }
         public DbSet<Maquina> Maquinas { get; set; }
         public DbSet<Material> Materiales { get; set; }
+        public DbSet<Administrador> Administradores { get; set; }
+        public DbSet<Actividad> Actividades { get; set; }
+        public DbSet<Clase> Clases { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +41,7 @@ namespace Data
             // Claves de la herencia Persona
             modelBuilder.Entity<Profesor>().HasKey(p => p.PersonaId);
             modelBuilder.Entity<Socio>().HasKey(s => s.PersonaId);
+            modelBuilder.Entity<Administrador>().HasKey(a => a.PersonaId);
 
             // Claves del resto de las entidades
             modelBuilder.Entity<Turno>().HasKey(t => t.IdTurno);
@@ -52,6 +56,8 @@ namespace Data
 
             modelBuilder.Entity<Maquina>().HasKey(m => m.IdMaquina);
             modelBuilder.Entity<Material>().HasKey(m => m.IdMaterial);
+            modelBuilder.Entity<Actividad>().HasKey(a => a.IdActividad);
+            modelBuilder.Entity<Clase>().HasKey(c => c.IdClase);
 
 
             // Claves de Usuario
@@ -69,6 +75,37 @@ namespace Data
                 .HasOne(p => p.Usuario)
                 .WithMany()
                 .HasForeignKey(p => p.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Administrador>()
+                .HasOne(a => a.Usuario)
+                .WithMany()
+                .HasForeignKey(a => a.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // relacion plan actividad (un plan incluye varias actividades y viceversa)
+            modelBuilder.Entity<Plan>()
+                .HasMany(p => p.Actividades)
+                .WithMany(a => a.Planes)
+                .UsingEntity(j => j.ToTable("PlanActividades"));
+
+            // relaciones de clase: actividad, profesor a cargo y turno
+            modelBuilder.Entity<Clase>()
+                .HasOne(c => c.Actividad)
+                .WithMany()
+                .HasForeignKey(c => c.IdActividad)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Clase>()
+                .HasOne(c => c.Profesor)
+                .WithMany()
+                .HasForeignKey(c => c.IdProfesor)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Clase>()
+                .HasOne(c => c.Turno)
+                .WithMany()
+                .HasForeignKey(c => c.IdTurno)
                 .OnDelete(DeleteBehavior.Restrict);
 
 

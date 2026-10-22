@@ -39,6 +39,9 @@
             cuotasToolStripMenuItem = new ToolStripMenuItem();
             maquinasToolStripMenuItem = new ToolStripMenuItem();
             materialesToolStripMenuItem = new ToolStripMenuItem();
+            actividadesToolStripMenuItem = new ToolStripMenuItem();
+            clasesToolStripMenuItem = new ToolStripMenuItem();
+            administradoresToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -67,7 +70,7 @@
             // 
             // gestionToolStripMenuItem
             // 
-            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem });
+            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem, actividadesToolStripMenuItem, clasesToolStripMenuItem, administradoresToolStripMenuItem });
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(59, 20);
             gestionToolStripMenuItem.Text = "Gestion";
@@ -121,6 +124,27 @@
             materialesToolStripMenuItem.Text = "Materiales";
             materialesToolStripMenuItem.Click += materialesToolStripMenuItem_Click;
             // 
+            // actividadesToolStripMenuItem
+            // 
+            actividadesToolStripMenuItem.Name = "actividadesToolStripMenuItem";
+            actividadesToolStripMenuItem.Size = new Size(180, 22);
+            actividadesToolStripMenuItem.Text = "Actividades";
+            actividadesToolStripMenuItem.Click += actividadesToolStripMenuItem_Click;
+            // 
+            // clasesToolStripMenuItem
+            // 
+            clasesToolStripMenuItem.Name = "clasesToolStripMenuItem";
+            clasesToolStripMenuItem.Size = new Size(180, 22);
+            clasesToolStripMenuItem.Text = "Clases";
+            clasesToolStripMenuItem.Click += clasesToolStripMenuItem_Click;
+            // 
+            // administradoresToolStripMenuItem
+            // 
+            administradoresToolStripMenuItem.Name = "administradoresToolStripMenuItem";
+            administradoresToolStripMenuItem.Size = new Size(180, 22);
+            administradoresToolStripMenuItem.Text = "Administradores";
+            administradoresToolStripMenuItem.Click += administradoresToolStripMenuItem_Click;
+            // 
             // Home
             // 
             ClientSize = new Size(800, 450);
@@ -146,6 +170,9 @@
         private ToolStripMenuItem cuotasToolStripMenuItem;
         private ToolStripMenuItem maquinasToolStripMenuItem;
         private ToolStripMenuItem materialesToolStripMenuItem;
+        private ToolStripMenuItem actividadesToolStripMenuItem;
+        private ToolStripMenuItem clasesToolStripMenuItem;
+        private ToolStripMenuItem administradoresToolStripMenuItem;
     }
 }
 

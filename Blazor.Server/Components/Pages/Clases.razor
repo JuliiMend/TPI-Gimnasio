@@ -1,0 +1,315 @@
+@page "/clases"
+@using DTOs
+@using API.Clients
+
+<h3>Clases</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevaClase">
+        + Nueva clase
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar clase" : "Nueva clase")</h4>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>Actividad</label>
+
+                <select class="form-select" @bind="claseActual.IdActividad">
+                    <option value="0">Seleccionar actividad</option>
+
+                    @foreach (var actividad in actividades)
+                    {
+                        <option value="@actividad.IdActividad">@actividad.Tipo</option>
+                    }
+                </select>
+
+                @if (!string.IsNullOrEmpty(errorActividad))
+                {
+                    <div class="text-danger">@errorActividad</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Profesor a cargo</label>
+
+                <select class="form-select" @bind="claseActual.IdProfesor">
+                    <option value="0">Seleccionar profesor</option>
+
+                    @foreach (var profesor in profesores)
+                    {
+                        <option value="@profesor.IdPersona">@profesor.Nombre @profesor.Apellido</option>
+                    }
+                </select>
+
+                @if (!string.IsNullOrEmpty(errorProfesor))
+                {
+                    <div class="text-danger">@errorProfesor</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Turno</label>
+
+                <select class="form-select" @bind="claseActual.IdTurno">
+                    <option value="0">Seleccionar turno</option>
+
+                    @foreach (var turno in turnos)
+                    {
+                        <option value="@turno.IdTurno">
+                            @turno.DiaSemana @turno.HoraDesde.ToString(@"hh\:mm") - @turno.HoraHasta.ToString(@"hh\:mm")
+                        </option>
+                    }
+                </select>
+
+                @if (!string.IsNullOrEmpty(errorTurno))
+                {
+                    <div class="text-danger">@errorTurno</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Cupo</label>
+                <input type="number" min="1" class="form-control" @bind="claseActual.Cupo" />
+
+                @if (!string.IsNullOrEmpty(errorCupo))
+                {
+                    <div class="text-danger">@errorCupo</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Actividad</th>
+            <th>Profesor</th>
+            <th>Turno</th>
+            <th>Cupo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var clase in clases)
+        {
+            <tr>
+                <td>@clase.Actividad</td>
+                <td>@clase.Profesor</td>
+                <td>@clase.Turno</td>
+                <td>@clase.Cupo</td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarClase(clase)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarClase(clase)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private string errorActividad = string.Empty;
+    private string errorProfesor = string.Empty;
+    private string errorTurno = string.Empty;
+    private string errorCupo = string.Empty;
+
+    private ClaseCreaActualizaDTO claseActual = new();
+
+    private int idClaseEditando;
+
+    private List<ClaseMostrarDTO> clases = new();
+    private List<ActividadMostrarDTO> actividades = new();
+    private List<ProfesorMostrarDTO> profesores = new();
+    private List<TurnoMostrarDTO> turnos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            actividades = (await ActividadApiClient.GetAllAsync()).ToList();
+            profesores = (await ProfesorApiClient.GetAllAsync()).ToList();
+            turnos = (await TurnoApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar actividades, profesores o turnos: {ex.Message}";
+        }
+
+        await CargarClases();
+    }
+
+    private async Task CargarClases()
+    {
+        try
+        {
+            clases = (await ClaseApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar las clases: {ex.Message}";
+        }
+    }
+
+    private void LimpiarErrores()
+    {
+        errorActividad = string.Empty;
+        errorProfesor = string.Empty;
+        errorTurno = string.Empty;
+        errorCupo = string.Empty;
+    }
+
+    private void NuevaClase()
+    {
+        claseActual = new ClaseCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private void EditarClase(ClaseMostrarDTO clase)
+    {
+        idClaseEditando = clase.IdClase;
+
+        claseActual = new ClaseCreaActualizaDTO
+        {
+            IdActividad = clase.IdActividad,
+            IdProfesor = clase.IdProfesor,
+            IdTurno = clase.IdTurno,
+            Cupo = clase.Cupo
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private bool Validar()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (claseActual.IdActividad == 0)
+        {
+            errorActividad = "Seleccioná una actividad.";
+            valido = false;
+        }
+
+        if (claseActual.IdProfesor == 0)
+        {
+            errorProfesor = "Seleccioná un profesor.";
+            valido = false;
+        }
+
+        if (claseActual.IdTurno == 0)
+        {
+            errorTurno = "Seleccioná un turno.";
+            valido = false;
+        }
+
+        if (claseActual.Cupo <= 0)
+        {
+            errorCupo = "El cupo debe ser mayor a 0.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await ClaseApiClient.UpdateAsync(idClaseEditando, claseActual);
+
+                mensaje = "Clase modificada correctamente.";
+            }
+            else
+            {
+                await ClaseApiClient.AddAsync(claseActual);
+
+                mensaje = "Clase creada correctamente.";
+            }
+
+            await CargarClases();
+
+            mostrarFormulario = false;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar la clase: {ex.Message}";
+        }
+    }
+
+    private async Task EliminarClase(ClaseMostrarDTO clase)
+    {
+        try
+        {
+            await ClaseApiClient.DeleteAsync(clase.IdClase);
+
+            await CargarClases();
+
+            mensaje = "Clase eliminada correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar la clase: {ex.Message}";
+        }
+    }
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+}
