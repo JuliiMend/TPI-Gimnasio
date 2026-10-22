@@ -1,0 +1,281 @@
+@page "/inscripciones"
+@using DTOs
+@using API.Clients
+
+<h3>Inscripciones a clases</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevaInscripcion">
+        + Nueva inscripción
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>Nueva inscripción</h4>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>Socio</label>
+
+                <select class="form-select" @bind="inscripcionActual.IdSocio">
+                    <option value="0">Seleccionar socio</option>
+
+                    @foreach (var socio in sociosActivos)
+                    {
+                        <option value="@socio.IdPersona">@socio.Nombre @socio.Apellido (DNI @socio.Dni)</option>
+                    }
+                </select>
+
+                @if (!string.IsNullOrEmpty(errorSocio))
+                {
+                    <div class="text-danger">@errorSocio</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Clase</label>
+
+                <select class="form-select" @bind="inscripcionActual.IdClase">
+                    <option value="0">Seleccionar clase</option>
+
+                    @foreach (var clase in clases)
+                    {
+                        <option value="@clase.IdClase" disabled="@(clase.Inscriptos >= clase.Cupo)">
+                            @clase.Actividad - @clase.Turno (@clase.Inscriptos/@clase.Cupo)@(clase.Inscriptos >= clase.Cupo ? " - SIN CUPO" : "")
+                        </option>
+                    }
+                </select>
+
+                @if (!string.IsNullOrEmpty(errorClase))
+                {
+                    <div class="text-danger">@errorClase</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Inscribir
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert @(esError ? "alert-danger" : "alert-info")">
+        @mensaje
+    </div>
+}
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label>Filtrar por clase</label>
+
+        <select class="form-select" value="@idClaseFiltro" @onchange="CambiarFiltro">
+            <option value="0">Todas las clases</option>
+
+            @foreach (var clase in clases)
+            {
+                <option value="@clase.IdClase">@clase.Actividad - @clase.Turno</option>
+            }
+        </select>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Socio</th>
+            <th>Clase</th>
+            <th>Fecha de inscripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var inscripcion in inscripciones)
+        {
+            <tr>
+                <td>@inscripcion.Socio</td>
+                <td>@inscripcion.Clase</td>
+                <td>@inscripcion.FechaInscripcion.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => CancelarInscripcion(inscripcion)">
+                        Cancelar inscripción
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private bool mostrarFormulario = false;
+
+    private string mensaje = string.Empty;
+    private bool esError = false;
+
+    private string errorSocio = string.Empty;
+    private string errorClase = string.Empty;
+
+    private int idClaseFiltro = 0;
+
+    private InscripcionCreaDTO inscripcionActual = new();
+
+    private List<InscripcionMostrarDTO> inscripciones = new();
+    private List<ClaseMostrarDTO> clases = new();
+    private List<SocioMostrarDTO> sociosActivos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var socios = await SocioApiClient.GetAllAsync();
+
+            // Los socios dados de baja no pueden inscribirse
+            sociosActivos = socios
+                .Where(s => s.FechaBaja == null || s.FechaBaja.Value.Date > DateTime.Today)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al cargar los socios: {ex.Message}");
+        }
+
+        await CargarClases();
+        await CargarInscripciones();
+    }
+
+    private async Task CargarClases()
+    {
+        try
+        {
+            clases = (await ClaseApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al cargar las clases: {ex.Message}");
+        }
+    }
+
+    private async Task CargarInscripciones()
+    {
+        try
+        {
+            inscripciones = (await InscripcionApiClient.GetAllAsync(idClaseFiltro > 0 ? idClaseFiltro : null)).ToList();
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al cargar las inscripciones: {ex.Message}");
+        }
+    }
+
+    private async Task CambiarFiltro(ChangeEventArgs e)
+    {
+        idClaseFiltro = int.TryParse(e.Value?.ToString(), out var id) ? id : 0;
+        await CargarInscripciones();
+    }
+
+    private void NuevaInscripcion()
+    {
+        inscripcionActual = new InscripcionCreaDTO { IdClase = idClaseFiltro };
+
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private void LimpiarErrores()
+    {
+        errorSocio = string.Empty;
+        errorClase = string.Empty;
+    }
+
+    private bool Validar()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (inscripcionActual.IdSocio == 0)
+        {
+            errorSocio = "Seleccioná un socio.";
+            valido = false;
+        }
+
+        if (inscripcionActual.IdClase == 0)
+        {
+            errorClase = "Seleccioná una clase.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            await InscripcionApiClient.AddAsync(inscripcionActual);
+
+            mensaje = "Socio inscripto correctamente.";
+            esError = false;
+            mostrarFormulario = false;
+
+            await CargarClases();
+            await CargarInscripciones();
+        }
+        catch (Exception ex)
+        {
+            // Ej: la clase se quedó sin cupo o el socio ya estaba inscripto
+            MostrarError($"No se pudo inscribir: {ex.Message}");
+        }
+    }
+
+    private async Task CancelarInscripcion(InscripcionMostrarDTO inscripcion)
+    {
+        try
+        {
+            await InscripcionApiClient.DeleteAsync(inscripcion.IdInscripcion);
+
+            mensaje = "Inscripción cancelada correctamente.";
+            esError = false;
+
+            await CargarClases();
+            await CargarInscripciones();
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al cancelar la inscripción: {ex.Message}");
+        }
+    }
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private void MostrarError(string texto)
+    {
+        mensaje = texto;
+        esError = true;
+    }
+}

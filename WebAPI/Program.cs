@@ -86,6 +86,8 @@ builder.Services.AddScoped<IActividadRepository, ActividadRepository>();
 builder.Services.AddScoped<IActividadService, ActividadService>();
 builder.Services.AddScoped<IClaseRepository, ClaseRepository>();
 builder.Services.AddScoped<IClaseService, ClaseService>();
+builder.Services.AddScoped<IInscripcionRepository, InscripcionRepository>();
+builder.Services.AddScoped<IInscripcionService, InscripcionService>();
 
 var app = builder.Build();
 
@@ -112,6 +114,11 @@ app.Use(async (context, next) =>
         context.Response.StatusCode = StatusCodes.Status409Conflict;
         await context.Response.WriteAsJsonAsync(new { mensaje });
     }
+    catch (ReglaNegocioException ex)
+    {
+        context.Response.StatusCode = StatusCodes.Status409Conflict;
+        await context.Response.WriteAsJsonAsync(new { mensaje = ex.Message });
+    }
 });
 
 // Auth tiene que ir ANTES de mapear los endpoints
@@ -131,5 +138,6 @@ app.MapMaterialEndpoints();
 app.MapAdministradorEndpoints();
 app.MapActividadEndpoints();
 app.MapClaseEndpoints();
+app.MapInscripcionEndpoints();
 
 app.Run();
