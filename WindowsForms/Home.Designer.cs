@@ -43,6 +43,8 @@
             clasesToolStripMenuItem = new ToolStripMenuItem();
             inscripcionesToolStripMenuItem = new ToolStripMenuItem();
             administradoresToolStripMenuItem = new ToolStripMenuItem();
+            mantenimientosToolStripMenuItem = new ToolStripMenuItem();
+            historicoSueldosToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -71,7 +73,7 @@
             // 
             // gestionToolStripMenuItem
             // 
-            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem, actividadesToolStripMenuItem, clasesToolStripMenuItem, inscripcionesToolStripMenuItem, administradoresToolStripMenuItem });
+            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem, actividadesToolStripMenuItem, clasesToolStripMenuItem, inscripcionesToolStripMenuItem, administradoresToolStripMenuItem, mantenimientosToolStripMenuItem, historicoSueldosToolStripMenuItem });
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(59, 20);
             gestionToolStripMenuItem.Text = "Gestion";
@@ -153,6 +155,20 @@
             administradoresToolStripMenuItem.Text = "Administradores";
             administradoresToolStripMenuItem.Click += administradoresToolStripMenuItem_Click;
             // 
+            // mantenimientosToolStripMenuItem
+            // 
+            mantenimientosToolStripMenuItem.Name = "mantenimientosToolStripMenuItem";
+            mantenimientosToolStripMenuItem.Size = new Size(180, 22);
+            mantenimientosToolStripMenuItem.Text = "Mantenimientos";
+            mantenimientosToolStripMenuItem.Click += mantenimientosToolStripMenuItem_Click;
+            // 
+            // historicoSueldosToolStripMenuItem
+            // 
+            historicoSueldosToolStripMenuItem.Name = "historicoSueldosToolStripMenuItem";
+            historicoSueldosToolStripMenuItem.Size = new Size(180, 22);
+            historicoSueldosToolStripMenuItem.Text = "Historico de sueldos";
+            historicoSueldosToolStripMenuItem.Click += historicoSueldosToolStripMenuItem_Click;
+            // 
             // Home
             // 
             ClientSize = new Size(800, 450);
@@ -182,6 +198,8 @@
         private ToolStripMenuItem clasesToolStripMenuItem;
         private ToolStripMenuItem inscripcionesToolStripMenuItem;
         private ToolStripMenuItem administradoresToolStripMenuItem;
+        private ToolStripMenuItem mantenimientosToolStripMenuItem;
+        private ToolStripMenuItem historicoSueldosToolStripMenuItem;
     }
 }
 

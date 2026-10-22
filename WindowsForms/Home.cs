@@ -90,6 +90,20 @@ namespace WindowsFormsApp
             inscripcionForm.Show();
         }
 
+        private void mantenimientosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var mantenimientoForm = new MantenimientoLista();
+            mantenimientoForm.MdiParent = this;
+            mantenimientoForm.Show();
+        }
+
+        private void historicoSueldosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var historicoForm = new HistoricoSueldoLista();
+            historicoForm.MdiParent = this;
+            historicoForm.Show();
+        }
+
         private void administradoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var administradorForm = new AdministradorLista();
