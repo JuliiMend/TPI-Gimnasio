@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public InscripcionLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void InscripcionLista_Load(object sender, EventArgs e)

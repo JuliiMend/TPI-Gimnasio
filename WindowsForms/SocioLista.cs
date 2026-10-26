@@ -11,6 +11,7 @@ namespace WindowsFormsApp
         public SocioLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
 
             this.Load -= SocioLista_Load;
             this.Load += SocioLista_Load;

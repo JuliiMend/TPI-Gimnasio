@@ -11,6 +11,7 @@ namespace WindowsFormsApp
         public Home()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
 
             AuthServiceProvider.Instance.AuthenticationStateChanged += AlCambiarSesion;
             FormClosed += (s, e) => AuthServiceProvider.Instance.AuthenticationStateChanged -= AlCambiarSesion;

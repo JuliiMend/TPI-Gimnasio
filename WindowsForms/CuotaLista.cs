@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public CuotaLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void CuotaLista_Load(object sender, EventArgs e)

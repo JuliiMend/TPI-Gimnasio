@@ -10,6 +10,7 @@ namespace WindowsFormsApp
         public ProfesorLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void ProfesorLista_Load(object sender, EventArgs e)

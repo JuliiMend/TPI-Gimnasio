@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <!-- ScottPlot.WinForms trae OpenTK (para su control OpenGL, que no usamos), compilado para .NET Framework -->
     <NoWarn>$(NoWarn);NU1701</NoWarn>
+    <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="app.ico" />
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

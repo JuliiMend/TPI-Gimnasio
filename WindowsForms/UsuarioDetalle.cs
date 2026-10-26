@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public UsuarioDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public async Task CargarUsuarioAsync(int id)

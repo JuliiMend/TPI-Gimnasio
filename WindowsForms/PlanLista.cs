@@ -12,6 +12,7 @@ namespace WindowsFormsApp
         public PlanLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
 
             this.Load -= PlanLista_Load;
             this.Load += PlanLista_Load;

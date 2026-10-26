@@ -15,6 +15,7 @@ namespace WindowsFormsApp
         public MantenimientoLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void MantenimientoLista_Load(object sender, EventArgs e)

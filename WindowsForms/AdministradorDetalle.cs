@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public AdministradorDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public async Task CargarAdministradorAsync(int id)

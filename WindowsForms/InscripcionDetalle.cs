@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public InscripcionDetalle(int? idClaseInicial = null)
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
             _idClaseInicial = idClaseInicial;
         }
 

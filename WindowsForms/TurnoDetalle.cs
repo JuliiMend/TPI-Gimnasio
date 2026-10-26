@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public TurnoDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public async Task CargarTurnoAsync(int id)

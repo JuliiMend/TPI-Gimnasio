@@ -10,6 +10,7 @@ namespace WindowsFormsApp
         public TurnoLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void TurnoLista_Load(object sender, EventArgs e)

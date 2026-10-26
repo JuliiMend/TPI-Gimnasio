@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public LoginForm(IAuthService authService)
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
             _authService = authService;
         }
 
