@@ -14,6 +14,7 @@ namespace WindowsFormsApp
         public PlanDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
 
             this.Load -= PlanDetalle_Load;
             this.Load += PlanDetalle_Load;

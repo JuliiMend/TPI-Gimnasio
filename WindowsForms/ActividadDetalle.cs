@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public ActividadDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public async Task CargarActividadAsync(int id)

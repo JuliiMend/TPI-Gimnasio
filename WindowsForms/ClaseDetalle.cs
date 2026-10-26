@@ -16,6 +16,7 @@ namespace WindowsFormsApp
         public ClaseDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async Task CargarCombosAsync()

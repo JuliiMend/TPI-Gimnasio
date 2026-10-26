@@ -41,6 +41,7 @@ namespace WindowsFormsApp
         public ReporteMantenimientos()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void ReporteMantenimientos_Load(object sender, EventArgs e)

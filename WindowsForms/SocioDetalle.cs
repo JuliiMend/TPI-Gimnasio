@@ -11,6 +11,7 @@ namespace WindowsFormsApp
         public SocioDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
 
             this.Load -= SocioDetalle_Load;
             this.Load += SocioDetalle_Load;

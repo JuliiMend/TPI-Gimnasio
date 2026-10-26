@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public HistoricoSueldoLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
             colValor.DefaultCellStyle.FormatProvider = new System.Globalization.CultureInfo("es-AR");
         }
 

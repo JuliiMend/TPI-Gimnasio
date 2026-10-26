@@ -10,6 +10,7 @@ namespace WindowsFormsApp
         public UsuarioLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void UsuarioLista_Load(object sender, EventArgs e)

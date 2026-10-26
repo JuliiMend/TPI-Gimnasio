@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public MaquinaDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public async Task CargarMaquinaAsync(int id)

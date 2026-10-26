@@ -24,6 +24,7 @@ namespace WindowsFormsApp
         public ReporteOcupacionClases()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void ReporteOcupacionClases_Load(object sender, EventArgs e)

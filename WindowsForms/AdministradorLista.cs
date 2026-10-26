@@ -10,6 +10,7 @@ namespace WindowsFormsApp
         public AdministradorLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void AdministradorLista_Load(object sender, EventArgs e)

@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public HistoricoSueldoDetalle(int? idProfesorInicial = null)
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
             _idProfesorInicial = idProfesorInicial;
         }
 
