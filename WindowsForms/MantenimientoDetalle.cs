@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public MantenimientoDetalle(MantenimientoMostrarDTO? mantenimiento = null)
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
             _mantenimiento = mantenimiento;
         }
 

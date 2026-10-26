@@ -25,6 +25,14 @@ namespace API.Clients
             return result ?? new List<UsuarioMostrarDTO>();
         }
 
+        public static async Task<PaginaDTO<UsuarioMostrarDTO>> GetPaginadoAsync(int pagina, int tamanio)
+        {
+            using var client = await CreateHttpClientAsync();
+            var url = ConParametros("api/usuarios/paginado", ("pagina", pagina), ("tamanio", tamanio));
+            var result = await client.GetFromJsonAsync<PaginaDTO<UsuarioMostrarDTO>>(url);
+            return result ?? new PaginaDTO<UsuarioMostrarDTO>();
+        }
+
         public static async Task AddAsync(UsuarioCreaActualizaDTO usuario)
         {
             using var client = await CreateHttpClientAsync();

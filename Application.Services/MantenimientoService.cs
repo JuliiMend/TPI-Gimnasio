@@ -36,6 +36,14 @@ namespace Application.Services
             return resultado.ToList();
         }
 
+        // El estado se calcula en memoria, así que se pagina después de filtrar por él
+        public async Task<PaginaDTO<MantenimientoMostrarDTO>> ObtenerPaginadoAsync(int? idMaquina, string? estado, int numeroPagina, int tamanioPagina)
+        {
+            var todos = await ObtenerTodosAsync(idMaquina, estado);
+
+            return Pagina<MantenimientoMostrarDTO>.Crear(todos, numeroPagina, tamanioPagina).ADto(m => m);
+        }
+
         public async Task<MantenimientoMostrarDTO?> ObtenerPorIdAsync(int id)
         {
             var mantenimiento = await _mantenimientoRepository.ObtenerPorIdAsync(id);

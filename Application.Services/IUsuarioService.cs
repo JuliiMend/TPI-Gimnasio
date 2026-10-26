@@ -10,6 +10,7 @@ namespace Application.Services
     public interface IUsuarioService
     {
         Task<List<UsuarioMostrarDTO>> ObtenerTodosAsync();
+        Task<PaginaDTO<UsuarioMostrarDTO>> ObtenerPaginadoAsync(int numeroPagina, int tamanioPagina);
         Task<UsuarioMostrarDTO?> ObtenerPorIdAsync(int id);
         Task <int> AgregarAsync(UsuarioCreaActualizaDTO dto);
         Task ActualizarAsync(int id, UsuarioCreaActualizaDTO dto);

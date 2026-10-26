@@ -10,6 +10,7 @@ namespace WindowsFormsApp
         public MaquinaLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void MaquinaLista_Load(object sender, EventArgs e)

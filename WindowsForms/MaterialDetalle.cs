@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public MaterialDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public async Task CargarMaterialAsync(int id)

@@ -10,6 +10,7 @@ namespace WindowsFormsApp
         public MaterialLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void MaterialLista_Load(object sender, EventArgs e)

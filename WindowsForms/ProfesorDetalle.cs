@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public ProfesorDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public async Task CargarProfesorAsync(int id)

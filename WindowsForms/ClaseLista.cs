@@ -11,6 +11,7 @@ namespace WindowsFormsApp
         public ClaseLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void ClaseLista_Load(object sender, EventArgs e)

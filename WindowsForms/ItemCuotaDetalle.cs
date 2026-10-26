@@ -21,6 +21,7 @@ namespace WindowsFormsApp
         public ItemCuotaDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public ItemCuotaDetalle(DetalleCuotaCreaActualizaDTO item) : this()

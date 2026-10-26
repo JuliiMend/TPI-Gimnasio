@@ -169,6 +169,37 @@
     </div>
 }
 
+<div class="row g-2 mb-3 align-items-end">
+    <div class="col-md-4">
+        <label>Buscar por DNI</label>
+        <input class="form-control"
+               placeholder="Ej: 30123456"
+               @bind="dniBusqueda"
+               @bind:event="oninput"
+               @onkeyup="BuscarConEnter" />
+    </div>
+
+    <div class="col-md-auto">
+        <button class="btn btn-outline-primary me-2" @onclick="Buscar">
+            Buscar
+        </button>
+
+        @if (!string.IsNullOrWhiteSpace(dniFiltro))
+        {
+            <button class="btn btn-outline-secondary" @onclick="LimpiarBusqueda">
+                Ver todos
+            </button>
+        }
+    </div>
+</div>
+
+@if (socios.Count == 0 && !string.IsNullOrWhiteSpace(dniFiltro))
+{
+    <div class="alert alert-warning">
+        No se encontró ningún socio con DNI "@dniFiltro".
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -212,6 +243,12 @@
     </tbody>
 </table>
 
+<Paginador NumeroPagina="numeroPagina"
+           TamanioPagina="TamanioPagina"
+           TotalItems="totalItems"
+           TotalPaginas="totalPaginas"
+           OnCambiarPagina="CambiarPagina" />
+
 @code {
 private bool mostrarFormulario = false;
     private bool editando = false;
@@ -234,6 +271,15 @@ private bool mostrarFormulario = false;
     private int idSocioEditando;
 
     private List<SocioMostrarDTO> socios = new();
+
+    private const int TamanioPagina = 10;
+    private int numeroPagina = 1;
+    private int totalItems;
+    private int totalPaginas;
+
+    // dniBusqueda es lo que se está tipeando; dniFiltro, lo que se aplicó con "Buscar"
+    private string dniBusqueda = string.Empty;
+    private string dniFiltro = string.Empty;
 
     private List<PlanMostrarDTO> planes = new();
 
@@ -259,12 +305,44 @@ private bool mostrarFormulario = false;
     {
         try
         {
-            socios = (await SocioApiClient.GetAllAsync()).ToList();
+            var pagina = await SocioApiClient.GetPaginadoAsync(numeroPagina, TamanioPagina, dniFiltro);
+
+            socios = pagina.Items;
+            numeroPagina = pagina.NumeroPagina;
+            totalItems = pagina.TotalItems;
+            totalPaginas = pagina.TotalPaginas;
         }
         catch (Exception ex)
         {
             mensaje = $"Error al cargar los socios: {ex.Message}";
         }
+    }
+
+    private async Task CambiarPagina(int numero)
+    {
+        numeroPagina = numero;
+        await CargarSocios();
+    }
+
+    private async Task Buscar()
+    {
+        dniFiltro = dniBusqueda.Trim();
+        numeroPagina = 1;
+        await CargarSocios();
+    }
+
+    private async Task BuscarConEnter(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
+        }
+    }
+
+    private async Task LimpiarBusqueda()
+    {
+        dniBusqueda = string.Empty;
+        await Buscar();
     }
 
     private void LimpiarErrores()

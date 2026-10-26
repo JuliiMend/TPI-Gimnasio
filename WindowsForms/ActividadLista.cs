@@ -10,6 +10,7 @@ namespace WindowsFormsApp
         public ActividadLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         private async void ActividadLista_Load(object sender, EventArgs e)

@@ -146,6 +146,12 @@ else
         </tbody>
 
     </table>
+
+    <Paginador NumeroPagina="numeroPagina"
+               TamanioPagina="TamanioPagina"
+               TotalItems="totalItems"
+               TotalPaginas="totalPaginas"
+               OnCambiarPagina="CambiarPagina" />
 }
 
 @code {
@@ -167,6 +173,11 @@ else
 
     private List<UsuarioMostrarDTO> usuarios = new();
 
+    private const int TamanioPagina = 10;
+    private int numeroPagina = 1;
+    private int totalItems;
+    private int totalPaginas;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -180,9 +191,12 @@ else
         {
             cargando = true;
 
-            var resultado = await UsuarioApiClient.GetAllAsync();
+            var pagina = await UsuarioApiClient.GetPaginadoAsync(numeroPagina, TamanioPagina);
 
-            usuarios = resultado.ToList();
+            usuarios = pagina.Items;
+            numeroPagina = pagina.NumeroPagina;
+            totalItems = pagina.TotalItems;
+            totalPaginas = pagina.TotalPaginas;
         }
         catch (Exception ex)
         {
@@ -193,6 +207,13 @@ else
         {
             cargando = false;
         }
+    }
+
+
+    private async Task CambiarPagina(int numero)
+    {
+        numeroPagina = numero;
+        await CargarUsuarios();
     }
 
 

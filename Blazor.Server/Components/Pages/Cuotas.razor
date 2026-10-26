@@ -216,6 +216,60 @@
     </div>
 }
 
+<div class="row g-2 mb-3 align-items-end">
+
+    @if (esAdmin)
+    {
+        <div class="col-md-4">
+            <label>Filtrar por socio</label>
+
+            <select class="form-select" value="@idSocioFiltro" @onchange="CambiarFiltroSocio">
+                <option value="0">Todos</option>
+
+                @foreach (var socio in socios)
+                {
+                    <option value="@socio.IdPersona">@socio.Apellido, @socio.Nombre (@socio.Dni)</option>
+                }
+            </select>
+        </div>
+    }
+
+    <div class="col-md-3">
+        <label>Mes</label>
+
+        <select class="form-select" value="@mesFiltro" @onchange="CambiarFiltroMes">
+            <option value="0">Todos</option>
+
+            @for (int mes = 1; mes <= 12; mes++)
+            {
+                <option value="@mes">@NombresMeses[mes - 1]</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label>Año</label>
+
+        <input type="number"
+               class="form-control"
+               placeholder="Todos"
+               min="2000"
+               max="2100"
+               value="@(anioFiltro > 0 ? anioFiltro.ToString() : string.Empty)"
+               @onchange="CambiarFiltroAnio" />
+    </div>
+
+    @if (idSocioFiltro > 0 || mesFiltro > 0 || anioFiltro > 0)
+    {
+        <div class="col-md-auto">
+            <button class="btn btn-outline-secondary" @onclick="LimpiarFiltros">
+                Limpiar filtros
+            </button>
+        </div>
+    }
+
+</div>
+
 <table class="table">
 
     <thead>
@@ -274,6 +328,12 @@
 
 </table>
 
+<Paginador NumeroPagina="numeroPagina"
+           TamanioPagina="TamanioPagina"
+           TotalItems="totalItems"
+           TotalPaginas="totalPaginas"
+           OnCambiarPagina="CambiarPagina" />
+
 
 @code {
 
@@ -300,6 +360,22 @@
     private List<CuotaMostrarDTO> cuotas = new();
 
     private List<SocioMostrarDTO> socios = new();
+
+    private const int TamanioPagina = 10;
+    private int numeroPagina = 1;
+    private int totalItems;
+    private int totalPaginas;
+
+    // 0 = sin filtro
+    private int idSocioFiltro;
+    private int mesFiltro;
+    private int anioFiltro;
+
+    private static readonly string[] NombresMeses =
+    {
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    };
 
 
     private bool esAdmin;
@@ -334,12 +410,64 @@
     {
         try
         {
-            cuotas = (await CuotaApiClient.GetAllAsync()).ToList();
+            // Para un socio la API ignora idSocio y devuelve solo sus cuotas
+            var pagina = await CuotaApiClient.GetPaginadoAsync(
+                numeroPagina,
+                TamanioPagina,
+                idSocioFiltro > 0 ? idSocioFiltro : null,
+                mesFiltro > 0 ? mesFiltro : null,
+                anioFiltro > 0 ? anioFiltro : null);
+
+            cuotas = pagina.Items;
+            numeroPagina = pagina.NumeroPagina;
+            totalItems = pagina.TotalItems;
+            totalPaginas = pagina.TotalPaginas;
         }
         catch (Exception ex)
         {
             mensaje = $"Error al cargar las cuotas: {ex.Message}";
         }
+    }
+
+
+    private async Task CambiarPagina(int numero)
+    {
+        numeroPagina = numero;
+        await CargarCuotas();
+    }
+
+
+    private async Task CambiarFiltroSocio(ChangeEventArgs e)
+    {
+        idSocioFiltro = int.TryParse(e.Value?.ToString(), out var id) ? id : 0;
+        numeroPagina = 1;
+        await CargarCuotas();
+    }
+
+
+    private async Task CambiarFiltroMes(ChangeEventArgs e)
+    {
+        mesFiltro = int.TryParse(e.Value?.ToString(), out var mes) ? mes : 0;
+        numeroPagina = 1;
+        await CargarCuotas();
+    }
+
+
+    private async Task CambiarFiltroAnio(ChangeEventArgs e)
+    {
+        anioFiltro = int.TryParse(e.Value?.ToString(), out var anio) && anio > 0 ? anio : 0;
+        numeroPagina = 1;
+        await CargarCuotas();
+    }
+
+
+    private async Task LimpiarFiltros()
+    {
+        idSocioFiltro = 0;
+        mesFiltro = 0;
+        anioFiltro = 0;
+        numeroPagina = 1;
+        await CargarCuotas();
     }
 
 

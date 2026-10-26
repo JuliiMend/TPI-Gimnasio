@@ -54,6 +54,14 @@ namespace Application.Services
                 .ToList();
         }
 
+        // FechaHasta depende del sueldo siguiente del profesor, así que se pagina después de calcularla
+        public async Task<PaginaDTO<HistoricoSueldoMostrarDTO>> ObtenerPaginadoAsync(int? idProfesor, int numeroPagina, int tamanioPagina)
+        {
+            var todos = await ObtenerTodosAsync(idProfesor);
+
+            return Pagina<HistoricoSueldoMostrarDTO>.Crear(todos, numeroPagina, tamanioPagina).ADto(s => s);
+        }
+
         public async Task<int> RegistrarAsync(HistoricoSueldoCreaDTO dto)
         {
             if (dto.Valor <= 0)

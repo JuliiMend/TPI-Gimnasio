@@ -18,6 +18,12 @@ namespace WebAPI
                 return Results.Ok(usuarios);
             });
 
+            grupo.MapGet("/paginado", async (IUsuarioService usuarioService, int pagina = 1, int tamanio = 10) =>
+            {
+                var usuarios = await usuarioService.ObtenerPaginadoAsync(pagina, tamanio);
+                return Results.Ok(usuarios);
+            });
+
             grupo.MapGet("/{id}", async (int id, IUsuarioService usuarioService) =>
             {
                 var usuario = await usuarioService.ObtenerPorIdAsync(id);

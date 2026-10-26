@@ -19,6 +19,20 @@ namespace Data
 
         public async Task<List<Socio>> ObtenerTodosAsync(SocioCriteria criterios)
         {
+            return await ConstruirConsulta(criterios).ToListAsync();
+        }
+
+        public async Task<Pagina<Socio>> ObtenerPaginadoAsync(SocioCriteria criterios, int numeroPagina, int tamanioPagina)
+        {
+            return await ConstruirConsulta(criterios)
+                .OrderBy(s => s.Apellido)
+                .ThenBy(s => s.Nombre)
+                .ThenBy(s => s.PersonaId)
+                .PaginarAsync(numeroPagina, tamanioPagina);
+        }
+
+        private IQueryable<Socio> ConstruirConsulta(SocioCriteria criterios)
+        {
             var query = _context.Socios
                 .Include(s => s.Plan)
                 .Include(s => s.Usuario)
@@ -47,7 +61,7 @@ namespace Data
                 }
             }
 
-            return await query.ToListAsync();
+            return query;
         }
 
         public async Task<Socio?> ObtenerPorIdAsync(int id)

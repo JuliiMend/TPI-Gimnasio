@@ -26,6 +26,14 @@ namespace API.Clients
             return result ?? new List<MantenimientoMostrarDTO>();
         }
 
+        public static async Task<PaginaDTO<MantenimientoMostrarDTO>> GetPaginadoAsync(int pagina, int tamanio, int? idMaquina = null, string? estado = null)
+        {
+            using var client = await CreateHttpClientAsync();
+            var url = ConParametros("api/mantenimientos/paginado", ("pagina", pagina), ("tamanio", tamanio), ("idMaquina", idMaquina), ("estado", estado));
+            var result = await client.GetFromJsonAsync<PaginaDTO<MantenimientoMostrarDTO>>(url);
+            return result ?? new PaginaDTO<MantenimientoMostrarDTO>();
+        }
+
         public static async Task AddAsync(MantenimientoCreaActualizaDTO mantenimiento)
         {
             using var client = await CreateHttpClientAsync();
