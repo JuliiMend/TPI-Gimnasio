@@ -8,6 +8,9 @@ namespace WindowsFormsApp
 {
     public partial class SocioLista : Form
     {
+        // DNI aplicado con "Buscar"; vacío = todos los socios
+        private string dniFiltro = string.Empty;
+
         public SocioLista()
         {
             InitializeComponent();
@@ -35,15 +38,53 @@ namespace WindowsFormsApp
         {
             try
             {
-                var socios = await SocioApiClient.GetAllAsync();
+                var pagina = await SocioApiClient.GetPaginadoAsync(paginador.NumeroPagina, paginador.TamanioPagina, dniFiltro);
 
                 dgvSocios.DataSource = null;
-                dgvSocios.DataSource = socios.ToList();
+                dgvSocios.DataSource = pagina.Items;
+                paginador.Actualizar(pagina);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar los socios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private async Task BuscarAsync()
+        {
+            dniFiltro = txtDni.Text.Trim();
+            paginador.Reiniciar();
+            await CargarSociosAsync();
+
+            if (dgvSocios.DataSource is List<SocioMostrarDTO> { Count: 0 } && !string.IsNullOrEmpty(dniFiltro))
+            {
+                MessageBox.Show($"No se encontró ningún socio con DNI \"{dniFiltro}\".", "Búsqueda", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private async void btnBuscar_Click(object? sender, EventArgs e)
+        {
+            await BuscarAsync();
+        }
+
+        private async void txtDni_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                await BuscarAsync();
+            }
+        }
+
+        private async void btnVerTodos_Click(object? sender, EventArgs e)
+        {
+            txtDni.Clear();
+            await BuscarAsync();
+        }
+
+        private async void paginador_PaginaCambiada(object? sender, EventArgs e)
+        {
+            await CargarSociosAsync();
         }
 
         private async void btnNuevo_Click(object? sender, EventArgs e)

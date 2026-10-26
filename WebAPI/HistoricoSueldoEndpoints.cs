@@ -25,6 +25,18 @@ namespace WebAPI
                 return Results.Ok(sueldos);
             });
 
+            grupo.MapGet("/paginado", async (int? idProfesor, ClaimsPrincipal user, IHistoricoSueldoService historicoSueldoService,
+                IProfesorService profesorService, int pagina = 1, int tamanio = 10) =>
+            {
+                if (user.EsProfesor())
+                {
+                    idProfesor = await user.IdProfesorAsync(profesorService);
+                }
+
+                var sueldos = await historicoSueldoService.ObtenerPaginadoAsync(idProfesor, pagina, tamanio);
+                return Results.Ok(sueldos);
+            });
+
             grupo.MapPost("/", async (HistoricoSueldoCreaDTO dto, IHistoricoSueldoService historicoSueldoService) =>
             {
                 var id = await historicoSueldoService.RegistrarAsync(dto);

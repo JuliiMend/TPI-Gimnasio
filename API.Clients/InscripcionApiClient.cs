@@ -15,6 +15,14 @@ namespace API.Clients
             return result ?? new List<InscripcionMostrarDTO>();
         }
 
+        public static async Task<PaginaDTO<InscripcionMostrarDTO>> GetPaginadoAsync(int pagina, int tamanio, int? idClase = null)
+        {
+            using var client = await CreateHttpClientAsync();
+            var url = ConParametros("api/inscripciones/paginado", ("pagina", pagina), ("tamanio", tamanio), ("idClase", idClase));
+            var result = await client.GetFromJsonAsync<PaginaDTO<InscripcionMostrarDTO>>(url);
+            return result ?? new PaginaDTO<InscripcionMostrarDTO>();
+        }
+
         public static async Task AddAsync(InscripcionCreaDTO inscripcion)
         {
             using var client = await CreateHttpClientAsync();

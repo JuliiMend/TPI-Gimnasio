@@ -38,6 +38,7 @@ namespace WindowsFormsApp
             btnModificar = new Button();
             btnNuevo = new Button();
             lblOpciones = new Label();
+            paginador = new Paginador();
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).BeginInit();
             SuspendLayout();
             // 
@@ -98,7 +99,7 @@ namespace WindowsFormsApp
             // 
             btnEliminar.BackColor = Color.Crimson;
             btnEliminar.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnEliminar.Location = new Point(12, 321);
+            btnEliminar.Location = new Point(12, 357);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(154, 35);
             btnEliminar.TabIndex = 5;
@@ -110,7 +111,7 @@ namespace WindowsFormsApp
             // 
             btnModificar.BackColor = Color.MediumSeaGreen;
             btnModificar.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnModificar.Location = new Point(12, 280);
+            btnModificar.Location = new Point(12, 316);
             btnModificar.Name = "btnModificar";
             btnModificar.Size = new Size(154, 35);
             btnModificar.TabIndex = 4;
@@ -122,7 +123,7 @@ namespace WindowsFormsApp
             // 
             btnNuevo.BackColor = Color.LightBlue;
             btnNuevo.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnNuevo.Location = new Point(12, 239);
+            btnNuevo.Location = new Point(12, 275);
             btnNuevo.Name = "btnNuevo";
             btnNuevo.Size = new Size(154, 35);
             btnNuevo.TabIndex = 3;
@@ -134,17 +135,26 @@ namespace WindowsFormsApp
             // 
             lblOpciones.AutoSize = true;
             lblOpciones.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
-            lblOpciones.Location = new Point(12, 207);
+            lblOpciones.Location = new Point(12, 243);
             lblOpciones.Name = "lblOpciones";
             lblOpciones.Size = new Size(91, 22);
             lblOpciones.TabIndex = 2;
             lblOpciones.Text = "Opciones:";
+            // 
+            // paginador
+            // 
+            paginador.Location = new Point(12, 201);
+            paginador.Name = "paginador";
+            paginador.Size = new Size(422, 28);
+            paginador.TabIndex = 20;
+            paginador.PaginaCambiada += paginador_PaginaCambiada;
             // 
             // UsuarioLista
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(paginador);
             Controls.Add(btnEliminar);
             Controls.Add(btnModificar);
             Controls.Add(btnNuevo);
@@ -171,5 +181,6 @@ namespace WindowsFormsApp
         private Button btnModificar;
         private Button btnNuevo;
         private Label lblOpciones;
+        private Paginador paginador;
     }
 }

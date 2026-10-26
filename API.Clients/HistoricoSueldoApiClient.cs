@@ -15,6 +15,14 @@ namespace API.Clients
             return result ?? new List<HistoricoSueldoMostrarDTO>();
         }
 
+        public static async Task<PaginaDTO<HistoricoSueldoMostrarDTO>> GetPaginadoAsync(int pagina, int tamanio, int? idProfesor = null)
+        {
+            using var client = await CreateHttpClientAsync();
+            var url = ConParametros("api/historico-sueldos/paginado", ("pagina", pagina), ("tamanio", tamanio), ("idProfesor", idProfesor));
+            var result = await client.GetFromJsonAsync<PaginaDTO<HistoricoSueldoMostrarDTO>>(url);
+            return result ?? new PaginaDTO<HistoricoSueldoMostrarDTO>();
+        }
+
         public static async Task AddAsync(HistoricoSueldoCreaDTO sueldo)
         {
             using var client = await CreateHttpClientAsync();

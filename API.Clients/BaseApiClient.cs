@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -43,6 +44,17 @@ namespace API.Clients
             }
 
             return client;
+        }
+
+        // Arma "ruta?clave=valor&..." omitiendo los parámetros nulos o vacíos
+        protected static string ConParametros(string ruta, params (string Nombre, object? Valor)[] parametros)
+        {
+            var query = parametros
+                .Where(p => p.Valor != null && !string.IsNullOrWhiteSpace(p.Valor.ToString()))
+                .Select(p => $"{p.Nombre}={Uri.EscapeDataString(p.Valor!.ToString()!)}");
+
+            var queryString = string.Join("&", query);
+            return queryString.Length > 0 ? $"{ruta}?{queryString}" : ruta;
         }
 
         protected static async Task EnsureSuccessAsync(HttpResponseMessage response)

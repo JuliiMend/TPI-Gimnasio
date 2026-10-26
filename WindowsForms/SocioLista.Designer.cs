@@ -34,6 +34,11 @@
             btnEditar = new Button();
             btnNuevo = new Button();
             label1 = new Label();
+            lblDni = new Label();
+            txtDni = new TextBox();
+            btnBuscar = new Button();
+            btnVerTodos = new Button();
+            paginador = new Paginador();
             ((System.ComponentModel.ISupportInitialize)dgvSocios).BeginInit();
             SuspendLayout();
             // 
@@ -42,7 +47,7 @@
             dgvSocios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvSocios.Location = new Point(12, 44);
             dgvSocios.Name = "dgvSocios";
-            dgvSocios.Size = new Size(443, 150);
+            dgvSocios.Size = new Size(588, 150);
             dgvSocios.TabIndex = 0;
             // 
             // lblTitulo
@@ -59,7 +64,7 @@
             // 
             btnEliminar.BackColor = Color.Crimson;
             btnEliminar.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnEliminar.Location = new Point(12, 323);
+            btnEliminar.Location = new Point(12, 359);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(154, 35);
             btnEliminar.TabIndex = 12;
@@ -70,7 +75,7 @@
             // 
             btnEditar.BackColor = Color.MediumSeaGreen;
             btnEditar.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnEditar.Location = new Point(12, 282);
+            btnEditar.Location = new Point(12, 318);
             btnEditar.Name = "btnEditar";
             btnEditar.Size = new Size(154, 35);
             btnEditar.TabIndex = 11;
@@ -81,7 +86,7 @@
             // 
             btnNuevo.BackColor = Color.LightBlue;
             btnNuevo.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnNuevo.Location = new Point(12, 241);
+            btnNuevo.Location = new Point(12, 277);
             btnNuevo.Name = "btnNuevo";
             btnNuevo.Size = new Size(154, 35);
             btnNuevo.TabIndex = 10;
@@ -92,17 +97,69 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Times New Roman", 14F, FontStyle.Bold);
-            label1.Location = new Point(12, 209);
+            label1.Location = new Point(12, 245);
             label1.Name = "label1";
             label1.Size = new Size(91, 22);
             label1.TabIndex = 9;
             label1.Text = "Opciones:";
+            // 
+            // lblDni
+            // 
+            lblDni.AutoSize = true;
+            lblDni.Font = new Font("Segoe UI", 9.75F);
+            lblDni.Location = new Point(250, 14);
+            lblDni.Name = "lblDni";
+            lblDni.Size = new Size(34, 17);
+            lblDni.TabIndex = 13;
+            lblDni.Text = "DNI:";
+            // 
+            // txtDni
+            // 
+            txtDni.Location = new Point(290, 11);
+            txtDni.Name = "txtDni";
+            txtDni.PlaceholderText = "Buscar por DNI";
+            txtDni.Size = new Size(140, 23);
+            txtDni.TabIndex = 14;
+            txtDni.KeyDown += txtDni_KeyDown;
+            // 
+            // btnBuscar
+            // 
+            btnBuscar.Location = new Point(436, 10);
+            btnBuscar.Name = "btnBuscar";
+            btnBuscar.Size = new Size(75, 25);
+            btnBuscar.TabIndex = 15;
+            btnBuscar.Text = "Buscar";
+            btnBuscar.UseVisualStyleBackColor = true;
+            btnBuscar.Click += btnBuscar_Click;
+            // 
+            // btnVerTodos
+            // 
+            btnVerTodos.Location = new Point(517, 10);
+            btnVerTodos.Name = "btnVerTodos";
+            btnVerTodos.Size = new Size(83, 25);
+            btnVerTodos.TabIndex = 16;
+            btnVerTodos.Text = "Ver todos";
+            btnVerTodos.UseVisualStyleBackColor = true;
+            btnVerTodos.Click += btnVerTodos_Click;
+            // 
+            // paginador
+            // 
+            paginador.Location = new Point(12, 200);
+            paginador.Name = "paginador";
+            paginador.Size = new Size(422, 28);
+            paginador.TabIndex = 17;
+            paginador.PaginaCambiada += paginador_PaginaCambiada;
             // 
             // SocioLista
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(paginador);
+            Controls.Add(btnVerTodos);
+            Controls.Add(btnBuscar);
+            Controls.Add(txtDni);
+            Controls.Add(lblDni);
             Controls.Add(btnEliminar);
             Controls.Add(btnEditar);
             Controls.Add(btnNuevo);
@@ -125,5 +182,10 @@
         private Button btnEditar;
         private Button btnNuevo;
         private Label label1;
+        private Label lblDni;
+        private TextBox txtDni;
+        private Button btnBuscar;
+        private Button btnVerTodos;
+        private Paginador paginador;
     }
 }
