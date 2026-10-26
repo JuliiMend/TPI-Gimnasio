@@ -22,6 +22,14 @@ namespace Data
             return await _context.Usuarios.ToListAsync();
         }
 
+        public async Task<Pagina<Usuario>> ObtenerPaginadoAsync(int numeroPagina, int tamanioPagina)
+        {
+            return await _context.Usuarios
+                .OrderBy(u => u.Username)
+                .ThenBy(u => u.UsuarioId)
+                .PaginarAsync(numeroPagina, tamanioPagina);
+        }
+
         public async Task<Usuario?> ObtenerPorIdAsync(int id)
         {
             return await _context.Usuarios

@@ -22,6 +22,19 @@ namespace WebAPI.Endpoints
                 return Results.Ok(cuotas);
             });
 
+            group.MapGet("/paginado", async (int? idSocio, int? mes, int? anio, ClaimsPrincipal user,
+                ICuotaService cuotaService, ISocioService socioService, int pagina = 1, int tamanio = 10) =>
+            {
+                // Un socio solo ve sus cuotas, sin importar el filtro que mande
+                if (user.EsSocio())
+                {
+                    idSocio = await user.IdSocioAsync(socioService);
+                }
+
+                var cuotas = await cuotaService.ObtenerPaginadoAsync(idSocio, mes, anio, pagina, tamanio);
+                return Results.Ok(cuotas);
+            });
+
             group.MapGet("/{id}", async (int id, ClaimsPrincipal user, ICuotaService cuotaService, ISocioService socioService) =>
             {
                 var cuota = await cuotaService.ObtenerPorIdAsync(id);

@@ -60,10 +60,12 @@ namespace WindowsFormsApp
         {
             try
             {
-                var sueldos = await HistoricoSueldoApiClient.GetAllAsync(IdProfesorFiltro());
+                var pagina = await HistoricoSueldoApiClient.GetPaginadoAsync(
+                    paginador.NumeroPagina, paginador.TamanioPagina, IdProfesorFiltro());
 
                 dgvSueldos.DataSource = null;
-                dgvSueldos.DataSource = sueldos.ToList();
+                dgvSueldos.DataSource = pagina.Items;
+                paginador.Actualizar(pagina);
             }
             catch (Exception ex)
             {
@@ -76,6 +78,12 @@ namespace WindowsFormsApp
         }
 
         private async void cmbFiltroProfesor_SelectionChangeCommitted(object? sender, EventArgs e)
+        {
+            paginador.Reiniciar();
+            await CargarSueldosAsync();
+        }
+
+        private async void paginador_PaginaCambiada(object? sender, EventArgs e)
         {
             await CargarSueldosAsync();
         }

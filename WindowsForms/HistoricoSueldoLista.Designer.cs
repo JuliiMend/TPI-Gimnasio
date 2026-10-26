@@ -38,6 +38,7 @@ namespace WindowsFormsApp
             colValor = new DataGridViewTextBoxColumn();
             colVigente = new DataGridViewCheckBoxColumn();
             btnRegistrar = new Button();
+            paginador = new Paginador();
             ((System.ComponentModel.ISupportInitialize)dgvSueldos).BeginInit();
             SuspendLayout();
             //
@@ -128,19 +129,28 @@ namespace WindowsFormsApp
             //
             btnRegistrar.BackColor = Color.LightBlue;
             btnRegistrar.Font = new Font("Segoe UI Black", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnRegistrar.Location = new Point(12, 345);
+            btnRegistrar.Location = new Point(12, 381);
             btnRegistrar.Name = "btnRegistrar";
             btnRegistrar.Size = new Size(220, 35);
             btnRegistrar.TabIndex = 4;
             btnRegistrar.Text = "Registrar nuevo sueldo";
             btnRegistrar.UseVisualStyleBackColor = false;
             btnRegistrar.Click += btnRegistrar_Click;
+            // 
+            // paginador
+            // 
+            paginador.Location = new Point(12, 336);
+            paginador.Name = "paginador";
+            paginador.Size = new Size(422, 28);
+            paginador.TabIndex = 20;
+            paginador.PaginaCambiada += paginador_PaginaCambiada;
             //
             // HistoricoSueldoLista
             //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 400);
+            ClientSize = new Size(800, 436);
+            Controls.Add(paginador);
             Controls.Add(btnRegistrar);
             Controls.Add(dgvSueldos);
             Controls.Add(cmbFiltroProfesor);
@@ -166,5 +176,6 @@ namespace WindowsFormsApp
         private DataGridViewTextBoxColumn colValor;
         private DataGridViewCheckBoxColumn colVigente;
         private Button btnRegistrar;
+        private Paginador paginador;
     }
 }

@@ -22,10 +22,11 @@ namespace WindowsFormsApp
         {
             try
             {
-                var usuarios = await UsuarioApiClient.GetAllAsync();
+                var pagina = await UsuarioApiClient.GetPaginadoAsync(paginador.NumeroPagina, paginador.TamanioPagina);
 
                 dgvUsuarios.DataSource = null;
-                dgvUsuarios.DataSource = usuarios;
+                dgvUsuarios.DataSource = pagina.Items;
+                paginador.Actualizar(pagina);
             }
             catch (Exception ex)
             {
@@ -35,6 +36,11 @@ namespace WindowsFormsApp
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+        }
+
+        private async void paginador_PaginaCambiada(object? sender, EventArgs e)
+        {
+            await CargarUsuariosAsync();
         }
 
         private void btnNuevo_Click(object sender, EventArgs e)

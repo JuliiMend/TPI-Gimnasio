@@ -21,31 +21,18 @@ namespace Application.Services
         {
             var cuotas = await _cuotaRepository.ObtenerTodosAsync(idSocio);
 
-            return cuotas.Select(c => new CuotaMostrarDTO
-            {
-                CuotaId = c.CuotaId,
-                SocioId = c.SocioId,
-                MesAnio = c.MesAnio,
-                FechaPago = c.FechaPago,
-                Valor = c.Valor,
-                SocioNombre = c.Socio != null ? $"{c.Socio.Nombre} {c.Socio.Apellido}" : string.Empty,
-                Detalles = c.Detalles.Select(d => new DetalleCuotaMostrarDTO
-                {
-                    DetalleCuotaId = d.DetalleCuotaId,
-                    CuotaId = d.CuotaId,
-                    Concepto = d.Concepto,
-                    Subtotal = d.Subtotal,
-                    Monto = d.Monto
-                }).ToList()
-            }).ToList();
+            return cuotas.Select(MapearAMostrar).ToList();
         }
 
-        public async Task<CuotaMostrarDTO?> ObtenerPorIdAsync(int id)
+        public async Task<PaginaDTO<CuotaMostrarDTO>> ObtenerPaginadoAsync(int? idSocio, int? mes, int? anio, int numeroPagina, int tamanioPagina)
         {
-            var c = await _cuotaRepository.ObtenerPorIdAsync(id);
+            var pagina = await _cuotaRepository.ObtenerPaginadoAsync(idSocio, mes, anio, numeroPagina, tamanioPagina);
 
-            if (c == null) return null;
+            return pagina.ADto(MapearAMostrar);
+        }
 
+        private static CuotaMostrarDTO MapearAMostrar(Cuota c)
+        {
             return new CuotaMostrarDTO
             {
                 CuotaId = c.CuotaId,
@@ -63,6 +50,13 @@ namespace Application.Services
                     Monto = d.Monto
                 }).ToList()
             };
+        }
+
+        public async Task<CuotaMostrarDTO?> ObtenerPorIdAsync(int id)
+        {
+            var c = await _cuotaRepository.ObtenerPorIdAsync(id);
+
+            return c == null ? null : MapearAMostrar(c);
         }
 
         public async Task<int> AgregarAsync(CuotaCreaActualizaDTO cuotaDto)

@@ -55,10 +55,12 @@ namespace WindowsFormsApp
                 int? idMaquina = cmbFiltroMaquina.SelectedValue is int id && id > 0 ? id : null;
                 string? estado = cmbFiltroEstado.SelectedItem is string e && e != TodosLosEstados ? e : null;
 
-                var mantenimientos = await MantenimientoApiClient.GetAllAsync(idMaquina, estado);
+                var pagina = await MantenimientoApiClient.GetPaginadoAsync(
+                    paginador.NumeroPagina, paginador.TamanioPagina, idMaquina, estado);
 
                 dgvMantenimientos.DataSource = null;
-                dgvMantenimientos.DataSource = mantenimientos.ToList();
+                dgvMantenimientos.DataSource = pagina.Items;
+                paginador.Actualizar(pagina);
             }
             catch (Exception ex)
             {
@@ -71,6 +73,12 @@ namespace WindowsFormsApp
         }
 
         private async void filtro_SelectionChangeCommitted(object? sender, EventArgs e)
+        {
+            paginador.Reiniciar();
+            await CargarMantenimientosAsync();
+        }
+
+        private async void paginador_PaginaCambiada(object? sender, EventArgs e)
         {
             await CargarMantenimientosAsync();
         }

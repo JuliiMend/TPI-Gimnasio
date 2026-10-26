@@ -23,6 +23,16 @@ namespace WebAPI
                 return Results.Ok(inscripciones);
             });
 
+            grupo.MapGet("/paginado", async (int? idClase, ClaimsPrincipal user, IInscripcionService inscripcionService,
+                ISocioService socioService, IProfesorService profesorService, int pagina = 1, int tamanio = 10) =>
+            {
+                int? idSocio = user.EsSocio() ? await user.IdSocioAsync(socioService) : null;
+                int? idProfesor = user.EsProfesor() ? await user.IdProfesorAsync(profesorService) : null;
+
+                var inscripciones = await inscripcionService.ObtenerPaginadoAsync(idClase, idSocio, idProfesor, pagina, tamanio);
+                return Results.Ok(inscripciones);
+            });
+
             grupo.MapGet("/{id}", async (int id, ClaimsPrincipal user, IInscripcionService inscripcionService,
                 ISocioService socioService, IProfesorService profesorService, IClaseService claseService) =>
             {

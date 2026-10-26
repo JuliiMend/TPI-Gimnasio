@@ -18,6 +18,13 @@ namespace WebAPI
                 return Results.Ok(socios);
             });
 
+            grupo.MapGet("/paginado", async ([AsParameters] SocioCriteriaDTO criterios, ISocioService socioService,
+                int pagina = 1, int tamanio = 10) =>
+            {
+                var socios = await socioService.ObtenerPaginadoAsync(criterios, pagina, tamanio);
+                return Results.Ok(socios);
+            });
+
             grupo.MapGet("/{id}", async (int id, ISocioService socioService) =>
             {
                 var socio = await socioService.ObtenerPorIdAsync(id);

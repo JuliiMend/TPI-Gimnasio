@@ -17,6 +17,21 @@ namespace Data
 
         public async Task<List<Inscripcion>> ObtenerTodosAsync(int? idClase, int? idSocio = null, int? idProfesor = null)
         {
+            return await ConstruirConsulta(idClase, idSocio, idProfesor)
+                .OrderByDescending(i => i.FechaInscripcion)
+                .ToListAsync();
+        }
+
+        public async Task<Pagina<Inscripcion>> ObtenerPaginadoAsync(int? idClase, int? idSocio, int? idProfesor, int numeroPagina, int tamanioPagina)
+        {
+            return await ConstruirConsulta(idClase, idSocio, idProfesor)
+                .OrderByDescending(i => i.FechaInscripcion)
+                .ThenByDescending(i => i.IdInscripcion)
+                .PaginarAsync(numeroPagina, tamanioPagina);
+        }
+
+        private IQueryable<Inscripcion> ConstruirConsulta(int? idClase, int? idSocio, int? idProfesor)
+        {
             var query = _context.Inscripciones
                 .Include(i => i.Socio)
                 .Include(i => i.Clase).ThenInclude(c => c!.Actividad)
@@ -38,9 +53,7 @@ namespace Data
                 query = query.Where(i => i.Clase!.IdProfesor == idProfesor.Value);
             }
 
-            return await query
-                .OrderByDescending(i => i.FechaInscripcion)
-                .ToListAsync();
+            return query;
         }
 
         public async Task<Inscripcion?> ObtenerPorIdAsync(int id)

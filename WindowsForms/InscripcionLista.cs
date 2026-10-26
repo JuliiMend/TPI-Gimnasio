@@ -63,10 +63,12 @@ namespace WindowsFormsApp
         {
             try
             {
-                var inscripciones = await InscripcionApiClient.GetAllAsync(IdClaseFiltro());
+                var pagina = await InscripcionApiClient.GetPaginadoAsync(
+                    paginador.NumeroPagina, paginador.TamanioPagina, IdClaseFiltro());
 
                 dgvInscripciones.DataSource = null;
-                dgvInscripciones.DataSource = inscripciones.ToList();
+                dgvInscripciones.DataSource = pagina.Items;
+                paginador.Actualizar(pagina);
             }
             catch (Exception ex)
             {
@@ -79,6 +81,12 @@ namespace WindowsFormsApp
         }
 
         private async void cmbFiltroClase_SelectionChangeCommitted(object? sender, EventArgs e)
+        {
+            paginador.Reiniciar();
+            await CargarInscripcionesAsync();
+        }
+
+        private async void paginador_PaginaCambiada(object? sender, EventArgs e)
         {
             await CargarInscripcionesAsync();
         }

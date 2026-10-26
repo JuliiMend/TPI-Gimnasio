@@ -10,6 +10,7 @@ namespace Data
     public interface IUsuarioRepository
     {
         Task<List<Usuario>> ObtenerTodosAsync();
+        Task<Pagina<Usuario>> ObtenerPaginadoAsync(int numeroPagina, int tamanioPagina);
         Task<Usuario?> ObtenerPorIdAsync(int id);
         Task<Usuario?> ObtenerPorUsernameAsync(string username);
         Task AgregarAsync(Usuario usuario);

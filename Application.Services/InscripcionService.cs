@@ -31,6 +31,13 @@ namespace Application.Services
             return inscripciones.Select(MapearAMostrar).ToList();
         }
 
+        public async Task<PaginaDTO<InscripcionMostrarDTO>> ObtenerPaginadoAsync(int? idClase, int? idSocio, int? idProfesor, int numeroPagina, int tamanioPagina)
+        {
+            var pagina = await _inscripcionRepository.ObtenerPaginadoAsync(idClase, idSocio, idProfesor, numeroPagina, tamanioPagina);
+
+            return pagina.ADto(MapearAMostrar);
+        }
+
         public async Task<InscripcionMostrarDTO?> ObtenerPorIdAsync(int id)
         {
             var inscripcion = await _inscripcionRepository.ObtenerPorIdAsync(id);
