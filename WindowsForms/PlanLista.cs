@@ -12,6 +12,7 @@ namespace WindowsFormsApp
         public PlanLista()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
 
             this.Load -= PlanLista_Load;
             this.Load += PlanLista_Load;
@@ -28,6 +29,12 @@ namespace WindowsFormsApp
 
         private async void PlanLista_Load(object? sender, EventArgs e)
         {
+            if (!await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin))
+            {
+                Text = "Mi plan";
+                btnNuevo.Visible = btnActualizar.Visible = btnEliminar.Visible = false;
+            }
+
             await CargarPlanesAsync();
         }
 

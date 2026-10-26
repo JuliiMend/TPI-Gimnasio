@@ -15,12 +15,44 @@ namespace Data
             _context = context;
         }
 
-        public async Task<List<Cuota>> ObtenerTodosAsync()
+        public async Task<List<Cuota>> ObtenerTodosAsync(int? idSocio = null)
         {
-            return await _context.Cuotas
+            return await ConstruirConsulta(idSocio, null, null).ToListAsync();
+        }
+
+        public async Task<Pagina<Cuota>> ObtenerPaginadoAsync(int? idSocio, int? mes, int? anio, int numeroPagina, int tamanioPagina)
+        {
+            return await ConstruirConsulta(idSocio, mes, anio)
+                .OrderByDescending(c => c.MesAnio)
+                .ThenBy(c => c.Socio!.Apellido)
+                .ThenBy(c => c.CuotaId)
+                .PaginarAsync(numeroPagina, tamanioPagina);
+        }
+
+        private IQueryable<Cuota> ConstruirConsulta(int? idSocio, int? mes, int? anio)
+        {
+            var query = _context.Cuotas
                 .Include(c => c.Socio)
                 .Include(c => c.Detalles)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (idSocio.HasValue)
+            {
+                query = query.Where(c => c.SocioId == idSocio.Value);
+            }
+
+            // MesAnio se guarda como AAAAMM (ej: 202601)
+            if (mes.HasValue)
+            {
+                query = query.Where(c => c.MesAnio % 100 == mes.Value);
+            }
+
+            if (anio.HasValue)
+            {
+                query = query.Where(c => c.MesAnio / 100 == anio.Value);
+            }
+
+            return query;
         }
 
         public async Task<Cuota?> ObtenerPorIdAsync(int id)

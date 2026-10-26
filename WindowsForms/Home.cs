@@ -1,4 +1,7 @@
-﻿using System;
+﻿using API.Clients;
+using DTOs;
+using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp
@@ -8,11 +11,32 @@ namespace WindowsFormsApp
         public Home()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
+
+            AuthServiceProvider.Instance.AuthenticationStateChanged += AlCambiarSesion;
+            FormClosed += (s, e) => AuthServiceProvider.Instance.AuthenticationStateChanged -= AlCambiarSesion;
         }
 
-        private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AlCambiarSesion(bool autenticado)
         {
-            this.Close();
+            if (autenticado || IsDisposed)
+            {
+                return;
+            }
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(Close);
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        private async void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await AuthServiceProvider.Instance.LogoutAsync();
         }
 
         private void planesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -22,8 +46,41 @@ namespace WindowsFormsApp
             planForm.Show();
         }
 
-        private void Home_Load(object sender, EventArgs e)
+        private async void Home_Load(object sender, EventArgs e)
         {
+            var authService = AuthServiceProvider.Instance;
+            var rol = await authService.GetRolAsync();
+
+            Text = $"Gimnasio - {await authService.GetUsernameAsync()} ({rol})";
+
+            if (rol == Roles.Admin)
+            {
+                return;
+            }
+
+            reportesToolStripMenuItem.Visible = false;
+
+            var visibles = rol == Roles.Profesor
+                ? new ToolStripMenuItem[] { clasesToolStripMenuItem, inscripcionesToolStripMenuItem, historicoSueldosToolStripMenuItem }
+                : new ToolStripMenuItem[] { planesToolStripMenuItem, clasesToolStripMenuItem, inscripcionesToolStripMenuItem, cuotasToolStripMenuItem };
+
+            foreach (ToolStripItem item in gestionToolStripMenuItem.DropDownItems)
+            {
+                item.Visible = visibles.Contains(item);
+            }
+
+            if (rol == Roles.Profesor)
+            {
+                clasesToolStripMenuItem.Text = "Mis clases";
+                inscripcionesToolStripMenuItem.Text = "Inscriptos a mis clases";
+                historicoSueldosToolStripMenuItem.Text = "Mi historico de sueldos";
+            }
+            else
+            {
+                planesToolStripMenuItem.Text = "Mi plan";
+                inscripcionesToolStripMenuItem.Text = "Mis inscripciones";
+                cuotasToolStripMenuItem.Text = "Mis cuotas";
+            }
         }
 
         private void turnosToolStripMenuItem_Click(object sender, EventArgs e)
@@ -52,6 +109,82 @@ namespace WindowsFormsApp
             var cuotaForm = new CuotaLista();
             cuotaForm.MdiParent = this;
             cuotaForm.Show();
+        }
+        private void maquinasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var maquinaForm = new MaquinaLista();
+            maquinaForm.MdiParent = this;
+            maquinaForm.Show();
+        }
+
+        private void materialesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var materialForm = new MaterialLista();
+            materialForm.MdiParent = this;
+            materialForm.Show();
+        }
+
+        private void actividadesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var actividadForm = new ActividadLista();
+            actividadForm.MdiParent = this;
+            actividadForm.Show();
+        }
+
+        private void clasesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var claseForm = new ClaseLista();
+            claseForm.MdiParent = this;
+            claseForm.Show();
+        }
+
+        private void inscripcionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var inscripcionForm = new InscripcionLista();
+            inscripcionForm.MdiParent = this;
+            inscripcionForm.Show();
+        }
+
+        private void reporteOcupacionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var reporteForm = new ReporteOcupacionClases();
+            reporteForm.MdiParent = this;
+            reporteForm.Show();
+        }
+
+        private void reporteMantenimientosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var reporteForm = new ReporteMantenimientos();
+            reporteForm.MdiParent = this;
+            reporteForm.Show();
+        }
+
+        private void mantenimientosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var mantenimientoForm = new MantenimientoLista();
+            mantenimientoForm.MdiParent = this;
+            mantenimientoForm.Show();
+        }
+
+        private void historicoSueldosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var historicoForm = new HistoricoSueldoLista();
+            historicoForm.MdiParent = this;
+            historicoForm.Show();
+        }
+
+        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var usuarioForm = new UsuarioLista();
+            usuarioForm.MdiParent = this;
+            usuarioForm.Show();
+        }
+
+        private void administradoresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var administradorForm = new AdministradorLista();
+            administradorForm.MdiParent = this;
+            administradorForm.Show();
         }
     }
 }

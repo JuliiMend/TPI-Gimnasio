@@ -1,0 +1,85 @@
+@* Barra de paginación reutilizable: muestra el rango actual y navega entre páginas *@
+
+@if (TotalItems > 0)
+{
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <small class="text-muted">
+            Mostrando @PrimerItem–@UltimoItem de @TotalItems
+        </small>
+
+        @if (TotalPaginas > 1)
+        {
+            <nav aria-label="Paginación">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item @(NumeroPagina <= 1 ? "disabled" : "")">
+                        <button class="page-link" @onclick="() => IrA(NumeroPagina - 1)">Anterior</button>
+                    </li>
+
+                    @foreach (var numero in PaginasVisibles())
+                    {
+                        if (numero == 0)
+                        {
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                        }
+                        else
+                        {
+                            var destino = numero;
+                            <li class="page-item @(numero == NumeroPagina ? "active" : "")">
+                                <button class="page-link" @onclick="() => IrA(destino)">@numero</button>
+                            </li>
+                        }
+                    }
+
+                    <li class="page-item @(NumeroPagina >= TotalPaginas ? "disabled" : "")">
+                        <button class="page-link" @onclick="() => IrA(NumeroPagina + 1)">Siguiente</button>
+                    </li>
+                </ul>
+            </nav>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public int NumeroPagina { get; set; }
+    [Parameter] public int TamanioPagina { get; set; }
+    [Parameter] public int TotalItems { get; set; }
+    [Parameter] public int TotalPaginas { get; set; }
+    [Parameter] public EventCallback<int> OnCambiarPagina { get; set; }
+
+    private int PrimerItem => (NumeroPagina - 1) * TamanioPagina + 1;
+    private int UltimoItem => Math.Min(NumeroPagina * TamanioPagina, TotalItems);
+
+    private async Task IrA(int numero)
+    {
+        if (numero < 1 || numero > TotalPaginas || numero == NumeroPagina)
+        {
+            return;
+        }
+
+        await OnCambiarPagina.InvokeAsync(numero);
+    }
+
+    // Primera, última y las dos vecinas de la actual; 0 representa un salto ("…")
+    private IEnumerable<int> PaginasVisibles()
+    {
+        int anterior = 0;
+
+        for (int numero = 1; numero <= TotalPaginas; numero++)
+        {
+            bool visible = numero == 1 || numero == TotalPaginas || Math.Abs(numero - NumeroPagina) <= 2;
+
+            if (!visible)
+            {
+                continue;
+            }
+
+            if (anterior != 0 && numero - anterior > 1)
+            {
+                yield return 0;
+            }
+
+            yield return numero;
+            anterior = numero;
+        }
+    }
+}

@@ -25,6 +25,14 @@ namespace API.Clients
             return result ?? new List<UsuarioMostrarDTO>();
         }
 
+        public static async Task<PaginaDTO<UsuarioMostrarDTO>> GetPaginadoAsync(int pagina, int tamanio)
+        {
+            using var client = await CreateHttpClientAsync();
+            var url = ConParametros("api/usuarios/paginado", ("pagina", pagina), ("tamanio", tamanio));
+            var result = await client.GetFromJsonAsync<PaginaDTO<UsuarioMostrarDTO>>(url);
+            return result ?? new PaginaDTO<UsuarioMostrarDTO>();
+        }
+
         public static async Task AddAsync(UsuarioCreaActualizaDTO usuario)
         {
             using var client = await CreateHttpClientAsync();
@@ -32,7 +40,7 @@ namespace API.Clients
             var response = await client.PostAsJsonAsync(
                 "api/usuarios", usuario);
 
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task UpdateAsync(
@@ -44,7 +52,7 @@ namespace API.Clients
             var response = await client.PutAsJsonAsync(
                 $"api/usuarios/{id}", usuario);
 
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task DeleteAsync(int id)
@@ -54,7 +62,7 @@ namespace API.Clients
             var response = await client.DeleteAsync(
                 $"api/usuarios/{id}");
 
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
     }
 }

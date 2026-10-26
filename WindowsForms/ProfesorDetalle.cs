@@ -13,36 +13,61 @@ namespace WindowsFormsApp
         public ProfesorDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public async Task CargarProfesorAsync(int id)
         {
-            var profesor = await ProfesorApiClient.GetAsync(id);
+            try
+            {
+                var profesor = await ProfesorApiClient.GetAsync(id);
 
-            if (profesor == null)
+                if (profesor == null)
+                {
+                    MessageBox.Show(
+                        "No se encontró el profesor.",
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+
+                    return;
+                }
+
+                _idProfesor = id;
+
+                txtDni.Text = profesor.Dni;
+                txtNombre.Text = profesor.Nombre;
+                txtApellido.Text = profesor.Apellido;
+                txtEmail.Text = profesor.Email;
+                txtTelefono.Text = profesor.Telefono;
+                dtpFechaNac.Value = profesor.FechaNac >= dtpFechaNac.MinDate ? profesor.FechaNac : DateTime.Today;
+                txtCargo.Text = profesor.Cargo;
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(
-                    "No se encontró el profesor.",
+                    $"Error al cargar el profesor: {ex.Message}",
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-
-                return;
             }
-
-            _idProfesor = id;
-
-            txtDni.Text = profesor.Dni;
-            txtNombre.Text = profesor.Nombre;
-            txtApellido.Text = profesor.Apellido;
-            txtEmail.Text = profesor.Email;
-            txtTelefono.Text = profesor.Telefono;
-            dtpFechaNac.Value = profesor.FechaNac;
-            txtCargo.Text = profesor.Cargo;
         }
 
         private async void btnGuardar_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtDni.Text) ||
+                string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                string.IsNullOrWhiteSpace(txtApellido.Text))
+            {
+                MessageBox.Show(
+                    "Completá DNI, nombre y apellido.",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
             var profesorDto = new ProfesorCreaActualizaDTO
             {
                 Dni = txtDni.Text,
@@ -53,32 +78,43 @@ namespace WindowsFormsApp
                 FechaNac = dtpFechaNac.Value,
                 Cargo = txtCargo.Text,
                 Username = txtDni.Text.Trim(),
-                Password = txtDni.Text.Trim()
+                Password = _idProfesor == null ? txtDni.Text.Trim() : string.Empty
             };
 
-            if (_idProfesor == null)
+            try
             {
-                await ProfesorApiClient.AddAsync(profesorDto);
+                if (_idProfesor == null)
+                {
+                    await ProfesorApiClient.AddAsync(profesorDto);
 
-                MessageBox.Show(
-                    "Profesor creado correctamente.",
-                    "Éxito",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        "Profesor creado correctamente.",
+                        "Éxito",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    await ProfesorApiClient.UpdateAsync(_idProfesor.Value, profesorDto);
+
+                    MessageBox.Show(
+                        "Profesor modificado correctamente.",
+                        "Éxito",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+
+                DialogResult = DialogResult.OK;
+                Close();
             }
-            else
+            catch (Exception ex)
             {
-                await ProfesorApiClient.UpdateAsync(_idProfesor.Value, profesorDto);
-
                 MessageBox.Show(
-                    "Profesor modificado correctamente.",
-                    "Éxito",
+                    $"Error al guardar el profesor: {ex.Message}",
+                    "Error",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Error);
             }
-
-            DialogResult = DialogResult.OK;
-            Close();
         }
 
         private void ProfesorDetalle_Load(object sender, EventArgs e)

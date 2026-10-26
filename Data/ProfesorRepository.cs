@@ -29,6 +29,13 @@ namespace Data
                 .FirstOrDefaultAsync(p => p.PersonaId == id);
         }
 
+        public async Task<Profesor?> ObtenerPorUsuarioIdAsync(int usuarioId)
+        {
+            return await _context.Profesores
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(p => p.UsuarioId == usuarioId);
+        }
+
         public async Task AgregarAsync(Profesor profesor)
         {
             await _context.Profesores.AddAsync(profesor);

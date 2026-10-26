@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,5 +14,9 @@ namespace DTOs
         public string Tipo { get; set; } = string.Empty;
         public decimal Precio { get; set; }
         public string Descripcion { get; set; } = string.Empty;
+        public string Actividades { get; set; } = string.Empty;
+
+        [Browsable(false)]
+        public List<int> IdsActividades { get; set; } = new();
     }
 }

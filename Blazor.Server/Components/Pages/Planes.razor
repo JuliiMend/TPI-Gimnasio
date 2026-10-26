@@ -1,14 +1,18 @@
 ﻿@page "/planes"
+@attribute [RolesPermitidos(Roles.Admin, Roles.Socio)]
 @using DTOs
 @using API.Clients
 
-<h3>Planes</h3>
+<h3>@(esAdmin ? "Planes" : "Mi plan")</h3>
 
-<div class="mb-3">
-    <button class="btn btn-primary" @onclick="NuevoPlan">
-        + Nuevo plan
-    </button>
-</div>
+@if (esAdmin)
+{
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="NuevoPlan">
+            + Nuevo plan
+        </button>
+    </div>
+}
 
 @if (mostrarFormulario)
 {
@@ -57,6 +61,29 @@
                 }
             </div>
 
+            <div class="col-12 mb-3">
+                <label>Actividades incluidas</label>
+
+                @if (!actividades.Any())
+                {
+                    <p class="text-muted mb-0">No hay actividades cargadas.</p>
+                }
+
+                @foreach (var actividad in actividades)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="act-@actividad.IdActividad"
+                               checked="@planActual.IdsActividades.Contains(actividad.IdActividad)"
+                               @onchange="e => CambiarActividad(actividad.IdActividad, e)" />
+                        <label class="form-check-label" for="act-@actividad.IdActividad">
+                            @actividad.Tipo
+                        </label>
+                    </div>
+                }
+            </div>
+
         </div>
 
         <div>
@@ -85,7 +112,11 @@
             <th>Tipo</th>
             <th>Precio</th>
             <th>Descripción</th>
-            <th>Acciones</th>
+            <th>Actividades</th>
+            @if (esAdmin)
+            {
+                <th>Acciones</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -96,17 +127,21 @@
                 <td>@plan.Tipo</td>
                 <td>$@plan.Precio</td>
                 <td>@plan.Descripcion</td>
-                <td>
-                    <button class="btn btn-sm btn-warning me-2"
-                            @onclick="() => EditarPlan(plan)">
-                        Editar
-                    </button>
+                <td>@plan.Actividades</td>
+                @if (esAdmin)
+                {
+                    <td>
+                        <button class="btn btn-sm btn-warning me-2"
+                                @onclick="() => EditarPlan(plan)">
+                            Editar
+                        </button>
 
-                    <button class="btn btn-sm btn-danger"
-                            @onclick="() => EliminarPlan(plan)">
-                        Eliminar
-                    </button>
-                </td>
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => EliminarPlan(plan)">
+                            Eliminar
+                        </button>
+                    </td>
+                }
             </tr>
         }
     </tbody>
@@ -129,9 +164,42 @@
 
     private List<PlanMostrarDTO> planes = new();
 
+    private List<ActividadMostrarDTO> actividades = new();
+
+    private bool esAdmin;
+
     protected override async Task OnInitializedAsync()
     {
+        esAdmin = await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin);
+
+        if (esAdmin)
+        {
+            try
+            {
+                actividades = (await ActividadApiClient.GetAllAsync()).ToList();
+            }
+            catch (Exception ex)
+            {
+                mensaje = $"Error al cargar las actividades: {ex.Message}";
+            }
+        }
+
         await CargarPlanes();
+    }
+
+    private void CambiarActividad(int idActividad, ChangeEventArgs e)
+    {
+        if (e.Value is true)
+        {
+            if (!planActual.IdsActividades.Contains(idActividad))
+            {
+                planActual.IdsActividades.Add(idActividad);
+            }
+        }
+        else
+        {
+            planActual.IdsActividades.Remove(idActividad);
+        }
     }
 
     private async Task CargarPlanes()
@@ -174,7 +242,8 @@
             Nombre = plan.Nombre,
             Tipo = plan.Tipo,
             Precio = plan.Precio,
-            Descripcion = plan.Descripcion
+            Descripcion = plan.Descripcion,
+            IdsActividades = plan.IdsActividades.ToList()
         };
 
         editando = true;

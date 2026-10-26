@@ -1,0 +1,291 @@
+﻿@page "/maquinas"
+@attribute [RolesPermitidos(Roles.Admin)]
+@using DTOs
+@using API.Clients
+
+<h3>Máquinas</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevaMaquina">
+        + Nueva máquina
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar máquina" : "Nueva máquina")</h4>
+
+        <div class="row">
+
+            <div class="col-md-3 mb-3">
+                <label>Nombre</label>
+                <input type="text" class="form-control" @bind="maquinaActual.Nombre" />
+                @if (!string.IsNullOrEmpty(errorNombre))
+                {
+                    <div class="text-danger">@errorNombre</div>
+                }
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label>Descripción</label>
+                <input type="text" class="form-control" @bind="maquinaActual.Descripcion" />
+                @if (!string.IsNullOrEmpty(errorDescripcion))
+                {
+                    <div class="text-danger">@errorDescripcion</div>
+                }
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label>Tipo</label>
+                <input type="text" class="form-control" @bind="maquinaActual.Tipo" />
+                @if (!string.IsNullOrEmpty(errorTipo))
+                {
+                    <div class="text-danger">@errorTipo</div>
+                }
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label>Estado</label>
+                <select class="form-select" @bind="maquinaActual.Estado">
+                    <option value="">Seleccionar estado</option>
+                    <option value="Operativa">Operativa</option>
+                    <option value="En mantenimiento">En mantenimiento</option>
+                    <option value="Fuera de servicio">Fuera de servicio</option>
+                </select>
+                @if (!string.IsNullOrEmpty(errorEstado))
+                {
+                    <div class="text-danger">@errorEstado</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var maquina in maquinas)
+        {
+            <tr>
+                <td>@maquina.Nombre</td>
+                <td>@maquina.Descripcion</td>
+                <td>@maquina.Tipo</td>
+                <td>@maquina.Estado</td>
+
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarMaquina(maquina)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarMaquina(maquina)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private string errorNombre = string.Empty;
+    private string errorDescripcion = string.Empty;
+    private string errorTipo = string.Empty;
+    private string errorEstado = string.Empty;
+
+    private MaquinaCreaActualizaDTO maquinaActual = new();
+
+    private int idMaquinaEditando;
+
+    private List<MaquinaMostrarDTO> maquinas = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarMaquinas();
+    }
+
+
+    private async Task CargarMaquinas()
+    {
+        try
+        {
+            maquinas = (await MaquinaApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar las máquinas: {ex.Message}";
+        }
+    }
+
+
+    private void LimpiarErrores()
+    {
+        errorNombre = string.Empty;
+        errorDescripcion = string.Empty;
+        errorTipo = string.Empty;
+        errorEstado = string.Empty;
+    }
+
+
+    private void NuevaMaquina()
+    {
+        maquinaActual = new MaquinaCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+
+    private void EditarMaquina(MaquinaMostrarDTO maquina)
+    {
+        idMaquinaEditando = maquina.IdMaquina;
+
+        maquinaActual = new MaquinaCreaActualizaDTO
+        {
+            Nombre = maquina.Nombre,
+            Descripcion = maquina.Descripcion,
+            Tipo = maquina.Tipo,
+            Estado = maquina.Estado
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+
+    private bool Validar()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(maquinaActual.Nombre))
+        {
+            errorNombre = "Ingresá el nombre.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(maquinaActual.Descripcion))
+        {
+            errorDescripcion = "Ingresá la descripción.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(maquinaActual.Tipo))
+        {
+            errorTipo = "Ingresá el tipo.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(maquinaActual.Estado))
+        {
+            errorEstado = "Seleccioná un estado.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await MaquinaApiClient.UpdateAsync(
+                    idMaquinaEditando,
+                    maquinaActual);
+
+                mensaje = "Máquina modificada correctamente.";
+            }
+            else
+            {
+                await MaquinaApiClient.AddAsync(maquinaActual);
+
+                mensaje = "Máquina creada correctamente.";
+            }
+
+            await CargarMaquinas();
+
+            mostrarFormulario = false;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar la máquina: {ex.Message}";
+        }
+    }
+
+
+    private async Task EliminarMaquina(MaquinaMostrarDTO maquina)
+    {
+        try
+        {
+            await MaquinaApiClient.DeleteAsync(maquina.IdMaquina);
+
+            await CargarMaquinas();
+
+            mensaje = "Máquina eliminada correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar la máquina: {ex.Message}";
+        }
+    }
+
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+}

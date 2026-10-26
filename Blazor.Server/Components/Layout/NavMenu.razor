@@ -1,4 +1,7 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using API.Clients
+@implements IDisposable
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">
             Gimnasio
@@ -14,60 +17,117 @@
 
     <nav class="nav flex-column">
 
+        @if (rol != null)
+        {
+            <div class="px-3 py-2 text-white-50 small">
+                @username (@rol)
+            </div>
+        }
+
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                <span aria-hidden="true">🏠</span>
-                Inicio
+            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All" style="@EstiloLink">
+                <span aria-hidden="true" style="@EstiloIcono">🏠</span>
+                <span>Inicio</span>
             </NavLink>
         </div>
 
+        @foreach (var item in itemsVisibles)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="@item.Href" style="@EstiloLink">
+                    <span aria-hidden="true" style="@EstiloIcono">@item.Icono</span>
+                    <span>@item.Texto</span>
+                </NavLink>
+            </div>
+        }
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/planes">
-                <span aria-hidden="true">📋</span>
-                Planes
-            </NavLink>
-        </div>
-
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/socios">
-                <span aria-hidden="true">👥</span>
-                Socios
-            </NavLink>
-        </div>
-
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/profesores">
-                <span aria-hidden="true">👨‍🏫</span>
-                Profesores
-            </NavLink>
-        </div>
-
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/turnos">
-                <span aria-hidden="true">🕐</span>
-                Turnos
-            </NavLink>
-        </div>
-
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/cuotas">
-                <span aria-hidden="true">💰</span>
-                Cuotas
-            </NavLink>
-        </div>
-
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/usuarios">
-                <span aria-hidden="true">👤</span>
-                Usuarios
-            </NavLink>
-        </div>
+        @if (rol != null)
+        {
+            <div class="nav-item px-3 mt-3">
+                <button class="nav-link btn btn-link text-start w-100" style="@EstiloLink" @onclick="CerrarSesion">
+                    <span aria-hidden="true" style="@EstiloIcono">🚪</span>
+                    <span>Cerrar sesión</span>
+                </button>
+            </div>
+        }
     </nav>
 
 </div>
+
+@code {
+    private record ItemMenu(string Href, string Icono, string Texto, string[] Roles);
+    private const string EstiloLink = "height:auto; min-height:3rem; line-height:1.25; display:flex; align-items:center; gap:0.75rem; padding-top:0.5rem; padding-bottom:0.5rem;";
+    private const string EstiloIcono = "width:1.5rem; text-align:center; flex-shrink:0;";
+    private static readonly ItemMenu[] items =
+    {
+        new("/planes", "📋", "Planes", new[] { Roles.Admin }),
+        new("/planes", "📋", "Mi plan", new[] { Roles.Socio }),
+        new("/actividades", "🤸", "Actividades", new[] { Roles.Admin }),
+        new("/clases", "📅", "Clases", new[] { Roles.Admin, Roles.Socio }),
+        new("/clases", "📅", "Mis clases", new[] { Roles.Profesor }),
+        new("/inscripciones", "✍️", "Inscripciones", new[] { Roles.Admin, Roles.Profesor }),
+        new("/inscripciones", "✍️", "Mis inscripciones", new[] { Roles.Socio }),
+        new("/socios", "👥", "Socios", new[] { Roles.Admin }),
+        new("/profesores", "👨‍🏫", "Profesores", new[] { Roles.Admin }),
+        new("/turnos", "🕐", "Turnos", new[] { Roles.Admin }),
+        new("/cuotas", "💰", "Cuotas", new[] { Roles.Admin }),
+        new("/cuotas", "💰", "Mis cuotas", new[] { Roles.Socio }),
+        new("/maquinas", "🏋️", "Máquinas", new[] { Roles.Admin }),
+        new("/materiales", "📦", "Materiales", new[] { Roles.Admin }),
+        new("/mantenimientos", "🔧", "Mantenimientos", new[] { Roles.Admin }),
+        new("/historico-sueldos", "💵", "Histórico de sueldos", new[] { Roles.Admin }),
+        new("/historico-sueldos", "💵", "Mi histórico de sueldos", new[] { Roles.Profesor }),
+        new("/reportes/ocupacion-clases", "📊", "Reporte: ocupación de clases", new[] { Roles.Admin }),
+        new("/reportes/mantenimientos", "📈", "Reporte: mantenimientos", new[] { Roles.Admin }),
+        new("/administradores", "🛡️", "Administradores", new[] { Roles.Admin }),
+        new("/usuarios", "👤", "Usuarios", new[] { Roles.Admin })
+    };
+
+    private string? rol;
+    private string? username;
+    private IEnumerable<ItemMenu> itemsVisibles = Enumerable.Empty<ItemMenu>();
+
+    private IAuthService authService = default!;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        authService = AuthServiceProvider.Instance;
+        authService.AuthenticationStateChanged += AlCambiarSesion;
+
+        await ActualizarMenu();
+    }
+
+    private async Task ActualizarMenu()
+    {
+        rol = await authService.GetRolAsync();
+        username = await authService.GetUsernameAsync();
+        itemsVisibles = items.Where(i => rol != null && i.Roles.Contains(rol)).ToList();
+    }
+    
+    private void AlCambiarSesion(bool autenticado)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            await ActualizarMenu();
+            StateHasChanged();
+
+            if (!autenticado)
+            {
+                Navigation.NavigateTo("/login");
+            }
+        });
+    }
+
+    private async Task CerrarSesion()
+    {
+        await authService.LogoutAsync();
+    }
+
+    public void Dispose()
+    {
+        authService.AuthenticationStateChanged -= AlCambiarSesion;
+    }
+}

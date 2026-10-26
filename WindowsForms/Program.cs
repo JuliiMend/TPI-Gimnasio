@@ -9,6 +9,9 @@ namespace WindowsFormsApp
     {
         public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
+        public static Icon AppIcon { get; } =
+            new Icon(typeof(Program).Assembly.GetManifestResourceStream("WindowsFormsApp.app.ico")!);
+
         [STAThread]
         static void Main()
         {

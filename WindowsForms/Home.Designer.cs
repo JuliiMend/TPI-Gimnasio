@@ -32,17 +32,29 @@
             sistemaToolStripMenuItem = new ToolStripMenuItem();
             cerrarSesionToolStripMenuItem = new ToolStripMenuItem();
             gestionToolStripMenuItem = new ToolStripMenuItem();
+            reportesToolStripMenuItem = new ToolStripMenuItem();
+            reporteOcupacionToolStripMenuItem = new ToolStripMenuItem();
+            reporteMantenimientosToolStripMenuItem = new ToolStripMenuItem();
             sociosToolStripMenuItem = new ToolStripMenuItem();
             planesToolStripMenuItem = new ToolStripMenuItem();
             turnosToolStripMenuItem = new ToolStripMenuItem();
             profesoresToolStripMenuItem = new ToolStripMenuItem();
             cuotasToolStripMenuItem = new ToolStripMenuItem();
+            maquinasToolStripMenuItem = new ToolStripMenuItem();
+            materialesToolStripMenuItem = new ToolStripMenuItem();
+            actividadesToolStripMenuItem = new ToolStripMenuItem();
+            clasesToolStripMenuItem = new ToolStripMenuItem();
+            inscripcionesToolStripMenuItem = new ToolStripMenuItem();
+            administradoresToolStripMenuItem = new ToolStripMenuItem();
+            usuariosToolStripMenuItem = new ToolStripMenuItem();
+            mantenimientosToolStripMenuItem = new ToolStripMenuItem();
+            historicoSueldosToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { sistemaToolStripMenuItem, gestionToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { sistemaToolStripMenuItem, gestionToolStripMenuItem, reportesToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(800, 24);
@@ -65,10 +77,31 @@
             // 
             // gestionToolStripMenuItem
             // 
-            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem });
+            gestionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sociosToolStripMenuItem, planesToolStripMenuItem, turnosToolStripMenuItem, profesoresToolStripMenuItem, cuotasToolStripMenuItem, maquinasToolStripMenuItem, materialesToolStripMenuItem, actividadesToolStripMenuItem, clasesToolStripMenuItem, inscripcionesToolStripMenuItem, administradoresToolStripMenuItem, usuariosToolStripMenuItem, mantenimientosToolStripMenuItem, historicoSueldosToolStripMenuItem });
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(59, 20);
             gestionToolStripMenuItem.Text = "Gestion";
+            // 
+            // reportesToolStripMenuItem
+            // 
+            reportesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { reporteOcupacionToolStripMenuItem, reporteMantenimientosToolStripMenuItem });
+            reportesToolStripMenuItem.Name = "reportesToolStripMenuItem";
+            reportesToolStripMenuItem.Size = new Size(65, 20);
+            reportesToolStripMenuItem.Text = "Reportes";
+            // 
+            // reporteOcupacionToolStripMenuItem
+            // 
+            reporteOcupacionToolStripMenuItem.Name = "reporteOcupacionToolStripMenuItem";
+            reporteOcupacionToolStripMenuItem.Size = new Size(230, 22);
+            reporteOcupacionToolStripMenuItem.Text = "Ocupacion de clases";
+            reporteOcupacionToolStripMenuItem.Click += reporteOcupacionToolStripMenuItem_Click;
+            // 
+            // reporteMantenimientosToolStripMenuItem
+            // 
+            reporteMantenimientosToolStripMenuItem.Name = "reporteMantenimientosToolStripMenuItem";
+            reporteMantenimientosToolStripMenuItem.Size = new Size(230, 22);
+            reporteMantenimientosToolStripMenuItem.Text = "Mantenimiento de maquinas";
+            reporteMantenimientosToolStripMenuItem.Click += reporteMantenimientosToolStripMenuItem_Click;
             // 
             // sociosToolStripMenuItem
             // 
@@ -105,6 +138,69 @@
             cuotasToolStripMenuItem.Text = "Cuotas";
             cuotasToolStripMenuItem.Click += cuotasToolStripMenuItem_Click;
             // 
+            // maquinasToolStripMenuItem
+            // 
+            maquinasToolStripMenuItem.Name = "maquinasToolStripMenuItem";
+            maquinasToolStripMenuItem.Size = new Size(180, 22);
+            maquinasToolStripMenuItem.Text = "Maquinas";
+            maquinasToolStripMenuItem.Click += maquinasToolStripMenuItem_Click;
+            // 
+            // materialesToolStripMenuItem
+            // 
+            materialesToolStripMenuItem.Name = "materialesToolStripMenuItem";
+            materialesToolStripMenuItem.Size = new Size(180, 22);
+            materialesToolStripMenuItem.Text = "Materiales";
+            materialesToolStripMenuItem.Click += materialesToolStripMenuItem_Click;
+            // 
+            // actividadesToolStripMenuItem
+            // 
+            actividadesToolStripMenuItem.Name = "actividadesToolStripMenuItem";
+            actividadesToolStripMenuItem.Size = new Size(180, 22);
+            actividadesToolStripMenuItem.Text = "Actividades";
+            actividadesToolStripMenuItem.Click += actividadesToolStripMenuItem_Click;
+            // 
+            // clasesToolStripMenuItem
+            // 
+            clasesToolStripMenuItem.Name = "clasesToolStripMenuItem";
+            clasesToolStripMenuItem.Size = new Size(180, 22);
+            clasesToolStripMenuItem.Text = "Clases";
+            clasesToolStripMenuItem.Click += clasesToolStripMenuItem_Click;
+            // 
+            // inscripcionesToolStripMenuItem
+            // 
+            inscripcionesToolStripMenuItem.Name = "inscripcionesToolStripMenuItem";
+            inscripcionesToolStripMenuItem.Size = new Size(180, 22);
+            inscripcionesToolStripMenuItem.Text = "Inscripciones";
+            inscripcionesToolStripMenuItem.Click += inscripcionesToolStripMenuItem_Click;
+            // 
+            // administradoresToolStripMenuItem
+            // 
+            administradoresToolStripMenuItem.Name = "administradoresToolStripMenuItem";
+            administradoresToolStripMenuItem.Size = new Size(180, 22);
+            administradoresToolStripMenuItem.Text = "Administradores";
+            administradoresToolStripMenuItem.Click += administradoresToolStripMenuItem_Click;
+            // 
+            // usuariosToolStripMenuItem
+            // 
+            usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
+            usuariosToolStripMenuItem.Size = new Size(180, 22);
+            usuariosToolStripMenuItem.Text = "Usuarios";
+            usuariosToolStripMenuItem.Click += usuariosToolStripMenuItem_Click;
+            // 
+            // mantenimientosToolStripMenuItem
+            // 
+            mantenimientosToolStripMenuItem.Name = "mantenimientosToolStripMenuItem";
+            mantenimientosToolStripMenuItem.Size = new Size(180, 22);
+            mantenimientosToolStripMenuItem.Text = "Mantenimientos";
+            mantenimientosToolStripMenuItem.Click += mantenimientosToolStripMenuItem_Click;
+            // 
+            // historicoSueldosToolStripMenuItem
+            // 
+            historicoSueldosToolStripMenuItem.Name = "historicoSueldosToolStripMenuItem";
+            historicoSueldosToolStripMenuItem.Size = new Size(180, 22);
+            historicoSueldosToolStripMenuItem.Text = "Historico de sueldos";
+            historicoSueldosToolStripMenuItem.Click += historicoSueldosToolStripMenuItem_Click;
+            // 
             // Home
             // 
             ClientSize = new Size(800, 450);
@@ -123,11 +219,23 @@
         private ToolStripMenuItem sistemaToolStripMenuItem;
         private ToolStripMenuItem cerrarSesionToolStripMenuItem;
         private ToolStripMenuItem gestionToolStripMenuItem;
+        private ToolStripMenuItem reportesToolStripMenuItem;
+        private ToolStripMenuItem reporteOcupacionToolStripMenuItem;
+        private ToolStripMenuItem reporteMantenimientosToolStripMenuItem;
         private ToolStripMenuItem sociosToolStripMenuItem;
         private ToolStripMenuItem planesToolStripMenuItem;
         private ToolStripMenuItem turnosToolStripMenuItem;
         private ToolStripMenuItem profesoresToolStripMenuItem;
         private ToolStripMenuItem cuotasToolStripMenuItem;
+        private ToolStripMenuItem maquinasToolStripMenuItem;
+        private ToolStripMenuItem materialesToolStripMenuItem;
+        private ToolStripMenuItem actividadesToolStripMenuItem;
+        private ToolStripMenuItem clasesToolStripMenuItem;
+        private ToolStripMenuItem inscripcionesToolStripMenuItem;
+        private ToolStripMenuItem administradoresToolStripMenuItem;
+        private ToolStripMenuItem usuariosToolStripMenuItem;
+        private ToolStripMenuItem mantenimientosToolStripMenuItem;
+        private ToolStripMenuItem historicoSueldosToolStripMenuItem;
     }
 }
 

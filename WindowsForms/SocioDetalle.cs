@@ -11,6 +11,7 @@ namespace WindowsFormsApp
         public SocioDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
 
             this.Load -= SocioDetalle_Load;
             this.Load += SocioDetalle_Load;
@@ -115,7 +116,7 @@ namespace WindowsFormsApp
                     FechaBaja = dtpFechaBaja.Checked ? dtpFechaBaja.Value : (DateTime?)null,
                     IdPlan = (int)cmbPlanes.SelectedValue,
                     Username = txtDni.Text.Trim(),
-                    Password = txtDni.Text.Trim()
+                    Password = _idSocio == null ? txtDni.Text.Trim() : string.Empty
                 };
 
                 if (_idSocio == null)

@@ -6,7 +6,7 @@ namespace WindowsFormsApp
 {
     public partial class ItemCuotaDetalle : Form
     {
-        private DetalleCuotaCreaActualizaDTO item;
+        private DetalleCuotaCreaActualizaDTO item = new();
 
         public DetalleCuotaCreaActualizaDTO Item
         {
@@ -21,6 +21,7 @@ namespace WindowsFormsApp
         public ItemCuotaDetalle()
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
         }
 
         public ItemCuotaDetalle(DetalleCuotaCreaActualizaDTO item) : this()
@@ -49,8 +50,14 @@ namespace WindowsFormsApp
                 return;
             }
 
+            if (!decimal.TryParse(txt_monto.Text, out var monto) || monto <= 0)
+            {
+                MessageBox.Show("Ingresá un monto numérico mayor a cero.");
+                return;
+            }
+
             this.Item.Concepto = txt_concepto.Text;
-            this.Item.Monto = decimal.Parse(txt_monto.Text);
+            this.Item.Monto = monto;
             this.Item.Subtotal = this.Item.Monto;
 
             this.DialogResult = DialogResult.OK;

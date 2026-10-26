@@ -20,18 +20,26 @@ namespace API.Clients
             return result ?? new List<CuotaMostrarDTO>();
         }
 
+        public static async Task<PaginaDTO<CuotaMostrarDTO>> GetPaginadoAsync(int pagina, int tamanio, int? idSocio = null, int? mes = null, int? anio = null)
+        {
+            using var client = await CreateHttpClientAsync();
+            var url = ConParametros("api/cuotas/paginado", ("pagina", pagina), ("tamanio", tamanio), ("idSocio", idSocio), ("mes", mes), ("anio", anio));
+            var result = await client.GetFromJsonAsync<PaginaDTO<CuotaMostrarDTO>>(url);
+            return result ?? new PaginaDTO<CuotaMostrarDTO>();
+        }
+
         public static async Task AddAsync(CuotaCreaActualizaDTO cuota)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PostAsJsonAsync("api/cuotas", cuota);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task UpdateAsync(int id, CuotaCreaActualizaDTO cuota)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PutAsJsonAsync($"api/cuotas/{id}", cuota);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task UpdateAsync(CuotaCreaActualizaDTO cuota)
@@ -43,7 +51,7 @@ namespace API.Clients
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.DeleteAsync($"api/cuotas/{id}");
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
     }
 }

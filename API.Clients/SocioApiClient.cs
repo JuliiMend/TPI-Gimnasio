@@ -20,25 +20,33 @@ namespace API.Clients
             return result ?? new List<SocioMostrarDTO>();
         }
 
+        public static async Task<PaginaDTO<SocioMostrarDTO>> GetPaginadoAsync(int pagina, int tamanio, string? dni = null)
+        {
+            using var client = await CreateHttpClientAsync();
+            var url = ConParametros("api/socios/paginado", ("pagina", pagina), ("tamanio", tamanio), ("dni", dni));
+            var result = await client.GetFromJsonAsync<PaginaDTO<SocioMostrarDTO>>(url);
+            return result ?? new PaginaDTO<SocioMostrarDTO>();
+        }
+
         public static async Task AddAsync(SocioCreaActualizaDTO socio)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PostAsJsonAsync("api/socios", socio);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task UpdateAsync(int id, SocioCreaActualizaDTO socio)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.PutAsJsonAsync($"api/socios/{id}", socio);
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
 
         public static async Task DeleteAsync(int id)
         {
             using var client = await CreateHttpClientAsync();
             var response = await client.DeleteAsync($"api/socios/{id}");
-            response.EnsureSuccessStatusCode();
+            await EnsureSuccessAsync(response);
         }
     }
 }

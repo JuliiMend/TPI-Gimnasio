@@ -1,0 +1,234 @@
+@page "/actividades"
+@attribute [RolesPermitidos(Roles.Admin)]
+@using DTOs
+@using API.Clients
+
+<h3>Actividades</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevaActividad">
+        + Nueva actividad
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar actividad" : "Nueva actividad")</h4>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>Tipo</label>
+                <input class="form-control" @bind="actividadActual.Tipo" />
+
+                @if (!string.IsNullOrEmpty(errorTipo))
+                {
+                    <div class="text-danger">@errorTipo</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Descripción</label>
+                <input class="form-control" @bind="actividadActual.Descripcion" />
+
+                @if (!string.IsNullOrEmpty(errorDescripcion))
+                {
+                    <div class="text-danger">@errorDescripcion</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var actividad in actividades)
+        {
+            <tr>
+                <td>@actividad.Tipo</td>
+                <td>@actividad.Descripcion</td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarActividad(actividad)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarActividad(actividad)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private string errorTipo = string.Empty;
+    private string errorDescripcion = string.Empty;
+
+    private ActividadCreaActualizaDTO actividadActual = new();
+
+    private int idActividadEditando;
+
+    private List<ActividadMostrarDTO> actividades = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarActividades();
+    }
+
+    private async Task CargarActividades()
+    {
+        try
+        {
+            actividades = (await ActividadApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar las actividades: {ex.Message}";
+        }
+    }
+
+    private void LimpiarErrores()
+    {
+        errorTipo = string.Empty;
+        errorDescripcion = string.Empty;
+    }
+
+    private void NuevaActividad()
+    {
+        actividadActual = new ActividadCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private void EditarActividad(ActividadMostrarDTO actividad)
+    {
+        idActividadEditando = actividad.IdActividad;
+
+        actividadActual = new ActividadCreaActualizaDTO
+        {
+            Tipo = actividad.Tipo,
+            Descripcion = actividad.Descripcion
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private bool Validar()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(actividadActual.Tipo))
+        {
+            errorTipo = "Ingresá el tipo de actividad.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(actividadActual.Descripcion))
+        {
+            errorDescripcion = "Ingresá la descripción.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await ActividadApiClient.UpdateAsync(idActividadEditando, actividadActual);
+
+                mensaje = "Actividad modificada correctamente.";
+            }
+            else
+            {
+                await ActividadApiClient.AddAsync(actividadActual);
+
+                mensaje = "Actividad creada correctamente.";
+            }
+
+            await CargarActividades();
+
+            mostrarFormulario = false;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar la actividad: {ex.Message}";
+        }
+    }
+
+    private async Task EliminarActividad(ActividadMostrarDTO actividad)
+    {
+        try
+        {
+            await ActividadApiClient.DeleteAsync(actividad.IdActividad);
+
+            await CargarActividades();
+
+            mensaje = "Actividad eliminada correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar la actividad: {ex.Message}";
+        }
+    }
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+}

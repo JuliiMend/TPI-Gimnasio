@@ -16,12 +16,15 @@ namespace Data
 
         public async Task<List<Plan>> ObtenerTodosAsync()
         {
-            return await _context.Planes.ToListAsync();
+            return await _context.Planes
+                .Include(p => p.Actividades)
+                .ToListAsync();
         }
 
         public async Task<Plan?> ObtenerPorIdAsync(int id)
         {
             return await _context.Planes
+                .Include(p => p.Actividades)
                 .FirstOrDefaultAsync(p => p.PlanId == id);
         }
 

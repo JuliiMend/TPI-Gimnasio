@@ -1,0 +1,132 @@
+@page "/reportes/ocupacion-clases"
+@attribute [RolesPermitidos(Roles.Admin)]
+@using API.Clients
+@inject IJSRuntime JS
+
+<PageTitle>Reporte de ocupación de clases</PageTitle>
+
+<h3>Reporte de ocupación de clases</h3>
+<p class="text-muted">Inscriptos y cupo de cada clase, para detectar clases llenas o con poca demanda.</p>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-danger">@mensaje</div>
+}
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <div class="text-muted">Clases</div>
+            <div class="fs-3 fw-bold">@filas.Count</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <div class="text-muted">Inscriptos totales</div>
+            <div class="fs-3 fw-bold">@filas.Sum(f => f.Inscriptos)</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <div class="text-muted">Ocupación promedio</div>
+            <div class="fs-3 fw-bold">@(filas.Any() ? filas.Average(f => f.Porcentaje).ToString("0") : "0")%</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <div class="text-muted">Clases llenas</div>
+            <div class="fs-3 fw-bold text-danger">@filas.Count(f => f.Disponibles == 0)</div>
+        </div>
+    </div>
+</div>
+
+<div class="card p-3 mb-4" style="height: 380px;">
+    <canvas id="graficoOcupacion"></canvas>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Clase</th>
+            <th>Profesor</th>
+            <th>Turno</th>
+            <th>Inscriptos</th>
+            <th>Cupo</th>
+            <th>Disponibles</th>
+            <th>Ocupación</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var fila in filas)
+        {
+            <tr class="@(fila.Disponibles == 0 ? "table-danger" : "")">
+                <td>@fila.Clase.Actividad</td>
+                <td>@fila.Clase.Profesor</td>
+                <td>@fila.Clase.Turno</td>
+                <td>@fila.Inscriptos</td>
+                <td>@fila.Clase.Cupo</td>
+                <td>@fila.Disponibles</td>
+                <td>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar @(fila.Disponibles == 0 ? "bg-danger" : "")"
+                             style="width: @(fila.Porcentaje.ToString("0", System.Globalization.CultureInfo.InvariantCulture))%">
+                            @fila.Porcentaje.ToString("0")%
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private record FilaOcupacion(ClaseMostrarDTO Clase)
+    {
+        public int Inscriptos => Clase.Inscriptos;
+        public int Disponibles => Math.Max(0, Clase.Cupo - Clase.Inscriptos);
+        public double Porcentaje => Clase.Cupo > 0 ? 100.0 * Clase.Inscriptos / Clase.Cupo : 0;
+    }
+
+    private List<FilaOcupacion> filas = new();
+    private string mensaje = string.Empty;
+    private bool graficoPendiente;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var clases = await ClaseApiClient.GetAllAsync();
+
+            filas = clases
+                .Select(c => new FilaOcupacion(c))
+                .OrderByDescending(f => f.Porcentaje)
+                .ToList();
+
+            graficoPendiente = true;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar las clases: {ex.Message}";
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!graficoPendiente)
+        {
+            return;
+        }
+
+        graficoPendiente = false;
+
+        var etiquetas = filas.Select(f => $"{f.Clase.Actividad} ({f.Clase.Turno})").ToArray();
+
+        var series = new object[]
+        {
+            new { nombre = "Inscriptos", valores = filas.Select(f => f.Inscriptos).ToArray(), color = "#0d6efd" },
+            new { nombre = "Cupo", valores = filas.Select(f => f.Clase.Cupo).ToArray(), color = "#adb5bd" }
+        };
+
+        await JS.InvokeVoidAsync("graficos.barras", "graficoOcupacion", etiquetas, series, "Inscriptos vs. cupo por clase");
+    }
+}

@@ -10,11 +10,17 @@ namespace WebAPI
     {
         public static void MapUsuarioEndpoints(this IEndpointRouteBuilder app)
         {
-            var grupo = app.MapGroup("/api/usuarios").RequireAuthorization();
+            var grupo = app.MapGroup("/api/usuarios").RequireAuthorization(Politicas.SoloAdmin);
 
             grupo.MapGet("/", async (IUsuarioService usuarioService) =>
             {
                 var usuarios = await usuarioService.ObtenerTodosAsync();
+                return Results.Ok(usuarios);
+            });
+
+            grupo.MapGet("/paginado", async (IUsuarioService usuarioService, int pagina = 1, int tamanio = 10) =>
+            {
+                var usuarios = await usuarioService.ObtenerPaginadoAsync(pagina, tamanio);
                 return Results.Ok(usuarios);
             });
 
@@ -29,7 +35,7 @@ namespace WebAPI
                 var id = await usuarioService.AgregarAsync(dto);
                 var usuario = await usuarioService.ObtenerPorIdAsync(id);
                 return Results.Created($"/api/usuarios/{id}", usuario);
-            }).AllowAnonymous();
+            });
 
             grupo.MapPut("/{id}", async (int id, UsuarioCreaActualizaDTO dto, IUsuarioService usuarioService) =>
             {

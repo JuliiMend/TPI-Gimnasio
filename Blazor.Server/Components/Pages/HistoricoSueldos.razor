@@ -1,0 +1,251 @@
+@page "/historico-sueldos"
+@attribute [RolesPermitidos(Roles.Admin, Roles.Profesor)]
+@using DTOs
+@using API.Clients
+
+<h3>@(esAdmin ? "Histórico de sueldos" : "Mi histórico de sueldos")</h3>
+
+@if (esAdmin)
+{
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="NuevoSueldo">
+            + Registrar nuevo sueldo
+        </button>
+    </div>
+}
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>Registrar nuevo sueldo</h4>
+        <p class="text-muted">El sueldo anterior del profesor deja de estar vigente desde esta fecha. El histórico no se modifica.</p>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label>Profesor</label>
+
+                <select class="form-select" @bind="sueldoActual.IdProfesor">
+                    <option value="0">Seleccionar profesor</option>
+
+                    @foreach (var profesor in profesores)
+                    {
+                        <option value="@profesor.IdPersona">@profesor.Nombre @profesor.Apellido</option>
+                    }
+                </select>
+
+                @if (!string.IsNullOrEmpty(errorProfesor))
+                {
+                    <div class="text-danger">@errorProfesor</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Vigente desde</label>
+                <input type="date" class="form-control" @bind="sueldoActual.FechaDesde" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Valor</label>
+                <input type="number" step="0.01" class="form-control" @bind="sueldoActual.Valor" />
+
+                @if (!string.IsNullOrEmpty(errorValor))
+                {
+                    <div class="text-danger">@errorValor</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Registrar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert @(esError ? "alert-danger" : "alert-info")">
+        @mensaje
+    </div>
+}
+
+@if (esAdmin)
+{
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label>Filtrar por profesor</label>
+
+            <select class="form-select" value="@idProfesorFiltro" @onchange="CambiarFiltro">
+                <option value="0">Todos los profesores</option>
+
+                @foreach (var profesor in profesores)
+                {
+                    <option value="@profesor.IdPersona">@profesor.Nombre @profesor.Apellido</option>
+                }
+            </select>
+        </div>
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Profesor</th>
+            <th>Desde</th>
+            <th>Hasta</th>
+            <th>Valor</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sueldo in sueldos)
+        {
+            <tr class="@(sueldo.Vigente ? "table-success" : "")">
+                <td>@sueldo.Profesor</td>
+                <td>@sueldo.FechaDesde.ToString("dd/MM/yyyy")</td>
+                <td>@(sueldo.FechaHasta?.ToString("dd/MM/yyyy") ?? (sueldo.Vigente ? "Vigente" : "-"))</td>
+                <td>$ @sueldo.Valor.ToString("N2")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<Paginador NumeroPagina="numeroPagina"
+           TamanioPagina="TamanioPagina"
+           TotalItems="totalItems"
+           TotalPaginas="totalPaginas"
+           OnCambiarPagina="CambiarPagina" />
+
+@code {
+    private bool mostrarFormulario = false;
+
+    private string mensaje = string.Empty;
+    private bool esError = false;
+
+    private string errorProfesor = string.Empty;
+    private string errorValor = string.Empty;
+
+    private int idProfesorFiltro = 0;
+
+    private HistoricoSueldoCreaDTO sueldoActual = new();
+
+    private List<HistoricoSueldoMostrarDTO> sueldos = new();
+    private List<ProfesorMostrarDTO> profesores = new();
+
+    private const int TamanioPagina = 10;
+    private int numeroPagina = 1;
+    private int totalItems;
+    private int totalPaginas;
+
+    private bool esAdmin;
+
+    protected override async Task OnInitializedAsync()
+    {
+        esAdmin = await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin);
+
+        if (esAdmin)
+        {
+            try
+            {
+                profesores = (await ProfesorApiClient.GetAllAsync()).ToList();
+            }
+            catch (Exception ex)
+            {
+                MostrarError($"Error al cargar los profesores: {ex.Message}");
+            }
+        }
+
+        await CargarSueldos();
+    }
+
+    private async Task CargarSueldos()
+    {
+        try
+        {
+            var pagina = await HistoricoSueldoApiClient.GetPaginadoAsync(
+                numeroPagina,
+                TamanioPagina,
+                idProfesorFiltro > 0 ? idProfesorFiltro : null);
+
+            sueldos = pagina.Items;
+            numeroPagina = pagina.NumeroPagina;
+            totalItems = pagina.TotalItems;
+            totalPaginas = pagina.TotalPaginas;
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al cargar el histórico de sueldos: {ex.Message}");
+        }
+    }
+
+    private async Task CambiarFiltro(ChangeEventArgs e)
+    {
+        idProfesorFiltro = int.TryParse(e.Value?.ToString(), out var id) ? id : 0;
+        numeroPagina = 1;
+        await CargarSueldos();
+    }
+
+    private async Task CambiarPagina(int numero)
+    {
+        numeroPagina = numero;
+        await CargarSueldos();
+    }
+
+    private void NuevoSueldo()
+    {
+        sueldoActual = new HistoricoSueldoCreaDTO
+        {
+            IdProfesor = idProfesorFiltro,
+            FechaDesde = DateTime.Today
+        };
+
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+        errorProfesor = string.Empty;
+        errorValor = string.Empty;
+    }
+
+    private async Task Guardar()
+    {
+        errorProfesor = sueldoActual.IdProfesor == 0 ? "Seleccioná un profesor." : string.Empty;
+        errorValor = sueldoActual.Valor <= 0 ? "El valor debe ser mayor a 0." : string.Empty;
+
+        if (!string.IsNullOrEmpty(errorProfesor) || !string.IsNullOrEmpty(errorValor))
+        {
+            return;
+        }
+
+        try
+        {
+            await HistoricoSueldoApiClient.AddAsync(sueldoActual);
+
+            mensaje = "Sueldo registrado correctamente.";
+            esError = false;
+            mostrarFormulario = false;
+
+            await CargarSueldos();
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al registrar el sueldo: {ex.Message}");
+        }
+    }
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+    }
+
+    private void MostrarError(string texto)
+    {
+        mensaje = texto;
+        esError = true;
+    }
+}

@@ -11,24 +11,19 @@ namespace Application.Services
     public class PlanService : IPlanService
     {
         private readonly IPlanRepository _planRepository;
+        private readonly IActividadRepository _actividadRepository;
 
-        public PlanService(IPlanRepository planRepository)
+        public PlanService(IPlanRepository planRepository, IActividadRepository actividadRepository)
         {
             _planRepository = planRepository;
+            _actividadRepository = actividadRepository;
         }
 
         public async Task<List<PlanMostrarDTO>> ObtenerTodosAsync()
         {
             var planes = await _planRepository.ObtenerTodosAsync();
 
-            return planes.Select(p => new PlanMostrarDTO
-            {
-                IdPlan = p.PlanId,
-                Nombre = p.Nombre,
-                Tipo = p.Tipo,
-                Precio = p.Precio,
-                Descripcion = p.Descripcion ?? string.Empty
-            }).ToList();
+            return planes.Select(MapearAMostrar).ToList();
         }
 
         public async Task<PlanMostrarDTO?> ObtenerPorIdAsync(int id)
@@ -40,14 +35,7 @@ namespace Application.Services
                 return null;
             }
 
-            return new PlanMostrarDTO
-            {
-                IdPlan = plan.PlanId,
-                Nombre = plan.Nombre,
-                Tipo = plan.Tipo,
-                Precio = plan.Precio,
-                Descripcion = plan.Descripcion ?? string.Empty
-            };
+            return MapearAMostrar(plan);
         }
 
         public async Task<int> CrearAsync(PlanCreaActualizaDTO planDto)
@@ -57,7 +45,8 @@ namespace Application.Services
                 Nombre = planDto.Nombre,
                 Tipo = planDto.Tipo,
                 Precio = planDto.Precio,
-                Descripcion = planDto.Descripcion
+                Descripcion = planDto.Descripcion,
+                Actividades = await _actividadRepository.ObtenerPorIdsAsync(planDto.IdsActividades)
             };
 
             await _planRepository.AgregarAsync(planNuevo);
@@ -75,6 +64,10 @@ namespace Application.Services
                 planExistente.Precio = planDto.Precio;
                 planExistente.Descripcion = planDto.Descripcion;
 
+                var actividades = await _actividadRepository.ObtenerPorIdsAsync(planDto.IdsActividades);
+                planExistente.Actividades.Clear();
+                planExistente.Actividades.AddRange(actividades);
+
                 await _planRepository.ActualizarAsync(planExistente);
             }
             else
@@ -86,6 +79,20 @@ namespace Application.Services
         public async Task EliminarAsync(int id)
         {
             await _planRepository.EliminarAsync(id);
+        }
+
+        private static PlanMostrarDTO MapearAMostrar(Plan p)
+        {
+            return new PlanMostrarDTO
+            {
+                IdPlan = p.PlanId,
+                Nombre = p.Nombre,
+                Tipo = p.Tipo,
+                Precio = p.Precio,
+                Descripcion = p.Descripcion ?? string.Empty,
+                Actividades = string.Join(", ", p.Actividades.Select(a => a.Tipo)),
+                IdsActividades = p.Actividades.Select(a => a.IdActividad).ToList()
+            };
         }
     }
 }

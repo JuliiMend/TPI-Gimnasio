@@ -1,4 +1,4 @@
-using DTOs;
+﻿using DTOs;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows.Forms;
@@ -13,6 +13,7 @@ namespace WindowsFormsApp
         public LoginForm(IAuthService authService)
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
             _authService = authService;
         }
 
@@ -26,7 +27,7 @@ namespace WindowsFormsApp
             try
             {
                 btnLogin.Enabled = false;
-                btnLogin.Text = "Iniciando sesi�n...";
+                btnLogin.Text = "Iniciando sesión...";
 
                 bool exito = await _authService.LoginAsync(txtUsername.Text, txtPassword.Text);
 
@@ -34,12 +35,23 @@ namespace WindowsFormsApp
                 {
                     this.Hide();
                     var homeForm = Program.ServiceProvider.GetRequiredService<Home>();
-                    homeForm.FormClosed += (s, args) => this.Close();
+                    homeForm.FormClosed += async (s, args) =>
+                    {
+                        if (await _authService.IsAuthenticatedAsync())
+                        {
+                            this.Close();
+                        }
+                        else
+                        {
+                            txtPassword.Clear();
+                            this.Show();
+                        }
+                    };
                     homeForm.Show();
                 }
                 else
                 {
-                    MessageBox.Show("Usuario o contrase�a incorrectos.", "Error de autenticaci�n", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Usuario o contraseña incorrectos.", "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtPassword.Clear();
                     txtPassword.Focus();
                 }
@@ -51,7 +63,7 @@ namespace WindowsFormsApp
             finally
             {
                 btnLogin.Enabled = true;
-                btnLogin.Text = "Iniciar Sesi�n";
+                btnLogin.Text = "Iniciar Sesión";
             }
         }
 
@@ -70,7 +82,7 @@ namespace WindowsFormsApp
 
             if (string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                errorProvider1.SetError(txtPassword, "La contrase�a es requerida");
+                errorProvider1.SetError(txtPassword, "La contraseña es requerida");
                 isValid = false;
             }
 

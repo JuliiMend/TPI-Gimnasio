@@ -27,14 +27,24 @@ namespace Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Cuota> Cuotas { get; set; }
         public DbSet<DetalleCuota> DetallesCuota { get; set; }
+        public DbSet<Maquina> Maquinas { get; set; }
+        public DbSet<Material> Materiales { get; set; }
+        public DbSet<Administrador> Administradores { get; set; }
+        public DbSet<Actividad> Actividades { get; set; }
+        public DbSet<Clase> Clases { get; set; }
+        public DbSet<Inscripcion> Inscripciones { get; set; }
+        public DbSet<Mantenimiento> Mantenimientos { get; set; }
+        public DbSet<HistoricoSueldo> HistoricoSueldos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+
             // Claves de la herencia Persona
             modelBuilder.Entity<Profesor>().HasKey(p => p.PersonaId);
             modelBuilder.Entity<Socio>().HasKey(s => s.PersonaId);
+            modelBuilder.Entity<Administrador>().HasKey(a => a.PersonaId);
 
             // Claves del resto de las entidades
             modelBuilder.Entity<Turno>().HasKey(t => t.IdTurno);
@@ -46,6 +56,11 @@ namespace Data
             modelBuilder.Entity<Cuota>().Property(c => c.Valor).HasPrecision(18, 2);
             modelBuilder.Entity<DetalleCuota>().Property(d => d.Monto).HasPrecision(18, 2);
             modelBuilder.Entity<DetalleCuota>().Property(d => d.Subtotal).HasPrecision(18, 2);
+
+            modelBuilder.Entity<Maquina>().HasKey(m => m.IdMaquina);
+            modelBuilder.Entity<Material>().HasKey(m => m.IdMaterial);
+            modelBuilder.Entity<Actividad>().HasKey(a => a.IdActividad);
+            modelBuilder.Entity<Clase>().HasKey(c => c.IdClase);
 
 
             // Claves de Usuario
@@ -63,6 +78,75 @@ namespace Data
                 .HasOne(p => p.Usuario)
                 .WithMany()
                 .HasForeignKey(p => p.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Administrador>()
+                .HasOne(a => a.Usuario)
+                .WithMany()
+                .HasForeignKey(a => a.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // relacion plan actividad (un plan incluye varias actividades y viceversa)
+            modelBuilder.Entity<Plan>()
+                .HasMany(p => p.Actividades)
+                .WithMany(a => a.Planes)
+                .UsingEntity(j => j.ToTable("PlanActividades"));
+
+            // relaciones de clase: actividad, profesor a cargo y turno
+            modelBuilder.Entity<Clase>()
+                .HasOne(c => c.Actividad)
+                .WithMany()
+                .HasForeignKey(c => c.IdActividad)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Clase>()
+                .HasOne(c => c.Profesor)
+                .WithMany()
+                .HasForeignKey(c => c.IdProfesor)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Clase>()
+                .HasOne(c => c.Turno)
+                .WithMany()
+                .HasForeignKey(c => c.IdTurno)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // inscripcion: socio se inscribe a clase (una sola vez por clase)
+            modelBuilder.Entity<Inscripcion>().HasKey(i => i.IdInscripcion);
+            modelBuilder.Entity<Inscripcion>()
+                .HasIndex(i => new { i.IdSocio, i.IdClase })
+                .IsUnique();
+
+            modelBuilder.Entity<Inscripcion>()
+                .HasOne(i => i.Socio)
+                .WithMany()
+                .HasForeignKey(i => i.IdSocio)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Inscripcion>()
+                .HasOne(i => i.Clase)
+                .WithMany(c => c.Inscripciones)
+                .HasForeignKey(i => i.IdClase)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // mantenimiento: una maquina registra varios mantenimientos
+            modelBuilder.Entity<Mantenimiento>().HasKey(m => m.IdMantenimiento);
+            modelBuilder.Entity<Mantenimiento>()
+                .HasOne(m => m.Maquina)
+                .WithMany()
+                .HasForeignKey(m => m.IdMaquina)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // historico de sueldos: un profesor tiene varios, uno por fecha desde
+            modelBuilder.Entity<HistoricoSueldo>().HasKey(h => h.IdHistoricoSueldo);
+            modelBuilder.Entity<HistoricoSueldo>().Property(h => h.Valor).HasPrecision(18, 2);
+            modelBuilder.Entity<HistoricoSueldo>()
+                .HasIndex(h => new { h.IdProfesor, h.FechaDesde })
+                .IsUnique();
+            modelBuilder.Entity<HistoricoSueldo>()
+                .HasOne(h => h.Profesor)
+                .WithMany()
+                .HasForeignKey(h => h.IdProfesor)
                 .OnDelete(DeleteBehavior.Restrict);
 
 

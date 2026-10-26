@@ -12,11 +12,12 @@ namespace WindowsFormsApp
     public partial class CuotaDetalle : Form
     {
         private CuotaCreaActualizaDTO cuota;
-        private BindingList<DetalleCuotaCreaActualizaDTO> itemsLocales;
+        private BindingList<DetalleCuotaCreaActualizaDTO> itemsLocales = new();
 
         public CuotaDetalle(CuotaCreaActualizaDTO cuota)
         {
             InitializeComponent();
+            Icon = Program.AppIcon;
             this.cuota = cuota;
         }
 

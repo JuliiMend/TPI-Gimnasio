@@ -1,0 +1,406 @@
+@page "/mantenimientos"
+@attribute [RolesPermitidos(Roles.Admin)]
+@using DTOs
+@using API.Clients
+
+<h3>Mantenimiento de máquinas</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoMantenimiento">
+        + Registrar mantenimiento
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar mantenimiento" : "Nuevo mantenimiento")</h4>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>Máquina</label>
+
+                <select class="form-select" @bind="mantenimientoActual.IdMaquina">
+                    <option value="0">Seleccionar máquina</option>
+
+                    @foreach (var maquina in maquinas)
+                    {
+                        <option value="@maquina.IdMaquina">@maquina.Nombre (@maquina.Tipo)</option>
+                    }
+                </select>
+
+                @if (!string.IsNullOrEmpty(errorMaquina))
+                {
+                    <div class="text-danger">@errorMaquina</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Descripción</label>
+                <input class="form-control" @bind="mantenimientoActual.Descripcion" />
+
+                @if (!string.IsNullOrEmpty(errorDescripcion))
+                {
+                    <div class="text-danger">@errorDescripcion</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Fecha de inicio</label>
+                <input type="date" class="form-control" @bind="mantenimientoActual.FechaInicio" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Fin esperado</label>
+                <input type="date" class="form-control" @bind="mantenimientoActual.FechaFinEsperada" />
+
+                @if (!string.IsNullOrEmpty(errorFinEsperado))
+                {
+                    <div class="text-danger">@errorFinEsperado</div>
+                }
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Fin real (vacío si sigue en curso)</label>
+                <input type="date" class="form-control" @bind="mantenimientoActual.FechaFinReal" />
+
+                @if (!string.IsNullOrEmpty(errorFinReal))
+                {
+                    <div class="text-danger">@errorFinReal</div>
+                }
+            </div>
+
+        </div>
+
+        <div>
+            <button class="btn btn-success me-2" @onclick="Guardar">
+                Guardar
+            </button>
+
+            <button class="btn btn-secondary" @onclick="Cancelar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert @(esError ? "alert-danger" : "alert-info")">
+        @mensaje
+    </div>
+}
+
+<h5>Reporte</h5>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label>Máquina</label>
+
+        <select class="form-select" value="@idMaquinaFiltro" @onchange="CambiarFiltroMaquina">
+            <option value="0">Todas las máquinas</option>
+
+            @foreach (var maquina in maquinas)
+            {
+                <option value="@maquina.IdMaquina">@maquina.Nombre</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label>Estado</label>
+
+        <select class="form-select" value="@estadoFiltro" @onchange="CambiarFiltroEstado">
+            <option value="">Todos los estados</option>
+
+            @foreach (var estado in estados)
+            {
+                <option value="@estado">@estado</option>
+            }
+        </select>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Máquina</th>
+            <th>Descripción</th>
+            <th>Inicio</th>
+            <th>Fin esperado</th>
+            <th>Fin real</th>
+            <th>Estado</th>
+            <th>Días de demora</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var mantenimiento in mantenimientos)
+        {
+            <tr>
+                <td>@mantenimiento.Maquina</td>
+                <td>@mantenimiento.Descripcion</td>
+                <td>@mantenimiento.FechaInicio.ToString("dd/MM/yyyy")</td>
+                <td>@mantenimiento.FechaFinEsperada.ToString("dd/MM/yyyy")</td>
+                <td>@(mantenimiento.FechaFinReal?.ToString("dd/MM/yyyy") ?? "-")</td>
+                <td>
+                    <span class="badge @ClaseBadge(mantenimiento.Estado)">@mantenimiento.Estado</span>
+                </td>
+                <td>@mantenimiento.DiasDemora</td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarMantenimiento(mantenimiento)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarMantenimiento(mantenimiento)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<Paginador NumeroPagina="numeroPagina"
+           TamanioPagina="TamanioPagina"
+           TotalItems="totalItems"
+           TotalPaginas="totalPaginas"
+           OnCambiarPagina="CambiarPagina" />
+
+@code {
+    private static readonly string[] estados = { "En curso", "Demorado", "Finalizado", "Finalizado con demora" };
+
+    private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+    private bool esError = false;
+
+    private string errorMaquina = string.Empty;
+    private string errorDescripcion = string.Empty;
+    private string errorFinEsperado = string.Empty;
+    private string errorFinReal = string.Empty;
+
+    private int idMaquinaFiltro = 0;
+    private string estadoFiltro = string.Empty;
+
+    private MantenimientoCreaActualizaDTO mantenimientoActual = new();
+
+    private int idMantenimientoEditando;
+
+    private List<MantenimientoMostrarDTO> mantenimientos = new();
+    private List<MaquinaMostrarDTO> maquinas = new();
+
+    private const int TamanioPagina = 10;
+    private int numeroPagina = 1;
+    private int totalItems;
+    private int totalPaginas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            maquinas = (await MaquinaApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al cargar las máquinas: {ex.Message}");
+        }
+
+        await CargarMantenimientos();
+    }
+
+    private async Task CargarMantenimientos()
+    {
+        try
+        {
+            var pagina = await MantenimientoApiClient.GetPaginadoAsync(
+                numeroPagina,
+                TamanioPagina,
+                idMaquinaFiltro > 0 ? idMaquinaFiltro : null,
+                estadoFiltro);
+
+            mantenimientos = pagina.Items;
+            numeroPagina = pagina.NumeroPagina;
+            totalItems = pagina.TotalItems;
+            totalPaginas = pagina.TotalPaginas;
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al cargar los mantenimientos: {ex.Message}");
+        }
+    }
+
+    private async Task CambiarFiltroMaquina(ChangeEventArgs e)
+    {
+        idMaquinaFiltro = int.TryParse(e.Value?.ToString(), out var id) ? id : 0;
+        numeroPagina = 1;
+        await CargarMantenimientos();
+    }
+
+    private async Task CambiarFiltroEstado(ChangeEventArgs e)
+    {
+        estadoFiltro = e.Value?.ToString() ?? string.Empty;
+        numeroPagina = 1;
+        await CargarMantenimientos();
+    }
+
+    private async Task CambiarPagina(int numero)
+    {
+        numeroPagina = numero;
+        await CargarMantenimientos();
+    }
+
+    private static string ClaseBadge(string estado) => estado switch
+    {
+        "Demorado" => "bg-danger",
+        "Finalizado con demora" => "bg-warning text-dark",
+        "Finalizado" => "bg-success",
+        _ => "bg-primary"
+    };
+
+    private void LimpiarErrores()
+    {
+        errorMaquina = string.Empty;
+        errorDescripcion = string.Empty;
+        errorFinEsperado = string.Empty;
+        errorFinReal = string.Empty;
+    }
+
+    private void NuevoMantenimiento()
+    {
+        mantenimientoActual = new MantenimientoCreaActualizaDTO
+        {
+            IdMaquina = idMaquinaFiltro,
+            FechaInicio = DateTime.Today,
+            FechaFinEsperada = DateTime.Today.AddDays(7)
+        };
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private void EditarMantenimiento(MantenimientoMostrarDTO mantenimiento)
+    {
+        idMantenimientoEditando = mantenimiento.IdMantenimiento;
+
+        mantenimientoActual = new MantenimientoCreaActualizaDTO
+        {
+            IdMaquina = mantenimiento.IdMaquina,
+            FechaInicio = mantenimiento.FechaInicio,
+            FechaFinEsperada = mantenimiento.FechaFinEsperada,
+            FechaFinReal = mantenimiento.FechaFinReal,
+            Descripcion = mantenimiento.Descripcion
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private bool Validar()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (mantenimientoActual.IdMaquina == 0)
+        {
+            errorMaquina = "Seleccioná una máquina.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(mantenimientoActual.Descripcion))
+        {
+            errorDescripcion = "Ingresá la descripción.";
+            valido = false;
+        }
+
+        if (mantenimientoActual.FechaFinEsperada < mantenimientoActual.FechaInicio)
+        {
+            errorFinEsperado = "No puede ser anterior a la fecha de inicio.";
+            valido = false;
+        }
+
+        if (mantenimientoActual.FechaFinReal.HasValue &&
+            mantenimientoActual.FechaFinReal.Value < mantenimientoActual.FechaInicio)
+        {
+            errorFinReal = "No puede ser anterior a la fecha de inicio.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await MantenimientoApiClient.UpdateAsync(idMantenimientoEditando, mantenimientoActual);
+
+                mensaje = "Mantenimiento modificado correctamente.";
+            }
+            else
+            {
+                await MantenimientoApiClient.AddAsync(mantenimientoActual);
+
+                mensaje = "Mantenimiento registrado correctamente.";
+            }
+
+            esError = false;
+            mostrarFormulario = false;
+
+            await CargarMantenimientos();
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al guardar el mantenimiento: {ex.Message}");
+        }
+    }
+
+    private async Task EliminarMantenimiento(MantenimientoMostrarDTO mantenimiento)
+    {
+        try
+        {
+            await MantenimientoApiClient.DeleteAsync(mantenimiento.IdMantenimiento);
+
+            mensaje = "Mantenimiento eliminado correctamente.";
+            esError = false;
+
+            await CargarMantenimientos();
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error al eliminar el mantenimiento: {ex.Message}");
+        }
+    }
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private void MostrarError(string texto)
+    {
+        mensaje = texto;
+        esError = true;
+    }
+}

@@ -20,17 +20,32 @@ namespace Application.Services
 
         public async Task<List<SocioMostrarDTO>> ObtenerTodosAsync(SocioCriteriaDTO? criterios)
         {
-            var criteria = new SocioCriteria
+            var socios = await _socioRepository.ObtenerTodosAsync(ACriteria(criterios));
+
+            return socios.Select(MapearAMostrar).ToList();
+        }
+
+        public async Task<PaginaDTO<SocioMostrarDTO>> ObtenerPaginadoAsync(SocioCriteriaDTO? criterios, int numeroPagina, int tamanioPagina)
+        {
+            var pagina = await _socioRepository.ObtenerPaginadoAsync(ACriteria(criterios), numeroPagina, tamanioPagina);
+
+            return pagina.ADto(MapearAMostrar);
+        }
+
+        private static SocioCriteria ACriteria(SocioCriteriaDTO? criterios)
+        {
+            return new SocioCriteria
             {
-                Nombre = criterios?.Nombre ?? string.Empty,
-                Apellido = criterios?.Apellido ?? string.Empty,
-                Dni = criterios?.Dni ?? string.Empty,
+                Nombre = criterios?.Nombre?.Trim() ?? string.Empty,
+                Apellido = criterios?.Apellido?.Trim() ?? string.Empty,
+                Dni = criterios?.Dni?.Trim() ?? string.Empty,
                 IdPlan = criterios?.IdPlan ?? 0
             };
+        }
 
-            var socios = await _socioRepository.ObtenerTodosAsync(criteria);
-
-            return socios.Select(s => new SocioMostrarDTO
+        private static SocioMostrarDTO MapearAMostrar(Socio s)
+        {
+            return new SocioMostrarDTO
             {
                 IdPersona = s.PersonaId,
                 Dni = s.Dni,
@@ -45,7 +60,7 @@ namespace Application.Services
                 Email = s.Usuario?.Email ?? "",
                 Username = s.Usuario?.Username ?? "",
                 UsuarioActivo = s.Usuario?.Activo ?? false
-            }).ToList();
+            };
         }
 
         public async Task<SocioMostrarDTO?> ObtenerPorIdAsync(int id)
@@ -75,6 +90,13 @@ namespace Application.Services
             };
         }
 
+        public async Task<SocioMostrarDTO?> ObtenerPorUsuarioAsync(int usuarioId)
+        {
+            var socio = await _socioRepository.ObtenerPorUsuarioIdAsync(usuarioId);
+
+            return socio == null ? null : await ObtenerPorIdAsync(socio.PersonaId);
+        }
+
         public async Task<int> AgregarAsync(SocioCreaActualizaDTO dto)
         {
             var username = !string.IsNullOrWhiteSpace(dto.Username)
@@ -92,7 +114,7 @@ namespace Application.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
                 FechaCreacion = DateTime.Now,
                 Activo = true,
-                Rol = "Socio"
+                Rol = Roles.Socio
             };
 
             var socio = new Socio

@@ -1,0 +1,364 @@
+﻿@page "/administradores"
+@attribute [RolesPermitidos(Roles.Admin)]
+@using DTOs
+@using API.Clients
+
+<h3>Administradores</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NuevoAdministrador">
+        + Nuevo administrador
+    </button>
+</div>
+
+@if (mostrarFormulario)
+{
+    <div class="card p-4 mb-4">
+        <h4>@(editando ? "Editar administrador" : "Nuevo administrador")</h4>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label>DNI</label>
+                <input class="form-control" @bind="administradorActual.Dni" />
+
+                @if (!string.IsNullOrEmpty(errorDni))
+                {
+                    <div class="text-danger">@errorDni</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Nombre</label>
+                <input class="form-control" @bind="administradorActual.Nombre" />
+
+                @if (!string.IsNullOrEmpty(errorNombre))
+                {
+                    <div class="text-danger">@errorNombre</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Apellido</label>
+                <input class="form-control" @bind="administradorActual.Apellido" />
+
+                @if (!string.IsNullOrEmpty(errorApellido))
+                {
+                    <div class="text-danger">@errorApellido</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Teléfono</label>
+                <input class="form-control" @bind="administradorActual.Telefono" />
+
+                @if (!string.IsNullOrEmpty(errorTelefono))
+                {
+                    <div class="text-danger">@errorTelefono</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Fecha de nacimiento</label>
+                <input type="date" class="form-control" @bind="administradorActual.FechaNac" />
+
+                @if (!string.IsNullOrEmpty(errorFechaNac))
+                {
+                    <div class="text-danger">@errorFechaNac</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Username</label>
+                <input class="form-control" @bind="administradorActual.Username" />
+
+                @if (!string.IsNullOrEmpty(errorUsername))
+                {
+                    <div class="text-danger">@errorUsername</div>
+                }
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Email</label>
+                <input type="email" class="form-control" @bind="administradorActual.Email" />
+
+                @if (!string.IsNullOrEmpty(errorEmail))
+                {
+                    <div class="text-danger">@errorEmail</div>
+                }
+            </div>
+
+            @if (!editando)
+            {
+                <div class="col-md-6 mb-3">
+                    <label>Password</label>
+                    <input type="password"
+                           class="form-control"
+                           @bind="administradorActual.Password" />
+
+                    @if (!string.IsNullOrEmpty(errorPassword))
+                    {
+                        <div class="text-danger">@errorPassword</div>
+                    }
+                </div>
+            }
+
+    </div>
+
+    <div>
+        <button class="btn btn-success me-2" @onclick="Guardar">
+            Guardar
+        </button>
+
+        <button class="btn btn-secondary" @onclick="Cancelar">
+            Cancelar
+        </button>
+    </div>
+</div>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">
+        @mensaje
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var administrador in administradores)
+        {
+            <tr>
+                <td>@administrador.Dni</td>
+                <td>@administrador.Nombre</td>
+                <td>@administrador.Apellido</td>
+                <td>@administrador.Telefono</td>
+                <td>@administrador.Email</td>
+                <td>
+                    @(administrador.UsuarioActivo ? "Activo" : "Inactivo")
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-2"
+                            @onclick="() => EditarAdministrador(administrador)">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="() => EliminarAdministrador(administrador)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+private bool mostrarFormulario = false;
+    private bool editando = false;
+
+    private string mensaje = string.Empty;
+
+    private string errorDni = string.Empty;
+    private string errorNombre = string.Empty;
+    private string errorApellido = string.Empty;
+    private string errorTelefono = string.Empty;
+    private string errorFechaNac = string.Empty;
+    private string errorUsername = string.Empty;
+    private string errorEmail = string.Empty;
+    private string errorPassword = string.Empty;
+
+    private AdministradorCreaActualizaDTO administradorActual = new();
+
+    private int idAdministradorEditando;
+
+    private List<AdministradorMostrarDTO> administradores = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarAdministradores();
+    }
+
+    private async Task CargarAdministradores()
+    {
+        try
+        {
+            administradores = (await AdministradorApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los administradores: {ex.Message}";
+        }
+    }
+
+    private void LimpiarErrores()
+    {
+        errorDni = string.Empty;
+        errorNombre = string.Empty;
+        errorApellido = string.Empty;
+        errorTelefono = string.Empty;
+        errorFechaNac = string.Empty;
+        errorUsername = string.Empty;
+        errorEmail = string.Empty;
+        errorPassword = string.Empty;
+    }
+
+    private void NuevoAdministrador()
+    {
+        administradorActual = new AdministradorCreaActualizaDTO();
+
+        editando = false;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private void EditarAdministrador(AdministradorMostrarDTO administrador)
+    {
+        idAdministradorEditando = administrador.IdPersona;
+
+        administradorActual = new AdministradorCreaActualizaDTO
+        {
+            Dni = administrador.Dni,
+            Nombre = administrador.Nombre,
+            Apellido = administrador.Apellido,
+            Telefono = administrador.Telefono,
+            FechaNac = administrador.FechaNac,
+            Username = administrador.Username,
+            Email = administrador.Email
+        };
+
+        editando = true;
+        mostrarFormulario = true;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+
+    private bool Validar()
+    {
+        LimpiarErrores();
+
+        bool valido = true;
+
+        if (string.IsNullOrWhiteSpace(administradorActual.Dni))
+        {
+            errorDni = "Ingresá el DNI.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(administradorActual.Nombre))
+        {
+            errorNombre = "Ingresá el nombre.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(administradorActual.Apellido))
+        {
+            errorApellido = "Ingresá el apellido.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(administradorActual.Telefono))
+        {
+            errorTelefono = "Ingresá el teléfono.";
+            valido = false;
+        }
+
+        if (administradorActual.FechaNac == DateTime.MinValue)
+        {
+            errorFechaNac = "Ingresá la fecha de nacimiento.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(administradorActual.Username))
+        {
+            errorUsername = "Ingresá el username.";
+            valido = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(administradorActual.Email))
+        {
+            errorEmail = "Ingresá el email.";
+            valido = false;
+        }
+
+        if (!editando && string.IsNullOrWhiteSpace(administradorActual.Password))
+        {
+            errorPassword = "Ingresá una contraseña.";
+            valido = false;
+        }
+
+        return valido;
+    }
+
+    private async Task Guardar()
+    {
+        if (!Validar())
+        {
+            return;
+        }
+
+        try
+        {
+            if (editando)
+            {
+                await AdministradorApiClient.UpdateAsync(
+                    idAdministradorEditando,
+                    administradorActual);
+
+                mensaje = "Administrador modificado correctamente.";
+            }
+            else
+            {
+                await AdministradorApiClient.AddAsync(administradorActual);
+
+                mensaje = "Administrador creado correctamente.";
+            }
+
+            await CargarAdministradores();
+
+            mostrarFormulario = false;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al guardar el administrador: {ex.Message}";
+        }
+    }
+
+    private async Task EliminarAdministrador(AdministradorMostrarDTO administrador)
+    {
+        try
+        {
+            await AdministradorApiClient.DeleteAsync(administrador.IdPersona);
+
+            await CargarAdministradores();
+
+            mensaje = "Administrador eliminado correctamente.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el administrador: {ex.Message}";
+        }
+    }
+
+    private void Cancelar()
+    {
+        mostrarFormulario = false;
+        mensaje = string.Empty;
+
+        LimpiarErrores();
+    }
+}

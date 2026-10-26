@@ -1,14 +1,18 @@
 ﻿@page "/cuotas"
+@attribute [RolesPermitidos(Roles.Admin, Roles.Socio)]
 @using DTOs
 @using API.Clients
 
-<h3>Cuotas</h3>
+<h3>@(esAdmin ? "Cuotas" : "Mis cuotas")</h3>
 
-<div class="mb-3">
-    <button class="btn btn-primary" @onclick="NuevaCuota">
-        + Nueva cuota
-    </button>
-</div>
+@if (esAdmin)
+{
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="NuevaCuota">
+            + Nueva cuota
+        </button>
+    </div>
+}
 
 @if (mostrarFormulario)
 {
@@ -41,9 +45,10 @@
             <div class="col-md-4 mb-3">
                 <label>Mes y año</label>
 
-                <input type="number"
+                <input type="month"
                        class="form-control"
-                       @bind="cuotaActual.MesAnio" />
+                       value="@MesAnioParaInput(cuotaActual.MesAnio)"
+                       @onchange="CambiarMesAnio" />
 
                 @if (!string.IsNullOrEmpty(errorMesAnio))
                 {
@@ -65,17 +70,12 @@
             </div>
 
             <div class="col-md-4 mb-3">
-                <label>Valor</label>
+                <label>Valor (total de los detalles)</label>
 
-                <input type="number"
-                       step="0.01"
+                <input type="text"
                        class="form-control"
-                       @bind="cuotaActual.Valor" />
-
-                @if (!string.IsNullOrEmpty(errorValor))
-                {
-                    <div class="text-danger">@errorValor</div>
-                }
+                       value="@($"$ {cuotaActual.Detalles.Sum(d => d.Monto)}")"
+                       readonly />
             </div>
 
         </div>
@@ -216,6 +216,60 @@
     </div>
 }
 
+<div class="row g-2 mb-3 align-items-end">
+
+    @if (esAdmin)
+    {
+        <div class="col-md-4">
+            <label>Filtrar por socio</label>
+
+            <select class="form-select" value="@idSocioFiltro" @onchange="CambiarFiltroSocio">
+                <option value="0">Todos</option>
+
+                @foreach (var socio in socios)
+                {
+                    <option value="@socio.IdPersona">@socio.Apellido, @socio.Nombre (@socio.Dni)</option>
+                }
+            </select>
+        </div>
+    }
+
+    <div class="col-md-3">
+        <label>Mes</label>
+
+        <select class="form-select" value="@mesFiltro" @onchange="CambiarFiltroMes">
+            <option value="0">Todos</option>
+
+            @for (int mes = 1; mes <= 12; mes++)
+            {
+                <option value="@mes">@NombresMeses[mes - 1]</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label>Año</label>
+
+        <input type="number"
+               class="form-control"
+               placeholder="Todos"
+               min="2000"
+               max="2100"
+               value="@(anioFiltro > 0 ? anioFiltro.ToString() : string.Empty)"
+               @onchange="CambiarFiltroAnio" />
+    </div>
+
+    @if (idSocioFiltro > 0 || mesFiltro > 0 || anioFiltro > 0)
+    {
+        <div class="col-md-auto">
+            <button class="btn btn-outline-secondary" @onclick="LimpiarFiltros">
+                Limpiar filtros
+            </button>
+        </div>
+    }
+
+</div>
+
 <table class="table">
 
     <thead>
@@ -225,7 +279,10 @@
             <th>Fecha de pago</th>
             <th>Valor</th>
             <th>Detalles</th>
-            <th>Acciones</th>
+            @if (esAdmin)
+            {
+                <th>Acciones</th>
+            }
         </tr>
     </thead>
 
@@ -237,29 +294,32 @@
 
                 <td>@cuota.SocioNombre</td>
 
-                <td>@cuota.MesAnio</td>
+                <td>@FormatearMesAnio(cuota.MesAnio)</td>
 
                 <td>@cuota.FechaPago.ToString("dd/MM/yyyy")</td>
 
                 <td>$ @cuota.Valor</td>
 
                 <td>
-                    @cuota.Detalles.Count
+                    @string.Join(", ", cuota.Detalles.Select(d => d.Concepto))
                 </td>
 
-                <td>
+                @if (esAdmin)
+                {
+                    <td>
 
-                    <button class="btn btn-sm btn-warning me-2"
-                            @onclick="() => EditarCuota(cuota)">
-                        Editar
-                    </button>
+                        <button class="btn btn-sm btn-warning me-2"
+                                @onclick="() => EditarCuota(cuota)">
+                            Editar
+                        </button>
 
-                    <button class="btn btn-sm btn-danger"
-                            @onclick="() => EliminarCuota(cuota)">
-                        Eliminar
-                    </button>
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => EliminarCuota(cuota)">
+                            Eliminar
+                        </button>
 
-                </td>
+                    </td>
+                }
 
             </tr>
         }
@@ -267,6 +327,12 @@
     </tbody>
 
 </table>
+
+<Paginador NumeroPagina="numeroPagina"
+           TamanioPagina="TamanioPagina"
+           TotalItems="totalItems"
+           TotalPaginas="totalPaginas"
+           OnCambiarPagina="CambiarPagina" />
 
 
 @code {
@@ -280,7 +346,6 @@
     private string errorSocio = string.Empty;
     private string errorMesAnio = string.Empty;
     private string errorFechaPago = string.Empty;
-    private string errorValor = string.Empty;
     private string errorConcepto = string.Empty;
     private string errorSubtotal = string.Empty;
     private string errorMonto = string.Empty;
@@ -296,10 +361,34 @@
 
     private List<SocioMostrarDTO> socios = new();
 
+    private const int TamanioPagina = 10;
+    private int numeroPagina = 1;
+    private int totalItems;
+    private int totalPaginas;
+
+    // 0 = sin filtro
+    private int idSocioFiltro;
+    private int mesFiltro;
+    private int anioFiltro;
+
+    private static readonly string[] NombresMeses =
+    {
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    };
+
+
+    private bool esAdmin;
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarSocios();
+        esAdmin = await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin);
+
+        if (esAdmin)
+        {
+            await CargarSocios();
+        }
+
         await CargarCuotas();
     }
 
@@ -321,7 +410,18 @@
     {
         try
         {
-            cuotas = (await CuotaApiClient.GetAllAsync()).ToList();
+            // Para un socio la API ignora idSocio y devuelve solo sus cuotas
+            var pagina = await CuotaApiClient.GetPaginadoAsync(
+                numeroPagina,
+                TamanioPagina,
+                idSocioFiltro > 0 ? idSocioFiltro : null,
+                mesFiltro > 0 ? mesFiltro : null,
+                anioFiltro > 0 ? anioFiltro : null);
+
+            cuotas = pagina.Items;
+            numeroPagina = pagina.NumeroPagina;
+            totalItems = pagina.TotalItems;
+            totalPaginas = pagina.TotalPaginas;
         }
         catch (Exception ex)
         {
@@ -330,12 +430,52 @@
     }
 
 
+    private async Task CambiarPagina(int numero)
+    {
+        numeroPagina = numero;
+        await CargarCuotas();
+    }
+
+
+    private async Task CambiarFiltroSocio(ChangeEventArgs e)
+    {
+        idSocioFiltro = int.TryParse(e.Value?.ToString(), out var id) ? id : 0;
+        numeroPagina = 1;
+        await CargarCuotas();
+    }
+
+
+    private async Task CambiarFiltroMes(ChangeEventArgs e)
+    {
+        mesFiltro = int.TryParse(e.Value?.ToString(), out var mes) ? mes : 0;
+        numeroPagina = 1;
+        await CargarCuotas();
+    }
+
+
+    private async Task CambiarFiltroAnio(ChangeEventArgs e)
+    {
+        anioFiltro = int.TryParse(e.Value?.ToString(), out var anio) && anio > 0 ? anio : 0;
+        numeroPagina = 1;
+        await CargarCuotas();
+    }
+
+
+    private async Task LimpiarFiltros()
+    {
+        idSocioFiltro = 0;
+        mesFiltro = 0;
+        anioFiltro = 0;
+        numeroPagina = 1;
+        await CargarCuotas();
+    }
+
+
     private void LimpiarErrores()
     {
         errorSocio = string.Empty;
         errorMesAnio = string.Empty;
         errorFechaPago = string.Empty;
-        errorValor = string.Empty;
 
         errorConcepto = string.Empty;
         errorSubtotal = string.Empty;
@@ -348,6 +488,7 @@
     {
         cuotaActual = new CuotaCreaActualizaDTO
         {
+            MesAnio = DateTime.Today.Year * 100 + DateTime.Today.Month,
             FechaPago = DateTime.Today
         };
 
@@ -410,32 +551,18 @@
             valido = false;
         }
 
-        if (cuotaActual.MesAnio < 100000 ||
-            cuotaActual.MesAnio > 999999)
-        {
-            errorMesAnio = "Ingresá el mes y año con formato MMAAAA.";
-            valido = false;
-        }
-        else
-        {
-            int mes = cuotaActual.MesAnio / 10000;
+        int mes = cuotaActual.MesAnio % 100;
+        int anio = cuotaActual.MesAnio / 100;
 
-            if (mes < 1 || mes > 12)
-            {
-                errorMesAnio = "El mes debe estar entre 01 y 12.";
-                valido = false;
-            }
+        if (anio < 2000 || anio > 2100 || mes < 1 || mes > 12)
+        {
+            errorMesAnio = "Seleccioná el mes y año de la cuota.";
+            valido = false;
         }
 
         if (cuotaActual.FechaPago == DateTime.MinValue)
         {
             errorFechaPago = "Ingresá la fecha de pago.";
-            valido = false;
-        }
-
-        if (cuotaActual.Valor <= 0)
-        {
-            errorValor = "El valor debe ser mayor a 0.";
             valido = false;
         }
 
@@ -485,6 +612,8 @@
         {
             return;
         }
+
+        cuotaActual.Valor = cuotaActual.Detalles.Sum(d => d.Monto);
 
         try
         {
@@ -552,9 +681,7 @@
         }
         else
         {
-            int nuevoId = cuotaActual.Detalles.Any()
-                ? cuotaActual.Detalles.Max(d => d.DetalleCuotaId) + 1
-                : 1;
+            int nuevoId = Math.Min(0, cuotaActual.Detalles.Select(d => d.DetalleCuotaId).DefaultIfEmpty(0).Min()) - 1;
 
             cuotaActual.Detalles.Add(
                 new DetalleCuotaCreaActualizaDTO
@@ -607,6 +734,35 @@
         errorConcepto = string.Empty;
         errorSubtotal = string.Empty;
         errorMonto = string.Empty;
+    }
+
+
+    private static string MesAnioParaInput(int mesAnio)
+    {
+        return mesAnio > 0 ? $"{mesAnio / 100:0000}-{mesAnio % 100:00}" : string.Empty;
+    }
+
+
+    private static string FormatearMesAnio(int mesAnio)
+    {
+        return $"{mesAnio % 100:00}/{mesAnio / 100}";
+    }
+
+
+    private void CambiarMesAnio(ChangeEventArgs e)
+    {
+        var partes = e.Value?.ToString()?.Split('-');
+
+        if (partes?.Length == 2 &&
+            int.TryParse(partes[0], out var anio) &&
+            int.TryParse(partes[1], out var mes))
+        {
+            cuotaActual.MesAnio = anio * 100 + mes;
+        }
+        else
+        {
+            cuotaActual.MesAnio = 0;
+        }
     }
 
 

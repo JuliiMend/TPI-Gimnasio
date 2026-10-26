@@ -21,31 +21,32 @@ namespace Application.Services
         {
             var usuarios = await _usuarioRepository.ObtenerTodosAsync();
 
-            return usuarios.Select(u => new UsuarioMostrarDTO
+            return usuarios.Select(MapearAMostrar).ToList();
+        }
+
+        public async Task<PaginaDTO<UsuarioMostrarDTO>> ObtenerPaginadoAsync(int numeroPagina, int tamanioPagina)
+        {
+            var pagina = await _usuarioRepository.ObtenerPaginadoAsync(numeroPagina, tamanioPagina);
+
+            return pagina.ADto(MapearAMostrar);
+        }
+
+        private static UsuarioMostrarDTO MapearAMostrar(Usuario u)
+        {
+            return new UsuarioMostrarDTO
             {
                 UsuarioId = u.UsuarioId,
                 Username = u.Username,
                 Email = u.Email,
                 Rol = u.Rol
-            }).ToList();
+            };
         }
 
         public async Task<UsuarioMostrarDTO?> ObtenerPorIdAsync(int id)
         {
             var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
 
-            if (usuario == null)
-            {
-                return null;
-            }
-
-            return new UsuarioMostrarDTO
-            {
-                UsuarioId = usuario.UsuarioId,
-                Username = usuario.Username,
-                Email = usuario.Email,
-                Rol = usuario.Rol
-            };
+            return usuario == null ? null : MapearAMostrar(usuario);
         }
 
         public async Task<int> AgregarAsync(UsuarioCreaActualizaDTO dto)
@@ -57,7 +58,7 @@ namespace Application.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FechaCreacion = DateTime.Now,
                 Activo = true,
-                Rol = "Administrativo"
+                Rol = Roles.Admin
             };
 
             await _usuarioRepository.AgregarAsync(usuario);
