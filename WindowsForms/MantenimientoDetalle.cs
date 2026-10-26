@@ -75,6 +75,19 @@ namespace WindowsFormsApp
                 return;
             }
 
+            var validacion = new ValidacionFormulario()
+                .Regla(dtpFinEsperada.Value.Date >= dtpInicio.Value.Date,
+                       "La fecha de fin esperada no puede ser anterior a la fecha de inicio.")
+                .Regla(!dtpFinReal.Checked || dtpFinReal.Value.Date >= dtpInicio.Value.Date,
+                       "La fecha de fin real no puede ser anterior a la fecha de inicio.")
+                .Regla(!dtpFinReal.Checked || dtpFinReal.Value.Date <= DateTime.Today,
+                       "La fecha de fin real no puede ser futura.");
+
+            if (!validacion.EsValido())
+            {
+                return;
+            }
+
             var dto = new MantenimientoCreaActualizaDTO
             {
                 IdMaquina = idMaquina,

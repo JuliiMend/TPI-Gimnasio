@@ -273,10 +273,20 @@ private bool mostrarFormulario = false;
             errorDni = "Ingresá el DNI.";
             valido = false;
         }
+        else if (!ReglasValidacion.DniValido(profesorActual.Dni))
+        {
+            errorDni = ReglasValidacion.MensajeDni;
+            valido = false;
+        }
 
         if (string.IsNullOrWhiteSpace(profesorActual.Nombre))
         {
             errorNombre = "Ingresá el nombre.";
+            valido = false;
+        }
+        else if (!ReglasValidacion.NombreValido(profesorActual.Nombre))
+        {
+            errorNombre = ReglasValidacion.MensajeNombre;
             valido = false;
         }
 
@@ -285,16 +295,31 @@ private bool mostrarFormulario = false;
             errorApellido = "Ingresá el apellido.";
             valido = false;
         }
+        else if (!ReglasValidacion.NombreValido(profesorActual.Apellido))
+        {
+            errorApellido = ReglasValidacion.MensajeNombre;
+            valido = false;
+        }
 
         if (string.IsNullOrWhiteSpace(profesorActual.Telefono))
         {
             errorTelefono = "Ingresá el teléfono.";
             valido = false;
         }
+        else if (!ReglasValidacion.TelefonoValido(profesorActual.Telefono))
+        {
+            errorTelefono = ReglasValidacion.MensajeTelefono;
+            valido = false;
+        }
 
         if (profesorActual.FechaNac == DateTime.MinValue)
         {
             errorFechaNac = "Ingresá la fecha de nacimiento.";
+            valido = false;
+        }
+        else if (!ReglasValidacion.EdadValida(profesorActual.FechaNac, 18))
+        {
+            errorFechaNac = "Debe tener al menos 18 años.";
             valido = false;
         }
 
@@ -309,16 +334,31 @@ private bool mostrarFormulario = false;
             errorUsername = "Ingresá el username.";
             valido = false;
         }
+        else if (!ReglasValidacion.UsernameValido(profesorActual.Username))
+        {
+            errorUsername = ReglasValidacion.MensajeUsername;
+            valido = false;
+        }
 
         if (string.IsNullOrWhiteSpace(profesorActual.Email))
         {
             errorEmail = "Ingresá el email.";
             valido = false;
         }
+        else if (!ReglasValidacion.EmailValido(profesorActual.Email))
+        {
+            errorEmail = ReglasValidacion.MensajeEmail;
+            valido = false;
+        }
 
         if (!editando && string.IsNullOrWhiteSpace(profesorActual.Password))
         {
             errorPassword = "Ingresá una contraseña.";
+            valido = false;
+        }
+        else if (!editando && ReglasValidacion.ErrorPassword(profesorActual.Password) != null)
+        {
+            errorPassword = ReglasValidacion.ErrorPassword(profesorActual.Password)!;
             valido = false;
         }
 

@@ -82,6 +82,11 @@
                         </label>
                     </div>
                 }
+
+                @if (!string.IsNullOrEmpty(errorActividades))
+                {
+                    <div class="text-danger">@errorActividades</div>
+                }
             </div>
 
         </div>
@@ -157,6 +162,7 @@
     private string errorTipo = string.Empty;
     private string errorPrecio = string.Empty;
     private string errorDescripcion = string.Empty;
+    private string errorActividades = string.Empty;
 
     private PlanCreaActualizaDTO planActual = new();
 
@@ -220,6 +226,7 @@
         errorTipo = string.Empty;
         errorPrecio = string.Empty;
         errorDescripcion = string.Empty;
+        errorActividades = string.Empty;
     }
 
     private void NuevoPlan()
@@ -280,6 +287,12 @@
         if (string.IsNullOrWhiteSpace(planActual.Descripcion))
         {
             errorDescripcion = "Ingresá la descripción.";
+            valido = false;
+        }
+
+        if (planActual.IdsActividades.Count == 0)
+        {
+            errorActividades = "Seleccioná al menos una actividad.";
             valido = false;
         }
 

@@ -309,11 +309,18 @@ else
 
     private bool Validar()
     {
+        LimpiarErrores();
+
         bool valido = true;
 
         if (string.IsNullOrWhiteSpace(usuarioActual.Username))
         {
             errorUsername = "El username es obligatorio.";
+            valido = false;
+        }
+        else if (!ReglasValidacion.UsernameValido(usuarioActual.Username))
+        {
+            errorUsername = ReglasValidacion.MensajeUsername;
             valido = false;
         }
 
@@ -322,12 +329,22 @@ else
             errorEmail = "El email es obligatorio.";
             valido = false;
         }
-
-        if (!editando &&
-            string.IsNullOrWhiteSpace(usuarioActual.Password))
+        else if (!ReglasValidacion.EmailValido(usuarioActual.Email))
         {
-            errorPassword = "La contraseña es obligatoria.";
+            errorEmail = ReglasValidacion.MensajeEmail;
             valido = false;
+        }
+
+        // Al editar, la contraseña vacía significa que no se cambia
+        if (!editando || !string.IsNullOrEmpty(usuarioActual.Password))
+        {
+            var problemaPassword = ReglasValidacion.ErrorPassword(usuarioActual.Password);
+
+            if (problemaPassword != null)
+            {
+                errorPassword = problemaPassword;
+                valido = false;
+            }
         }
 
         return valido;

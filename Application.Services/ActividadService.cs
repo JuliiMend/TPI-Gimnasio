@@ -49,9 +49,11 @@ namespace Application.Services
         {
             var actividad = new Actividad
             {
-                Tipo = actividadDto.Tipo,
-                Descripcion = actividadDto.Descripcion
+                Tipo = actividadDto.Tipo?.Trim() ?? string.Empty,
+                Descripcion = actividadDto.Descripcion?.Trim() ?? string.Empty
             };
+
+            actividad.Validar();
 
             await _actividadRepository.AgregarAsync(actividad);
             return actividad.IdActividad;
@@ -59,15 +61,15 @@ namespace Application.Services
 
         public async Task ActualizarAsync(int id, ActividadCreaActualizaDTO actividadDto)
         {
-            var actividad = await _actividadRepository.ObtenerPorIdAsync(id);
+            var actividad = await _actividadRepository.ObtenerPorIdAsync(id)
+                ?? throw new ReglaNegocioException("La actividad no existe.");
 
-            if (actividad != null)
-            {
-                actividad.Tipo = actividadDto.Tipo;
-                actividad.Descripcion = actividadDto.Descripcion;
+            actividad.Tipo = actividadDto.Tipo?.Trim() ?? string.Empty;
+            actividad.Descripcion = actividadDto.Descripcion?.Trim() ?? string.Empty;
 
-                await _actividadRepository.ActualizarAsync(actividad);
-            }
+            actividad.Validar();
+
+            await _actividadRepository.ActualizarAsync(actividad);
         }
 
         public async Task EliminarAsync(int id)

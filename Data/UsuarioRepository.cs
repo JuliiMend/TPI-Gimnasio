@@ -54,6 +54,24 @@ namespace Data
             await _context.SaveChangesAsync();
         }
 
+        public async Task<bool> ExisteUsernameAsync(string username, int? exceptoId = null)
+        {
+            return await _context.Usuarios
+                .AnyAsync(u => u.Username == username && u.UsuarioId != exceptoId);
+        }
+
+        public async Task<bool> ExisteEmailAsync(string email, int? exceptoId = null)
+        {
+            return await _context.Usuarios
+                .AnyAsync(u => u.Email == email && u.UsuarioId != exceptoId);
+        }
+
+        public async Task<int> ContarAdministradoresActivosAsync()
+        {
+            return await _context.Usuarios
+                .CountAsync(u => u.Rol == "Admin" && u.Activo);
+        }
+
         public async Task EliminarAsync(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);

@@ -13,15 +13,18 @@ namespace Application.Services
         private readonly IInscripcionRepository _inscripcionRepository;
         private readonly IClaseRepository _claseRepository;
         private readonly ISocioRepository _socioRepository;
+        private readonly IPlanRepository _planRepository;
 
         public InscripcionService(
             IInscripcionRepository inscripcionRepository,
             IClaseRepository claseRepository,
-            ISocioRepository socioRepository)
+            ISocioRepository socioRepository,
+            IPlanRepository planRepository)
         {
             _inscripcionRepository = inscripcionRepository;
             _claseRepository = claseRepository;
             _socioRepository = socioRepository;
+            _planRepository = planRepository;
         }
 
         public async Task<List<InscripcionMostrarDTO>> ObtenerTodosAsync(int? idClase, int? idSocio = null, int? idProfesor = null)
@@ -57,6 +60,14 @@ namespace Application.Services
 
             var clase = await _claseRepository.ObtenerPorIdAsync(inscripcionDto.IdClase)
                 ?? throw new ReglaNegocioException("La clase no existe.");
+
+            var plan = await _planRepository.ObtenerPorIdAsync(socio.IdPlan);
+
+            if (plan == null || plan.Actividades.All(a => a.IdActividad != clase.IdActividad))
+            {
+                throw new ReglaNegocioException(
+                    $"El plan del socio ({plan?.Nombre ?? "sin plan"}) no incluye la actividad {clase.Actividad?.Tipo}.");
+            }
 
             if (await _inscripcionRepository.ExisteAsync(inscripcionDto.IdSocio, inscripcionDto.IdClase))
             {

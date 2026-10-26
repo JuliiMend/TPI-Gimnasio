@@ -565,6 +565,11 @@
             errorFechaPago = "Ingresá la fecha de pago.";
             valido = false;
         }
+        else if (cuotaActual.FechaPago.Date > DateTime.Today)
+        {
+            errorFechaPago = "La fecha de pago no puede ser futura.";
+            valido = false;
+        }
 
         if (!cuotaActual.Detalles.Any())
         {

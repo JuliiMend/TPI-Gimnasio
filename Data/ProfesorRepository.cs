@@ -58,6 +58,12 @@ namespace Data
             await _context.SaveChangesAsync();
         }
 
+        public async Task<bool> ExisteDniAsync(string dni, int? exceptoId = null)
+        {
+            return await _context.Profesores
+                .AnyAsync(p => p.Dni == dni && p.PersonaId != exceptoId);
+        }
+
         public async Task EliminarAsync(int id)
         {
             Profesor? profesor = await _context.Profesores

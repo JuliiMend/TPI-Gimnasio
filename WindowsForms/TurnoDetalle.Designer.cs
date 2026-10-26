@@ -51,6 +51,7 @@
             // cmbDia
             // 
             cmbDia.FormattingEnabled = true;
+            cmbDia.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbDia.Items.AddRange(new object[] { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" });
             cmbDia.Location = new Point(147, 62);
             cmbDia.Name = "cmbDia";

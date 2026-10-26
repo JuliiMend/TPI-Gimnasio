@@ -12,10 +12,12 @@ namespace Application.Services
     public class ProfesorService : IProfesorService
     {
         private readonly IProfesorRepository _profesorRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public ProfesorService(IProfesorRepository profesorRepository)
+        public ProfesorService(IProfesorRepository profesorRepository, IUsuarioRepository usuarioRepository)
         {
             _profesorRepository = profesorRepository;
+            _usuarioRepository = usuarioRepository;
         }
 
         public async Task<List<ProfesorMostrarDTO>> ObtenerTodosAsync()
@@ -70,34 +72,20 @@ namespace Application.Services
 
         public async Task<int> AgregarAsync(ProfesorCreaActualizaDTO profesorDto)
         {
-            var username = !string.IsNullOrWhiteSpace(profesorDto.Username)
-                ? profesorDto.Username.Trim()
-                : (!string.IsNullOrWhiteSpace(profesorDto.Dni) ? profesorDto.Dni.Trim() : $"prof_{Guid.NewGuid().ToString("N")[..8]}");
-
-            var password = !string.IsNullOrWhiteSpace(profesorDto.Password)
-                ? profesorDto.Password
-                : (!string.IsNullOrWhiteSpace(profesorDto.Dni) ? profesorDto.Dni.Trim() : "123456");
-
-            var nuevoUsuario = new Usuario
-            {
-                Username = username,
-                Email = profesorDto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-                FechaCreacion = DateTime.Now,
-                Activo = true,
-                Rol = Roles.Profesor
-            };
-
             var profesor = new Profesor
             {
-                Dni = profesorDto.Dni,
-                Nombre = profesorDto.Nombre,
-                Apellido = profesorDto.Apellido,
-                Telefono = profesorDto.Telefono,
-                FechaNac = profesorDto.FechaNac,
-                Cargo = profesorDto.Cargo,
-                Usuario = nuevoUsuario
+                Dni = profesorDto.Dni?.Trim() ?? string.Empty,
+                Nombre = profesorDto.Nombre?.Trim() ?? string.Empty,
+                Apellido = profesorDto.Apellido?.Trim() ?? string.Empty,
+                Telefono = profesorDto.Telefono?.Trim() ?? string.Empty,
+                FechaNac = profesorDto.FechaNac.Date,
+                Cargo = profesorDto.Cargo?.Trim() ?? string.Empty
             };
+
+            profesor.Validar();
+            profesor.Usuario = CuentaUsuario.Crear(profesor.Dni, profesorDto.Username, profesorDto.Email, profesorDto.Password, Roles.Profesor);
+
+            await VerificarDuplicadosAsync(profesor);
 
             await _profesorRepository.AgregarAsync(profesor);
             return profesor.PersonaId;
@@ -105,30 +93,38 @@ namespace Application.Services
 
         public async Task ActualizarAsync(int id, ProfesorCreaActualizaDTO profesorDto)
         {
-            var profesor = await _profesorRepository.ObtenerPorIdAsync(id);
+            var profesor = await _profesorRepository.ObtenerPorIdAsync(id)
+                ?? throw new ReglaNegocioException("El profesor no existe.");
 
-            if (profesor != null)
+            profesor.Dni = profesorDto.Dni?.Trim() ?? string.Empty;
+            profesor.Nombre = profesorDto.Nombre?.Trim() ?? string.Empty;
+            profesor.Apellido = profesorDto.Apellido?.Trim() ?? string.Empty;
+            profesor.Telefono = profesorDto.Telefono?.Trim() ?? string.Empty;
+            profesor.FechaNac = profesorDto.FechaNac.Date;
+            profesor.Cargo = profesorDto.Cargo?.Trim() ?? string.Empty;
+
+            profesor.Validar();
+
+            if (profesor.Usuario != null)
             {
-                profesor.Dni = profesorDto.Dni;
-                profesor.Nombre = profesorDto.Nombre;
-                profesor.Apellido = profesorDto.Apellido;
-                profesor.Telefono = profesorDto.Telefono;
-                profesor.FechaNac = profesorDto.FechaNac;
-                profesor.Cargo = profesorDto.Cargo;
+                CuentaUsuario.Actualizar(profesor.Usuario, profesorDto.Username, profesorDto.Email, profesorDto.Password);
+            }
 
-                if (profesor.Usuario != null)
-                {
-                    if (!string.IsNullOrWhiteSpace(profesorDto.Email))
-                    {
-                        profesor.Usuario.Email = profesorDto.Email;
-                    }
-                    if (!string.IsNullOrWhiteSpace(profesorDto.Password))
-                    {
-                        profesor.Usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(profesorDto.Password);
-                    }
-                }
+            await VerificarDuplicadosAsync(profesor);
 
-                await _profesorRepository.ActualizarAsync(profesor);
+            await _profesorRepository.ActualizarAsync(profesor);
+        }
+
+        private async Task VerificarDuplicadosAsync(Profesor profesor)
+        {
+            if (await _profesorRepository.ExisteDniAsync(profesor.Dni, profesor.PersonaId == 0 ? null : profesor.PersonaId))
+            {
+                throw new ReglaNegocioException($"Ya existe un profesor con el DNI {profesor.Dni}.");
+            }
+
+            if (profesor.Usuario != null)
+            {
+                await CuentaUsuario.VerificarDisponibleAsync(_usuarioRepository, profesor.Usuario);
             }
         }
 

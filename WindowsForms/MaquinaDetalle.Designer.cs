@@ -103,6 +103,7 @@
             // cmbEstado
             // 
             cmbEstado.FormattingEnabled = true;
+            cmbEstado.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbEstado.Items.AddRange(new object[] { "Operativa", "En mantenimiento", "Fuera de servicio" });
             cmbEstado.Location = new Point(147, 197);
             cmbEstado.Name = "cmbEstado";

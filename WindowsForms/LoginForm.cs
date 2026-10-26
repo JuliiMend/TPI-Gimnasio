@@ -29,9 +29,9 @@ namespace WindowsFormsApp
                 btnLogin.Enabled = false;
                 btnLogin.Text = "Iniciando sesión...";
 
-                bool exito = await _authService.LoginAsync(txtUsername.Text, txtPassword.Text);
+                var resultado = await _authService.LoginAsync(txtUsername.Text.Trim(), txtPassword.Text);
 
-                if (exito)
+                if (resultado.Exito)
                 {
                     this.Hide();
                     var homeForm = Program.ServiceProvider.GetRequiredService<Home>();
@@ -51,7 +51,7 @@ namespace WindowsFormsApp
                 }
                 else
                 {
-                    MessageBox.Show("Usuario o contraseña incorrectos.", "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(resultado.Mensaje, "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtPassword.Clear();
                     txtPassword.Focus();
                 }

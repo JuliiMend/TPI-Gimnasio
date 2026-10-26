@@ -60,15 +60,23 @@
 
         var authService = AuthServiceProvider.Instance;
 
-        var resultado = await authService.LoginAsync(username, password);
+        try
+        {
+            var resultado = await authService.LoginAsync(username.Trim(), password);
 
-        if (resultado)
-        {
-            NavigationManager.NavigateTo("/");
+            if (resultado.Exito)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                mensaje = resultado.Mensaje;
+                password = string.Empty;
+            }
         }
-        else
+        catch (Exception ex)
         {
-            mensaje = "Usuario o contraseña incorrectos.";
+            mensaje = $"No se pudo conectar con el servidor: {ex.Message}";
         }
     }
 

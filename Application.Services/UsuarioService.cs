@@ -51,15 +51,21 @@ namespace Application.Services
 
         public async Task<int> AgregarAsync(UsuarioCreaActualizaDTO dto)
         {
+            Validador.ValidarPassword(dto.Password);
+
             var usuario = new Usuario
             {
-                Username = dto.Username,
-                Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                Username = dto.Username?.Trim() ?? string.Empty,
+                Email = dto.Email?.Trim() ?? string.Empty,
                 FechaCreacion = DateTime.Now,
                 Activo = true,
                 Rol = Roles.Admin
             };
+
+            usuario.Validar();
+            await CuentaUsuario.VerificarDisponibleAsync(_usuarioRepository, usuario);
+
+            usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             await _usuarioRepository.AgregarAsync(usuario);
 
@@ -70,25 +76,35 @@ namespace Application.Services
             int id,
             UsuarioCreaActualizaDTO dto)
         {
-            var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
+            var usuario = await _usuarioRepository.ObtenerPorIdAsync(id)
+                ?? throw new ReglaNegocioException("El usuario no existe.");
 
-            if (usuario != null)
-            {
-                usuario.Username = dto.Username;
-                usuario.Email = dto.Email;
+            CuentaUsuario.Actualizar(usuario, dto.Username, dto.Email, dto.Password);
+            await CuentaUsuario.VerificarDisponibleAsync(_usuarioRepository, usuario);
 
-                if (!string.IsNullOrWhiteSpace(dto.Password))
-                {
-                    usuario.PasswordHash =
-                        BCrypt.Net.BCrypt.HashPassword(dto.Password);
-                }
-
-                await _usuarioRepository.ActualizarAsync(usuario);
-            }
+            await _usuarioRepository.ActualizarAsync(usuario);
         }
 
-        public async Task EliminarAsync(int id)
+        public async Task EliminarAsync(int id, int? idUsuarioActual)
         {
+            if (id == idUsuarioActual)
+            {
+                throw new ReglaNegocioException("No podés eliminar el usuario con el que iniciaste sesión.");
+            }
+
+            var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
+
+            if (usuario == null)
+            {
+                return;
+            }
+
+            if (usuario.Rol == Roles.Admin && usuario.Activo &&
+                await _usuarioRepository.ContarAdministradoresActivosAsync() <= 1)
+            {
+                throw new ReglaNegocioException("No se puede eliminar el último administrador del sistema.");
+            }
+
             await _usuarioRepository.EliminarAsync(id);
         }
     }

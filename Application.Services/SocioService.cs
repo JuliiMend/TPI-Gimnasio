@@ -12,10 +12,12 @@ namespace Application.Services
     public class SocioService : ISocioService
     {
         private readonly ISocioRepository _socioRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public SocioService(ISocioRepository socioRepository)
+        public SocioService(ISocioRepository socioRepository, IUsuarioRepository usuarioRepository)
         {
             _socioRepository = socioRepository;
+            _usuarioRepository = usuarioRepository;
         }
 
         public async Task<List<SocioMostrarDTO>> ObtenerTodosAsync(SocioCriteriaDTO? criterios)
@@ -99,36 +101,22 @@ namespace Application.Services
 
         public async Task<int> AgregarAsync(SocioCreaActualizaDTO dto)
         {
-            var username = !string.IsNullOrWhiteSpace(dto.Username)
-                ? dto.Username.Trim()
-                : (!string.IsNullOrWhiteSpace(dto.Dni) ? dto.Dni.Trim() : $"socio_{Guid.NewGuid().ToString("N")[..8]}");
-
-            var password = !string.IsNullOrWhiteSpace(dto.Password)
-                ? dto.Password
-                : (!string.IsNullOrWhiteSpace(dto.Dni) ? dto.Dni.Trim() : "123456");
-
-            var nuevoUsuario = new Usuario
-            {
-                Username = username,
-                Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-                FechaCreacion = DateTime.Now,
-                Activo = true,
-                Rol = Roles.Socio
-            };
-
             var socio = new Socio
             {
-                Dni = dto.Dni,
-                Nombre = dto.Nombre,
-                Apellido = dto.Apellido,
-                Telefono = dto.Telefono,
-                FechaNac = dto.FechaNac,
-                FechaAlta = dto.FechaAlta,
-                FechaBaja = dto.FechaBaja,
-                IdPlan = dto.IdPlan,
-                Usuario = nuevoUsuario 
+                Dni = dto.Dni?.Trim() ?? string.Empty,
+                Nombre = dto.Nombre?.Trim() ?? string.Empty,
+                Apellido = dto.Apellido?.Trim() ?? string.Empty,
+                Telefono = dto.Telefono?.Trim() ?? string.Empty,
+                FechaNac = dto.FechaNac.Date,
+                FechaAlta = dto.FechaAlta.Date,
+                FechaBaja = dto.FechaBaja?.Date,
+                IdPlan = dto.IdPlan
             };
+
+            socio.Validar();
+            socio.Usuario = CuentaUsuario.Crear(socio.Dni, dto.Username, dto.Email, dto.Password, Roles.Socio);
+
+            await VerificarDuplicadosAsync(socio);
 
             await _socioRepository.AgregarAsync(socio);
 
@@ -137,32 +125,40 @@ namespace Application.Services
 
         public async Task ActualizarAsync(int id, SocioCreaActualizaDTO socioDto)
         {
-            var socio = await _socioRepository.ObtenerPorIdAsync(id);
+            var socio = await _socioRepository.ObtenerPorIdAsync(id)
+                ?? throw new ReglaNegocioException("El socio no existe.");
 
-            if (socio != null)
+            socio.Dni = socioDto.Dni?.Trim() ?? string.Empty;
+            socio.Nombre = socioDto.Nombre?.Trim() ?? string.Empty;
+            socio.Apellido = socioDto.Apellido?.Trim() ?? string.Empty;
+            socio.Telefono = socioDto.Telefono?.Trim() ?? string.Empty;
+            socio.FechaNac = socioDto.FechaNac.Date;
+            socio.FechaAlta = socioDto.FechaAlta.Date;
+            socio.FechaBaja = socioDto.FechaBaja?.Date;
+            socio.IdPlan = socioDto.IdPlan;
+
+            socio.Validar();
+
+            if (socio.Usuario != null)
             {
-                socio.Dni = socioDto.Dni;
-                socio.Nombre = socioDto.Nombre;
-                socio.Apellido = socioDto.Apellido;
-                socio.Telefono = socioDto.Telefono;
-                socio.FechaNac = socioDto.FechaNac;
-                socio.FechaAlta = socioDto.FechaAlta;
-                socio.FechaBaja = socioDto.FechaBaja;
-                socio.IdPlan = socioDto.IdPlan;
+                CuentaUsuario.Actualizar(socio.Usuario, socioDto.Username, socioDto.Email, socioDto.Password);
+            }
 
-                if (socio.Usuario != null)
-                {
-                    if (!string.IsNullOrWhiteSpace(socioDto.Email))
-                    {
-                        socio.Usuario.Email = socioDto.Email;
-                    }
-                    if (!string.IsNullOrWhiteSpace(socioDto.Password))
-                    {
-                        socio.Usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(socioDto.Password);
-                    }
-                }
+            await VerificarDuplicadosAsync(socio);
 
-                await _socioRepository.ActualizarAsync(socio);
+            await _socioRepository.ActualizarAsync(socio);
+        }
+
+        private async Task VerificarDuplicadosAsync(Socio socio)
+        {
+            if (await _socioRepository.ExisteDniAsync(socio.Dni, socio.PersonaId == 0 ? null : socio.PersonaId))
+            {
+                throw new ReglaNegocioException($"Ya existe un socio con el DNI {socio.Dni}.");
+            }
+
+            if (socio.Usuario != null)
+            {
+                await CuentaUsuario.VerificarDisponibleAsync(_usuarioRepository, socio.Usuario);
             }
         }
 

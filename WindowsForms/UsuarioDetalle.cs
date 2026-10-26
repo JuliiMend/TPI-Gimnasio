@@ -51,18 +51,17 @@ namespace WindowsFormsApp
 
         private async void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtUsername.Text) ||
-                string.IsNullOrWhiteSpace(txtEmail.Text) ||
-                (_idUsuario == null && string.IsNullOrWhiteSpace(txtPassword.Text)))
-            {
-                MessageBox.Show(
-                    _idUsuario == null
-                        ? "Completá usuario, email y contraseña."
-                        : "Completá usuario y email.",
-                    "Validación",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+            // Al editar, la contraseña vacía significa que no se cambia
+            bool validarPassword = _idUsuario == null || !string.IsNullOrEmpty(txtPassword.Text);
 
+            var validacion = new ValidacionFormulario()
+                .Regla(ReglasValidacion.UsernameValido(txtUsername.Text), ReglasValidacion.MensajeUsername)
+                .Regla(ReglasValidacion.EmailValido(txtEmail.Text), ReglasValidacion.MensajeEmail)
+                .Regla(!validarPassword || ReglasValidacion.ErrorPassword(txtPassword.Text) == null,
+                       ReglasValidacion.ErrorPassword(txtPassword.Text) ?? string.Empty);
+
+            if (!validacion.EsValido())
+            {
                 return;
             }
 

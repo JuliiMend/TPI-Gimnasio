@@ -15,6 +15,7 @@ namespace Data
         Task<Socio?> ObtenerPorUsuarioIdAsync(int usuarioId);
         Task AgregarAsync(Socio socio);
         Task ActualizarAsync(Socio socio);
+        Task<bool> ExisteDniAsync(string dni, int? exceptoId = null);
         Task EliminarAsync(int id);
     }
 }

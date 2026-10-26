@@ -14,6 +14,6 @@ namespace Application.Services
         Task<UsuarioMostrarDTO?> ObtenerPorIdAsync(int id);
         Task <int> AgregarAsync(UsuarioCreaActualizaDTO dto);
         Task ActualizarAsync(int id, UsuarioCreaActualizaDTO dto);
-        Task EliminarAsync(int id);
+        Task EliminarAsync(int id, int? idUsuarioActual);
     }
 }

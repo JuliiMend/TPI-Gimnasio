@@ -169,6 +169,17 @@ namespace WindowsFormsApp
                 return;
             }
 
+            if (dtp_fechaPago.Value.Date > DateTime.Today)
+            {
+                MessageBox.Show(
+                    "La fecha de pago no puede ser futura.",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
             try
             {
                 this.cuota.SocioId =
@@ -178,7 +189,7 @@ namespace WindowsFormsApp
                     int.Parse(dtp_mesAnio.Value.ToString("yyyyMM"));
 
                 this.cuota.FechaPago =
-                    dtp_fechaPago.Value;
+                    dtp_fechaPago.Value.Date;
 
                 this.cuota.Detalles =
                     itemsLocales.ToList();

@@ -163,7 +163,7 @@ namespace Application.Services
                     {
                         Socio = socio,
                         MesAnio = mes.Year * 100 + mes.Month,
-                        FechaPago = new DateTime(mes.Year, mes.Month, Math.Min(10, DateTime.DaysInMonth(mes.Year, mes.Month))),
+                        FechaPago = Min(new DateTime(mes.Year, mes.Month, Math.Min(10, DateTime.DaysInMonth(mes.Year, mes.Month))), hoy),
                         Valor = detalles.Sum(d => d.Monto),
                         Detalles = detalles
                     });
@@ -225,6 +225,9 @@ namespace Application.Services
                 Usuario = NuevoUsuario(username, $"{username}@gimnasio.com", PasswordProfesor, Roles.Profesor)
             };
         }
+
+        // El pago del mes actual no puede quedar con fecha futura
+        private static DateTime Min(DateTime a, DateTime b) => a < b ? a : b;
 
         private static Socio NuevoSocio(int numero, string dni, string nombre, string apellido, Plan plan, DateTime fechaAlta, DateTime? fechaBaja = null)
         {

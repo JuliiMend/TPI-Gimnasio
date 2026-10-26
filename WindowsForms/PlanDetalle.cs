@@ -127,10 +127,21 @@ namespace WindowsFormsApp
                 return;
             }
 
-            if (precio < 0)
+            if (precio <= 0)
             {
                 MessageBox.Show(
-                    "El precio no puede ser negativo.",
+                    "El precio debe ser mayor a 0.",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            if (clbActividades.CheckedItems.Count == 0)
+            {
+                MessageBox.Show(
+                    "Seleccioná al menos una actividad incluida en el plan.",
                     "Validación",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);

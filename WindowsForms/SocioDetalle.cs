@@ -96,9 +96,16 @@ namespace WindowsFormsApp
 
         private async void btnGuardar_Click(object? sender, EventArgs e)
         {
-            if (cmbPlanes.SelectedValue == null)
+            var validacion = new ValidacionFormulario()
+                .Persona(txtDni.Text, txtNombre.Text, txtApellido.Text, txtTelefono.Text, txtEmail.Text, dtpFechaNac.Value, 14)
+                .Regla(cmbPlanes.SelectedValue is int, "Seleccioná un plan para el socio.")
+                .Regla(dtpFechaAlta.Value.Date <= DateTime.Today, "La fecha de alta no puede ser futura.")
+                .Regla(dtpFechaAlta.Value.Date > dtpFechaNac.Value.Date, "La fecha de alta debe ser posterior a la de nacimiento.")
+                .Regla(!dtpFechaBaja.Checked || dtpFechaBaja.Value.Date >= dtpFechaAlta.Value.Date,
+                       "La fecha de baja no puede ser anterior a la fecha de alta.");
+
+            if (!validacion.EsValido())
             {
-                MessageBox.Show("Por favor, seleccione un plan para el socio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -106,17 +113,18 @@ namespace WindowsFormsApp
             {
                 var socioDto = new SocioCreaActualizaDTO
                 {
-                    Dni = txtDni.Text,
-                    Nombre = txtNombre.Text,
-                    Apellido = txtApellido.Text,
-                    Email = txtEmail.Text,
-                    Telefono = txtTelefono.Text,
-                    FechaNac = dtpFechaNac.Value,
-                    FechaAlta = dtpFechaAlta.Value,
-                    FechaBaja = dtpFechaBaja.Checked ? dtpFechaBaja.Value : (DateTime?)null,
-                    IdPlan = (int)cmbPlanes.SelectedValue,
-                    Username = txtDni.Text.Trim(),
-                    Password = _idSocio == null ? txtDni.Text.Trim() : string.Empty
+                    Dni = txtDni.Text.Trim(),
+                    Nombre = txtNombre.Text.Trim(),
+                    Apellido = txtApellido.Text.Trim(),
+                    Email = txtEmail.Text.Trim(),
+                    Telefono = txtTelefono.Text.Trim(),
+                    FechaNac = dtpFechaNac.Value.Date,
+                    FechaAlta = dtpFechaAlta.Value.Date,
+                    FechaBaja = dtpFechaBaja.Checked ? dtpFechaBaja.Value.Date : (DateTime?)null,
+                    IdPlan = (int)cmbPlanes.SelectedValue!,
+                    // Al crear, el servidor usa el DNI como usuario y contraseña inicial
+                    Username = _idSocio == null ? txtDni.Text.Trim() : string.Empty,
+                    Password = string.Empty
                 };
 
                 if (_idSocio == null)

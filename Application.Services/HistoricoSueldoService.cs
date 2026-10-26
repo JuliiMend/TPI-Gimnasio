@@ -64,10 +64,14 @@ namespace Application.Services
 
         public async Task<int> RegistrarAsync(HistoricoSueldoCreaDTO dto)
         {
-            if (dto.Valor <= 0)
+            var sueldo = new HistoricoSueldo
             {
-                throw new ReglaNegocioException("El valor del sueldo debe ser mayor a 0.");
-            }
+                IdProfesor = dto.IdProfesor,
+                FechaDesde = dto.FechaDesde.Date,
+                Valor = dto.Valor
+            };
+
+            sueldo.Validar();
 
             _ = await _profesorRepository.ObtenerPorIdAsync(dto.IdProfesor)
                 ?? throw new ReglaNegocioException("El profesor no existe.");
@@ -77,13 +81,6 @@ namespace Application.Services
                 throw new ReglaNegocioException(
                     $"El profesor ya tiene un sueldo registrado desde el {dto.FechaDesde:dd/MM/yyyy}.");
             }
-
-            var sueldo = new HistoricoSueldo
-            {
-                IdProfesor = dto.IdProfesor,
-                FechaDesde = dto.FechaDesde.Date,
-                Valor = dto.Valor
-            };
 
             await _historicoSueldoRepository.AgregarAsync(sueldo);
             return sueldo.IdHistoricoSueldo;

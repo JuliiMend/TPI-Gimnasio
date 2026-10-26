@@ -336,6 +336,12 @@
             errorFinReal = "No puede ser anterior a la fecha de inicio.";
             valido = false;
         }
+        else if (mantenimientoActual.FechaFinReal.HasValue &&
+                 mantenimientoActual.FechaFinReal.Value.Date > DateTime.Today)
+        {
+            errorFinReal = "No puede ser una fecha futura.";
+            valido = false;
+        }
 
         return valido;
     }

@@ -53,16 +53,16 @@ namespace Application.Services
 
         public async Task<int> AgregarAsync(MantenimientoCreaActualizaDTO dto)
         {
-            Validar(dto);
-
             var mantenimiento = new Mantenimiento
             {
                 IdMaquina = dto.IdMaquina,
                 FechaInicio = dto.FechaInicio.Date,
                 FechaFinEsperada = dto.FechaFinEsperada.Date,
                 FechaFinReal = dto.FechaFinReal?.Date,
-                Descripcion = dto.Descripcion
+                Descripcion = dto.Descripcion?.Trim() ?? string.Empty
             };
+
+            await ValidarAsync(mantenimiento);
 
             await _mantenimientoRepository.AgregarAsync(mantenimiento);
             return mantenimiento.IdMantenimiento;
@@ -70,20 +70,18 @@ namespace Application.Services
 
         public async Task ActualizarAsync(int id, MantenimientoCreaActualizaDTO dto)
         {
-            Validar(dto);
+            var mantenimiento = await _mantenimientoRepository.ObtenerPorIdAsync(id)
+                ?? throw new ReglaNegocioException("El mantenimiento no existe.");
 
-            var mantenimiento = await _mantenimientoRepository.ObtenerPorIdAsync(id);
+            mantenimiento.IdMaquina = dto.IdMaquina;
+            mantenimiento.FechaInicio = dto.FechaInicio.Date;
+            mantenimiento.FechaFinEsperada = dto.FechaFinEsperada.Date;
+            mantenimiento.FechaFinReal = dto.FechaFinReal?.Date;
+            mantenimiento.Descripcion = dto.Descripcion?.Trim() ?? string.Empty;
 
-            if (mantenimiento != null)
-            {
-                mantenimiento.IdMaquina = dto.IdMaquina;
-                mantenimiento.FechaInicio = dto.FechaInicio.Date;
-                mantenimiento.FechaFinEsperada = dto.FechaFinEsperada.Date;
-                mantenimiento.FechaFinReal = dto.FechaFinReal?.Date;
-                mantenimiento.Descripcion = dto.Descripcion;
+            await ValidarAsync(mantenimiento);
 
-                await _mantenimientoRepository.ActualizarAsync(mantenimiento);
-            }
+            await _mantenimientoRepository.ActualizarAsync(mantenimiento);
         }
 
         public async Task EliminarAsync(int id)
@@ -91,16 +89,22 @@ namespace Application.Services
             await _mantenimientoRepository.EliminarAsync(id);
         }
 
-        private static void Validar(MantenimientoCreaActualizaDTO dto)
+        // Una máquina no puede tener dos mantenimientos abiertos (sin fecha de fin real) a la vez
+        private async Task ValidarAsync(Mantenimiento mantenimiento)
         {
-            if (dto.FechaFinEsperada.Date < dto.FechaInicio.Date)
+            mantenimiento.Validar();
+
+            if (mantenimiento.FechaFinReal.HasValue)
             {
-                throw new ReglaNegocioException("La fecha de fin esperada no puede ser anterior a la fecha de inicio.");
+                return;
             }
 
-            if (dto.FechaFinReal.HasValue && dto.FechaFinReal.Value.Date < dto.FechaInicio.Date)
+            var deLaMaquina = await _mantenimientoRepository.ObtenerTodosAsync(mantenimiento.IdMaquina);
+
+            if (deLaMaquina.Any(m => m.IdMantenimiento != mantenimiento.IdMantenimiento && !m.FechaFinReal.HasValue))
             {
-                throw new ReglaNegocioException("La fecha de fin real no puede ser anterior a la fecha de inicio.");
+                throw new ReglaNegocioException(
+                    "La máquina ya tiene un mantenimiento en curso. Cargá la fecha de fin real de ese mantenimiento antes de registrar otro.");
             }
         }
 

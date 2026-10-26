@@ -54,29 +54,25 @@ namespace WindowsFormsApp
 
         private async void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtDni.Text) ||
-                string.IsNullOrWhiteSpace(txtNombre.Text) ||
-                string.IsNullOrWhiteSpace(txtApellido.Text))
-            {
-                MessageBox.Show(
-                    "Completá DNI, nombre y apellido.",
-                    "Validación",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+            var validacion = new ValidacionFormulario()
+                .Persona(txtDni.Text, txtNombre.Text, txtApellido.Text, txtTelefono.Text, txtEmail.Text, dtpFechaNac.Value, 18);
 
+            if (!validacion.EsValido())
+            {
                 return;
             }
 
             var administradorDto = new AdministradorCreaActualizaDTO
             {
-                Dni = txtDni.Text,
-                Nombre = txtNombre.Text,
-                Apellido = txtApellido.Text,
-                Email = txtEmail.Text,
-                Telefono = txtTelefono.Text,
-                FechaNac = dtpFechaNac.Value,
-                Username = txtDni.Text.Trim(),
-                Password = _idAdministrador == null ? txtDni.Text.Trim() : string.Empty
+                Dni = txtDni.Text.Trim(),
+                Nombre = txtNombre.Text.Trim(),
+                Apellido = txtApellido.Text.Trim(),
+                Email = txtEmail.Text.Trim(),
+                Telefono = txtTelefono.Text.Trim(),
+                FechaNac = dtpFechaNac.Value.Date,
+                // Al crear, el servidor usa el DNI como usuario y contraseña inicial
+                Username = _idAdministrador == null ? txtDni.Text.Trim() : string.Empty,
+                Password = string.Empty
             };
 
             try

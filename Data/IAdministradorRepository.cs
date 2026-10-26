@@ -13,6 +13,7 @@ namespace Data
         Task<Administrador?> ObtenerPorIdAsync(int id);
         Task AgregarAsync(Administrador administrador);
         Task ActualizarAsync(Administrador administrador);
+        Task<bool> ExisteDniAsync(string dni, int? exceptoId = null);
         Task EliminarAsync(int id);
     }
 }

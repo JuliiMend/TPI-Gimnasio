@@ -117,6 +117,12 @@ namespace Data
             }
         }
 
+        public async Task<bool> ExisteAsync(int socioId, int mesAnio, int? exceptoId = null)
+        {
+            return await _context.Cuotas
+                .AnyAsync(c => c.SocioId == socioId && c.MesAnio == mesAnio && c.CuotaId != exceptoId);
+        }
+
         public async Task EliminarAsync(int id)
         {
             var cuota = await _context.Cuotas

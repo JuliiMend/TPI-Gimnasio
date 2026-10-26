@@ -64,6 +64,32 @@ Domain.Model  ←  Data (EF Core + ADO.NET)  ←  Application.Services  ←  Web
 | Cuotas | ✓ | ✗ | ve **las suyas** |
 | Histórico de sueldos | ✓ | ve **el suyo** | ✗ |
 
+- **Protección contra fuerza bruta en el login**:
+  - después de **5 intentos fallidos seguidos** para un mismo usuario, la cuenta queda **bloqueada 15 minutos** (la API responde `429`). Los intentos se cuentan aunque el usuario no exista, para no revelar qué usernames son válidos;
+  - además, la API acepta como máximo **20 intentos de login por minuto por IP** (rate limiting de ASP.NET Core).
+- **Contraseñas**: mínimo 8 caracteres, con al menos una letra y un número. Se guardan con hash BCrypt. Si al crear un socio, profesor o administrador no se indica usuario/contraseña (como en Escritorio), ambos son el DNI.
+- Un administrador no puede eliminar su propio usuario, y no se puede eliminar el último administrador.
+
+## Validaciones y reglas de negocio
+
+Las validaciones se hacen en dos niveles:
+- **UI** (Web y Escritorio): antes de llamar a la API, con las reglas de `DTOs/ReglasValidacion.cs`.
+- **Modelo de dominio**: cada entidad de `Domain.Model` tiene un método `Validar()` (formato, obligatorios, rangos). Si falla, la API responde `400` con el mensaje. Las reglas que necesitan consultar datos están en `Application.Services` y responden `409`.
+
+| Entidad | Reglas |
+|---|---|
+| Persona (socio, profesor, admin) | DNI de 7-8 dígitos y único; nombre/apellido solo letras; teléfono de 6-15 dígitos; edad mínima 14 (socio) o 18 |
+| Usuario | username de 3-50 caracteres y único; email con formato `nombre@dominio.com` y único |
+| Socio | alta no futura y posterior al nacimiento; baja no anterior al alta; plan obligatorio |
+| Plan | precio mayor a 0; al menos una actividad existente |
+| Turno | día válido; hora de fin posterior a la de inicio; no se repite el mismo día y horario |
+| Clase | cupo entre 1 y 200 y no menor a los inscriptos; el profesor no puede tener dos clases en turnos superpuestos |
+| Inscripción | socio activo; la actividad tiene que estar incluida en el plan del socio; sin duplicados; con cupo disponible |
+| Cuota | período AAAAMM válido, entre el alta y la baja del socio; una sola cuota por socio y período; fecha de pago no futura; al menos un ítem con montos mayores a 0 |
+| Máquina / Material | campos obligatorios; estado de la máquina dentro de los valores válidos; stock entre 0 y 100.000 |
+| Mantenimiento | fin esperado y fin real no anteriores al inicio; fin real no futuro; una máquina no puede tener dos mantenimientos abiertos |
+| Histórico de sueldos | valor mayor a 0; una sola entrada por profesor y fecha |
+
 ## Cómo levantar el proyecto
 
 ### Requisitos
@@ -111,8 +137,4 @@ Para volver a cargarlos desde cero: `dotnet ef database drop --project Data --st
 Para desarrollo viene en `WebAPI/appsettings.Development.json`, así que no hace falta configurar nada. Si se define una con `dotnet user-secrets set "JwtSettings:SecretKey" "<clave>"` (mínimo 32 caracteres), esa tiene prioridad. En producción debe venir de una variable de entorno.
 
 ## Modelo de Dominio
-<img width="1763" height="997" alt="MD TPI-Gimnasio" src="https://github.com/user-attachments/assets/52d98d33-294a-4609-83d3-ef545a903fce" />
-
-**Simplificaciones respecto del diagrama:**
-- Cada Clase tiene **un** profesor y **un** turno, como indica la consigna.
-- No se modelaron las relaciones Clase–Máquina/Material, Profesor "supervisa" Profesor, ni Profesor "a cargo de" Turno.
+![Modelo de dominio TPI-Gimnasio](docs/modelo-dominio.jpg)

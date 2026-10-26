@@ -12,10 +12,12 @@ namespace Application.Services
     public class AdministradorService : IAdministradorService
     {
         private readonly IAdministradorRepository _administradorRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public AdministradorService(IAdministradorRepository administradorRepository)
+        public AdministradorService(IAdministradorRepository administradorRepository, IUsuarioRepository usuarioRepository)
         {
             _administradorRepository = administradorRepository;
+            _usuarioRepository = usuarioRepository;
         }
 
         public async Task<List<AdministradorMostrarDTO>> ObtenerTodosAsync()
@@ -61,33 +63,19 @@ namespace Application.Services
 
         public async Task<int> AgregarAsync(AdministradorCreaActualizaDTO administradorDto)
         {
-            var username = !string.IsNullOrWhiteSpace(administradorDto.Username)
-                ? administradorDto.Username.Trim()
-                : (!string.IsNullOrWhiteSpace(administradorDto.Dni) ? administradorDto.Dni.Trim() : $"admin_{Guid.NewGuid().ToString("N")[..8]}");
-
-            var password = !string.IsNullOrWhiteSpace(administradorDto.Password)
-                ? administradorDto.Password
-                : (!string.IsNullOrWhiteSpace(administradorDto.Dni) ? administradorDto.Dni.Trim() : "123456");
-
-            var nuevoUsuario = new Usuario
-            {
-                Username = username,
-                Email = administradorDto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-                FechaCreacion = DateTime.Now,
-                Activo = true,
-                Rol = Roles.Admin
-            };
-
             var administrador = new Administrador
             {
-                Dni = administradorDto.Dni,
-                Nombre = administradorDto.Nombre,
-                Apellido = administradorDto.Apellido,
-                Telefono = administradorDto.Telefono,
-                FechaNac = administradorDto.FechaNac,
-                Usuario = nuevoUsuario
+                Dni = administradorDto.Dni?.Trim() ?? string.Empty,
+                Nombre = administradorDto.Nombre?.Trim() ?? string.Empty,
+                Apellido = administradorDto.Apellido?.Trim() ?? string.Empty,
+                Telefono = administradorDto.Telefono?.Trim() ?? string.Empty,
+                FechaNac = administradorDto.FechaNac.Date
             };
+
+            administrador.Validar();
+            administrador.Usuario = CuentaUsuario.Crear(administrador.Dni, administradorDto.Username, administradorDto.Email, administradorDto.Password, Roles.Admin);
+
+            await VerificarDuplicadosAsync(administrador);
 
             await _administradorRepository.AgregarAsync(administrador);
             return administrador.PersonaId;
@@ -95,34 +83,59 @@ namespace Application.Services
 
         public async Task ActualizarAsync(int id, AdministradorCreaActualizaDTO administradorDto)
         {
-            var administrador = await _administradorRepository.ObtenerPorIdAsync(id);
+            var administrador = await _administradorRepository.ObtenerPorIdAsync(id)
+                ?? throw new ReglaNegocioException("El administrador no existe.");
 
-            if (administrador != null)
+            administrador.Dni = administradorDto.Dni?.Trim() ?? string.Empty;
+            administrador.Nombre = administradorDto.Nombre?.Trim() ?? string.Empty;
+            administrador.Apellido = administradorDto.Apellido?.Trim() ?? string.Empty;
+            administrador.Telefono = administradorDto.Telefono?.Trim() ?? string.Empty;
+            administrador.FechaNac = administradorDto.FechaNac.Date;
+
+            administrador.Validar();
+
+            if (administrador.Usuario != null)
             {
-                administrador.Dni = administradorDto.Dni;
-                administrador.Nombre = administradorDto.Nombre;
-                administrador.Apellido = administradorDto.Apellido;
-                administrador.Telefono = administradorDto.Telefono;
-                administrador.FechaNac = administradorDto.FechaNac;
+                CuentaUsuario.Actualizar(administrador.Usuario, administradorDto.Username, administradorDto.Email, administradorDto.Password);
+            }
 
-                if (administrador.Usuario != null)
-                {
-                    if (!string.IsNullOrWhiteSpace(administradorDto.Email))
-                    {
-                        administrador.Usuario.Email = administradorDto.Email;
-                    }
-                    if (!string.IsNullOrWhiteSpace(administradorDto.Password))
-                    {
-                        administrador.Usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(administradorDto.Password);
-                    }
-                }
+            await VerificarDuplicadosAsync(administrador);
 
-                await _administradorRepository.ActualizarAsync(administrador);
+            await _administradorRepository.ActualizarAsync(administrador);
+        }
+
+        private async Task VerificarDuplicadosAsync(Administrador administrador)
+        {
+            if (await _administradorRepository.ExisteDniAsync(administrador.Dni, administrador.PersonaId == 0 ? null : administrador.PersonaId))
+            {
+                throw new ReglaNegocioException($"Ya existe un administrador con el DNI {administrador.Dni}.");
+            }
+
+            if (administrador.Usuario != null)
+            {
+                await CuentaUsuario.VerificarDisponibleAsync(_usuarioRepository, administrador.Usuario);
             }
         }
 
-        public async Task EliminarAsync(int id)
+        public async Task EliminarAsync(int id, int? idUsuarioActual)
         {
+            var administrador = await _administradorRepository.ObtenerPorIdAsync(id);
+
+            if (administrador == null)
+            {
+                return;
+            }
+
+            if (administrador.UsuarioId.HasValue && administrador.UsuarioId == idUsuarioActual)
+            {
+                throw new ReglaNegocioException("No podés eliminar el administrador con el que iniciaste sesión.");
+            }
+
+            if (await _usuarioRepository.ContarAdministradoresActivosAsync() <= 1)
+            {
+                throw new ReglaNegocioException("No se puede eliminar el último administrador del sistema.");
+            }
+
             await _administradorRepository.EliminarAsync(id);
         }
     }

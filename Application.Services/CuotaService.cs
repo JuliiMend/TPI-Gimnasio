@@ -11,10 +11,12 @@ namespace Application.Services
     public class CuotaService : ICuotaService
     {
         private readonly ICuotaRepository _cuotaRepository;
+        private readonly ISocioRepository _socioRepository;
 
-        public CuotaService(ICuotaRepository cuotaRepository)
+        public CuotaService(ICuotaRepository cuotaRepository, ISocioRepository socioRepository)
         {
             _cuotaRepository = cuotaRepository;
+            _socioRepository = socioRepository;
         }
 
         public async Task<List<CuotaMostrarDTO>> ObtenerTodosAsync(int? idSocio = null)
@@ -69,11 +71,13 @@ namespace Application.Services
                 Valor = cuotaDto.Detalles.Sum(d => d.Monto),
                 Detalles = cuotaDto.Detalles.Select(d => new DetalleCuota
                 {
-                    Concepto = d.Concepto,
+                    Concepto = d.Concepto?.Trim() ?? string.Empty,
                     Subtotal = d.Subtotal,
                     Monto = d.Monto
                 }).ToList()
             };
+
+            await ValidarAsync(cuota);
 
             await _cuotaRepository.AgregarAsync(cuota);
             return cuota.CuotaId;
@@ -91,13 +95,47 @@ namespace Application.Services
                 Detalles = cuotaDto.Detalles.Select(d => new DetalleCuota
                 {
                     DetalleCuotaId = d.DetalleCuotaId, 
-                    Concepto = d.Concepto,
+                    Concepto = d.Concepto?.Trim() ?? string.Empty,
                     Subtotal = d.Subtotal,
                     Monto = d.Monto
                 }).ToList()
             };
 
+            _ = await _cuotaRepository.ObtenerPorIdAsync(id)
+                ?? throw new ReglaNegocioException("La cuota no existe.");
+
+            await ValidarAsync(cuotaActualizada);
+
             await _cuotaRepository.ActualizarAsync(cuotaActualizada);
+        }
+
+        private async Task ValidarAsync(Cuota cuota)
+        {
+            cuota.Validar();
+
+            var socio = await _socioRepository.ObtenerPorIdAsync(cuota.SocioId)
+                ?? throw new ReglaNegocioException("El socio no existe.");
+
+            // El período se compara como AAAAMM con el mes de alta y el de baja del socio
+            int periodoAlta = socio.FechaAlta.Year * 100 + socio.FechaAlta.Month;
+
+            if (cuota.MesAnio < periodoAlta)
+            {
+                throw new ReglaNegocioException(
+                    $"El período de la cuota es anterior al alta del socio ({socio.FechaAlta:MM/yyyy}).");
+            }
+
+            if (socio.FechaBaja.HasValue && cuota.MesAnio > socio.FechaBaja.Value.Year * 100 + socio.FechaBaja.Value.Month)
+            {
+                throw new ReglaNegocioException(
+                    $"El período de la cuota es posterior a la baja del socio ({socio.FechaBaja.Value:MM/yyyy}).");
+            }
+
+            if (await _cuotaRepository.ExisteAsync(cuota.SocioId, cuota.MesAnio, cuota.CuotaId == 0 ? null : cuota.CuotaId))
+            {
+                throw new ReglaNegocioException(
+                    $"El socio ya tiene registrada la cuota de {cuota.Mes:00}/{cuota.Anio}.");
+            }
         }
 
         public async Task EliminarAsync(int id)
