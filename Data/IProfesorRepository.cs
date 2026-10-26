@@ -14,6 +14,7 @@ namespace Data
         Task<Profesor?> ObtenerPorUsuarioIdAsync(int usuarioId);
         Task AgregarAsync(Profesor profesor);
         Task ActualizarAsync(Profesor profesor);
+        Task<bool> ExisteDniAsync(string dni, int? exceptoId = null);
         Task EliminarAsync(int id);
     }
 }

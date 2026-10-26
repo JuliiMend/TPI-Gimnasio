@@ -8,7 +8,7 @@
         Task<string?> GetTokenAsync();
         Task<string?> GetUsernameAsync();
         Task<string?> GetRolAsync();
-        Task<bool> LoginAsync(string username, string password);
+        Task<DTOs.LoginResponse> LoginAsync(string username, string password);
         Task LogoutAsync();
         Task CheckTokenExpirationAsync();
         Task<bool> HasPermissionAsync(params string[] roles);

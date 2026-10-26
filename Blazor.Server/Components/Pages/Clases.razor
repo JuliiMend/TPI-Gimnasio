@@ -271,6 +271,11 @@
             errorCupo = "El cupo debe ser mayor a 0.";
             valido = false;
         }
+        else if (claseActual.Cupo > 200)
+        {
+            errorCupo = "El cupo no puede superar los 200 lugares.";
+            valido = false;
+        }
 
         return valido;
     }

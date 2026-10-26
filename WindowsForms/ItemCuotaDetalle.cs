@@ -50,13 +50,19 @@ namespace WindowsFormsApp
                 return;
             }
 
+            if (txt_concepto.Text.Trim().Length > 200)
+            {
+                MessageBox.Show("El concepto no puede superar los 200 caracteres.");
+                return;
+            }
+
             if (!decimal.TryParse(txt_monto.Text, out var monto) || monto <= 0)
             {
                 MessageBox.Show("Ingresá un monto numérico mayor a cero.");
                 return;
             }
 
-            this.Item.Concepto = txt_concepto.Text;
+            this.Item.Concepto = txt_concepto.Text.Trim();
             this.Item.Monto = monto;
             this.Item.Subtotal = this.Item.Monto;
 

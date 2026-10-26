@@ -17,11 +17,13 @@ namespace Application.Services
     {
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IConfiguration _configuration;
+        private readonly ControlIntentosLogin _controlIntentos;
 
-        public AuthService(IUsuarioRepository usuarioRepository, IConfiguration configuration)
+        public AuthService(IUsuarioRepository usuarioRepository, IConfiguration configuration, ControlIntentosLogin controlIntentos)
         {
             _usuarioRepository = usuarioRepository;
             _configuration = configuration;
+            _controlIntentos = controlIntentos;
         }
 
         public async Task<LoginResponse?> LoginAsync(LoginRequest request)
@@ -29,10 +31,31 @@ namespace Application.Services
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
                 return new LoginResponse { Exito = false, Mensaje = "Usuario y contraseña requeridos" };
 
-            var usuario = await _usuarioRepository.ObtenerPorUsernameAsync(request.Username);
+            if (request.Username.Length > 50 || request.Password.Length > Validador.LargoMaximoPassword)
+                return new LoginResponse { Exito = false, Mensaje = "Usuario o contraseña incorrectos" };
+
+            // Se controla antes de verificar la contraseña, así durante el bloqueo no se puede seguir probando
+            if (_controlIntentos.TiempoRestanteBloqueo(request.Username) is TimeSpan restante)
+                return Bloqueado(restante);
+
+            var usuario = await _usuarioRepository.ObtenerPorUsernameAsync(request.Username.Trim());
 
             if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Password, usuario.PasswordHash))
-                return new LoginResponse { Exito = false, Mensaje = "Usuario o contraseña incorrectos" };
+            {
+                // Se cuenta aunque el usuario no exista, para no revelar qué usernames son válidos
+                int intentosRestantes = _controlIntentos.RegistrarFallo(request.Username);
+
+                if (intentosRestantes == 0)
+                    return Bloqueado(ControlIntentosLogin.DuracionBloqueo);
+
+                return new LoginResponse
+                {
+                    Exito = false,
+                    Mensaje = $"Usuario o contraseña incorrectos. Te quedan {intentosRestantes} intento(s) antes de que la cuenta se bloquee temporalmente."
+                };
+            }
+
+            _controlIntentos.RegistrarExito(request.Username);
 
             var token = GenerateJwtToken(usuario);
             var expiresAt = DateTime.UtcNow.AddMinutes(GetExpirationMinutes());
@@ -45,6 +68,18 @@ namespace Application.Services
                 ExpiresAt = expiresAt,
                 Username = usuario.Username,
                 Rol = usuario.Rol
+            };
+        }
+
+        private static LoginResponse Bloqueado(TimeSpan restante)
+        {
+            int minutos = Math.Max(1, (int)Math.Ceiling(restante.TotalMinutes));
+
+            return new LoginResponse
+            {
+                Exito = false,
+                Bloqueado = true,
+                Mensaje = $"Demasiados intentos fallidos. La cuenta quedó bloqueada temporalmente: volvé a intentar en {minutos} minuto(s)."
             };
         }
 

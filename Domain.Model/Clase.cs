@@ -15,5 +15,17 @@ namespace Domain.Model
         public Turno? Turno { get; set; }
 
         public List<Inscripcion> Inscripciones { get; set; } = new();
+
+        public const int CupoMaximo = 200;
+
+        public void Validar()
+        {
+            new Validador()
+                .Regla(IdActividad > 0, "Debe seleccionar una actividad.")
+                .Regla(IdProfesor > 0, "Debe seleccionar un profesor.")
+                .Regla(IdTurno > 0, "Debe seleccionar un turno.")
+                .Regla(Cupo >= 1 && Cupo <= CupoMaximo, $"El cupo debe estar entre 1 y {CupoMaximo}.")
+                .Lanzar();
+        }
     }
 }

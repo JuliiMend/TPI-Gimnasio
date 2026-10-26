@@ -258,10 +258,20 @@ private bool mostrarFormulario = false;
             errorDni = "Ingresá el DNI.";
             valido = false;
         }
+        else if (!ReglasValidacion.DniValido(administradorActual.Dni))
+        {
+            errorDni = ReglasValidacion.MensajeDni;
+            valido = false;
+        }
 
         if (string.IsNullOrWhiteSpace(administradorActual.Nombre))
         {
             errorNombre = "Ingresá el nombre.";
+            valido = false;
+        }
+        else if (!ReglasValidacion.NombreValido(administradorActual.Nombre))
+        {
+            errorNombre = ReglasValidacion.MensajeNombre;
             valido = false;
         }
 
@@ -270,10 +280,20 @@ private bool mostrarFormulario = false;
             errorApellido = "Ingresá el apellido.";
             valido = false;
         }
+        else if (!ReglasValidacion.NombreValido(administradorActual.Apellido))
+        {
+            errorApellido = ReglasValidacion.MensajeNombre;
+            valido = false;
+        }
 
         if (string.IsNullOrWhiteSpace(administradorActual.Telefono))
         {
             errorTelefono = "Ingresá el teléfono.";
+            valido = false;
+        }
+        else if (!ReglasValidacion.TelefonoValido(administradorActual.Telefono))
+        {
+            errorTelefono = ReglasValidacion.MensajeTelefono;
             valido = false;
         }
 
@@ -282,10 +302,20 @@ private bool mostrarFormulario = false;
             errorFechaNac = "Ingresá la fecha de nacimiento.";
             valido = false;
         }
+        else if (!ReglasValidacion.EdadValida(administradorActual.FechaNac, 18))
+        {
+            errorFechaNac = "Debe tener al menos 18 años.";
+            valido = false;
+        }
 
         if (string.IsNullOrWhiteSpace(administradorActual.Username))
         {
             errorUsername = "Ingresá el username.";
+            valido = false;
+        }
+        else if (!ReglasValidacion.UsernameValido(administradorActual.Username))
+        {
+            errorUsername = ReglasValidacion.MensajeUsername;
             valido = false;
         }
 
@@ -294,10 +324,20 @@ private bool mostrarFormulario = false;
             errorEmail = "Ingresá el email.";
             valido = false;
         }
+        else if (!ReglasValidacion.EmailValido(administradorActual.Email))
+        {
+            errorEmail = ReglasValidacion.MensajeEmail;
+            valido = false;
+        }
 
         if (!editando && string.IsNullOrWhiteSpace(administradorActual.Password))
         {
             errorPassword = "Ingresá una contraseña.";
+            valido = false;
+        }
+        else if (!editando && ReglasValidacion.ErrorPassword(administradorActual.Password) != null)
+        {
+            errorPassword = ReglasValidacion.ErrorPassword(administradorActual.Password)!;
             valido = false;
         }
 

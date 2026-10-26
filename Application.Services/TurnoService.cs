@@ -51,10 +51,12 @@ namespace Application.Services
         {
             var turno = new Turno
             {
-                DiaSemana = turnoDto.DiaSemana,
+                DiaSemana = turnoDto.DiaSemana?.Trim() ?? string.Empty,
                 HoraDesde = turnoDto.HoraDesde,
                 HoraHasta = turnoDto.HoraHasta
             };
+
+            await ValidarAsync(turno);
 
             await _turnoRepository.AgregarAsync(turno);
             return turno.IdTurno;
@@ -65,12 +67,29 @@ namespace Application.Services
             var turno = new Turno
             {
                 IdTurno = id,
-                DiaSemana = turnoDto.DiaSemana,
+                DiaSemana = turnoDto.DiaSemana?.Trim() ?? string.Empty,
                 HoraDesde = turnoDto.HoraDesde,
                 HoraHasta = turnoDto.HoraHasta
             };
 
+            await ValidarAsync(turno);
+
             await _turnoRepository.ActualizarAsync(turno);
+        }
+
+        private async Task ValidarAsync(Turno turno)
+        {
+            turno.Validar();
+
+            var existentes = await _turnoRepository.ObtenerTodosAsync();
+
+            if (existentes.Any(t => t.IdTurno != turno.IdTurno &&
+                                    t.DiaSemana == turno.DiaSemana &&
+                                    t.HoraDesde == turno.HoraDesde &&
+                                    t.HoraHasta == turno.HoraHasta))
+            {
+                throw new ReglaNegocioException($"Ya existe un turno el {turno.DiaSemana} de {turno.HoraDesde:hh\\:mm} a {turno.HoraHasta:hh\\:mm}.");
+            }
         }
 
         public async Task EliminarAsync(int id)

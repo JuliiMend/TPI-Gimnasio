@@ -11,6 +11,7 @@ namespace Data
         Task<Cuota?> ObtenerPorIdAsync(int id);
         Task AgregarAsync(Cuota cuota);
         Task ActualizarAsync(Cuota cuota);
+        Task<bool> ExisteAsync(int socioId, int mesAnio, int? exceptoId = null);
         Task EliminarAsync(int id);
     }
 }

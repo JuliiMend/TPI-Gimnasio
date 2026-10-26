@@ -53,11 +53,13 @@ namespace Application.Services
         {
             var maquina = new Maquina
             {
-                Nombre = maquinaDto.Nombre,
-                Descripcion = maquinaDto.Descripcion,
-                Tipo = maquinaDto.Tipo,
-                Estado = maquinaDto.Estado
+                Nombre = maquinaDto.Nombre?.Trim() ?? string.Empty,
+                Descripcion = maquinaDto.Descripcion?.Trim() ?? string.Empty,
+                Tipo = maquinaDto.Tipo?.Trim() ?? string.Empty,
+                Estado = maquinaDto.Estado?.Trim() ?? string.Empty
             };
+
+            maquina.Validar();
 
             await _maquinaRepository.AgregarAsync(maquina);
             return maquina.IdMaquina;
@@ -68,11 +70,13 @@ namespace Application.Services
             var maquina = new Maquina
             {
                 IdMaquina = id,
-                Nombre = maquinaDto.Nombre,
-                Descripcion = maquinaDto.Descripcion,
-                Tipo = maquinaDto.Tipo,
-                Estado = maquinaDto.Estado
+                Nombre = maquinaDto.Nombre?.Trim() ?? string.Empty,
+                Descripcion = maquinaDto.Descripcion?.Trim() ?? string.Empty,
+                Tipo = maquinaDto.Tipo?.Trim() ?? string.Empty,
+                Estado = maquinaDto.Estado?.Trim() ?? string.Empty
             };
+
+            maquina.Validar();
 
             await _maquinaRepository.ActualizarAsync(maquina);
         }

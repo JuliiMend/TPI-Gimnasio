@@ -17,7 +17,7 @@ namespace API.Clients
         public Task<string?> GetUsernameAsync() => Task.FromResult(_username);
         public Task<string?> GetRolAsync() => Task.FromResult(_rol);
 
-        public async Task<bool> LoginAsync(string username, string password)
+        public async Task<DTOs.LoginResponse> LoginAsync(string username, string password)
         {
             var request = new DTOs.LoginRequest { Username = username, Password = password };
 
@@ -30,10 +30,14 @@ namespace API.Clients
                 _rol = response.Rol;
                 _expiraUtc = response.ExpiresAt;
                 AuthenticationStateChanged?.Invoke(true);
-                return true;
+                return response;
             }
 
-            return false;
+            return new DTOs.LoginResponse
+            {
+                Exito = false,
+                Mensaje = string.IsNullOrWhiteSpace(response?.Mensaje) ? "Usuario o contraseña incorrectos." : response!.Mensaje
+            };
         }
 
         public Task LogoutAsync()

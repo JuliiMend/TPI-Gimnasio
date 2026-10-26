@@ -3,6 +3,7 @@ using DTOs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using System.Security.Claims;
 
 namespace WebAPI
 {
@@ -43,9 +44,9 @@ namespace WebAPI
                 return Results.NoContent();
             });
 
-            grupo.MapDelete("/{id}", async (int id, IUsuarioService usuarioService) =>
+            grupo.MapDelete("/{id}", async (int id, ClaimsPrincipal user, IUsuarioService usuarioService) =>
             {
-                await usuarioService.EliminarAsync(id);
+                await usuarioService.EliminarAsync(id, user.UsuarioId());
                 return Results.NoContent();
             });
         }

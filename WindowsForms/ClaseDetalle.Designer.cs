@@ -118,7 +118,7 @@ namespace WindowsFormsApp
             // numCupo
             //
             numCupo.Location = new Point(130, 191);
-            numCupo.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numCupo.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
             numCupo.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numCupo.Name = "numCupo";
             numCupo.Size = new Size(100, 23);

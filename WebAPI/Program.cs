@@ -7,7 +7,10 @@ using WebAPI;
 using WebAPI.Endpoints;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.RateLimiting;
+using Domain.Model;
 using System.Text;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +30,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateAudience = false,
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
@@ -39,6 +43,30 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(Politicas.SoloAdmin, p => p.RequireRole(Roles.Admin));
     options.AddPolicy(Politicas.AdminOSocio, p => p.RequireRole(Roles.Admin, Roles.Socio));
     options.AddPolicy(Politicas.AdminOProfesor, p => p.RequireRole(Roles.Admin, Roles.Profesor));
+});
+
+// Límite de intentos de login por IP (complementa el bloqueo por usuario de ControlIntentosLogin)
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, token) =>
+    {
+        await context.HttpContext.Response.WriteAsJsonAsync(new LoginResponse
+        {
+            Exito = false,
+            Bloqueado = true,
+            Mensaje = "Demasiados intentos de inicio de sesión desde este equipo. Esperá un minuto y volvé a intentar."
+        }, token);
+    };
+    options.AddPolicy(AuthEndpoints.PoliticaLimiteLogin, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "desconocida",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 20,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
 });
 
 // Configuramos Swagger
@@ -89,6 +117,7 @@ builder.Services.AddScoped<IProfesorService, ProfesorService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<ControlIntentosLogin>();
 builder.Services.AddScoped<ICuotaService, CuotaService>();
 builder.Services.AddScoped<ICuotaRepository, CuotaRepository>();
 builder.Services.AddScoped<IMaquinaRepository, MaquinaRepository>();
@@ -110,14 +139,17 @@ builder.Services.AddScoped<IHistoricoSueldoService, HistoricoSueldoService>();
 
 var app = builder.Build();
 
-// Aplica las migraciones pendientes y, si la base no tiene usuarios, carga los datos de prueba
-if (builder.Configuration.GetValue("DatosDePrueba:Cargar", false))
+// Crea la base / aplica las migraciones pendientes y, si la base no tiene usuarios, carga los datos de prueba
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<GimnasioContext>();
 
     await context.Database.MigrateAsync();
-    await DatosDePrueba.CargarAsync(context);
+
+    if (builder.Configuration.GetValue("DatosDePrueba:Cargar", false))
+    {
+        await DatosDePrueba.CargarAsync(context);
+    }
 }
 
 // Habilitamos Swagger
@@ -152,11 +184,18 @@ app.Use(async (context, next) =>
         context.Response.StatusCode = StatusCodes.Status409Conflict;
         await context.Response.WriteAsJsonAsync(new { mensaje = ex.Message });
     }
+    // Datos que no cumplen las validaciones del modelo de dominio
+    catch (ValidacionDominioException ex)
+    {
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        await context.Response.WriteAsJsonAsync(new { mensaje = ex.Message });
+    }
 });
 
 // Auth tiene que ir ANTES de mapear los endpoints
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 // Mapeamos los Endpoints usando los archivos estáticos
 app.MapPlanEndpoints();

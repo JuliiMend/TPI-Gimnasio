@@ -15,6 +15,9 @@ namespace Data
         Task<Usuario?> ObtenerPorUsernameAsync(string username);
         Task AgregarAsync(Usuario usuario);
         Task ActualizarAsync(Usuario usuario);
+        Task<bool> ExisteUsernameAsync(string username, int? exceptoId = null);
+        Task<bool> ExisteEmailAsync(string email, int? exceptoId = null);
+        Task<int> ContarAdministradoresActivosAsync();
         Task EliminarAsync(int id);
     }
 }

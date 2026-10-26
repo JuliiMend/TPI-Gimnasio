@@ -49,9 +49,11 @@ namespace Application.Services
         {
             var material = new Material
             {
-                Descripcion = materialDto.Descripcion,
+                Descripcion = materialDto.Descripcion?.Trim() ?? string.Empty,
                 Stock = materialDto.Stock
             };
+
+            material.Validar();
 
             await _materialRepository.AgregarAsync(material);
             return material.IdMaterial;
@@ -62,9 +64,11 @@ namespace Application.Services
             var material = new Material
             {
                 IdMaterial = id,
-                Descripcion = materialDto.Descripcion,
+                Descripcion = materialDto.Descripcion?.Trim() ?? string.Empty,
                 Stock = materialDto.Stock
             };
+
+            material.Validar();
 
             await _materialRepository.ActualizarAsync(material);
         }

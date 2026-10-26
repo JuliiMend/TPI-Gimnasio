@@ -42,12 +42,14 @@ namespace Application.Services
         {
             var planNuevo = new Plan
             {
-                Nombre = planDto.Nombre,
-                Tipo = planDto.Tipo,
+                Nombre = planDto.Nombre?.Trim() ?? string.Empty,
+                Tipo = planDto.Tipo?.Trim() ?? string.Empty,
                 Precio = planDto.Precio,
-                Descripcion = planDto.Descripcion,
-                Actividades = await _actividadRepository.ObtenerPorIdsAsync(planDto.IdsActividades)
+                Descripcion = planDto.Descripcion?.Trim() ?? string.Empty
             };
+
+            planNuevo.Validar();
+            planNuevo.Actividades = await ObtenerActividadesAsync(planDto.IdsActividades);
 
             await _planRepository.AgregarAsync(planNuevo);
             return planNuevo.PlanId;
@@ -55,25 +57,40 @@ namespace Application.Services
 
         public async Task ActualizarAsync(int id, PlanCreaActualizaDTO planDto)
         {
-            var planExistente = await _planRepository.ObtenerPorIdAsync(id);
+            var planExistente = await _planRepository.ObtenerPorIdAsync(id)
+                ?? throw new ReglaNegocioException($"El plan con ID {id} no existe.");
 
-            if (planExistente != null)
+            planExistente.Nombre = planDto.Nombre?.Trim() ?? string.Empty;
+            planExistente.Tipo = planDto.Tipo?.Trim() ?? string.Empty;
+            planExistente.Precio = planDto.Precio;
+            planExistente.Descripcion = planDto.Descripcion?.Trim() ?? string.Empty;
+
+            planExistente.Validar();
+
+            var actividades = await ObtenerActividadesAsync(planDto.IdsActividades);
+            planExistente.Actividades.Clear();
+            planExistente.Actividades.AddRange(actividades);
+
+            await _planRepository.ActualizarAsync(planExistente);
+        }
+
+        private async Task<List<Actividad>> ObtenerActividadesAsync(List<int>? idsActividades)
+        {
+            var ids = (idsActividades ?? new List<int>()).Distinct().ToList();
+
+            if (ids.Count == 0)
             {
-                planExistente.Nombre = planDto.Nombre;
-                planExistente.Tipo = planDto.Tipo;
-                planExistente.Precio = planDto.Precio;
-                planExistente.Descripcion = planDto.Descripcion;
-
-                var actividades = await _actividadRepository.ObtenerPorIdsAsync(planDto.IdsActividades);
-                planExistente.Actividades.Clear();
-                planExistente.Actividades.AddRange(actividades);
-
-                await _planRepository.ActualizarAsync(planExistente);
+                throw new ReglaNegocioException("El plan debe incluir al menos una actividad.");
             }
-            else
+
+            var actividades = await _actividadRepository.ObtenerPorIdsAsync(ids);
+
+            if (actividades.Count != ids.Count)
             {
-                throw new Exception($"El plan con ID {id} no existe en la base de datos.");
+                throw new ReglaNegocioException("Alguna de las actividades seleccionadas no existe.");
             }
+
+            return actividades;
         }
 
         public async Task EliminarAsync(int id)
