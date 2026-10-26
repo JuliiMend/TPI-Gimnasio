@@ -50,7 +50,6 @@ namespace WindowsFormsApp
 
         private async void btnGuardar_Click(object sender, EventArgs e)
         {
-            // Al editar, la contraseña vacía significa "no cambiarla"
             if (string.IsNullOrWhiteSpace(txtUsername.Text) ||
                 string.IsNullOrWhiteSpace(txtEmail.Text) ||
                 (_idUsuario == null && string.IsNullOrWhiteSpace(txtPassword.Text)))

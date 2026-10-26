@@ -8,7 +8,6 @@ namespace WindowsFormsApp
 {
     public partial class MantenimientoDetalle : Form
     {
-        // Mantenimiento a editar; null = alta
         private readonly MantenimientoMostrarDTO? _mantenimiento;
 
         public MantenimientoDetalle(MantenimientoMostrarDTO? mantenimiento = null)
@@ -81,7 +80,6 @@ namespace WindowsFormsApp
                 Descripcion = txtDescripcion.Text.Trim(),
                 FechaInicio = dtpInicio.Value.Date,
                 FechaFinEsperada = dtpFinEsperada.Value.Date,
-                // Sin tildar = todavía en curso
                 FechaFinReal = dtpFinReal.Checked ? dtpFinReal.Value.Date : null
             };
 

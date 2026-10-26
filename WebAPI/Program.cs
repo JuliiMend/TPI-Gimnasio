@@ -12,7 +12,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// HS256 necesita una clave de al menos 32 bytes: si falta, mejor frenar acá que en el primer login
 var jwtSecretKey = builder.Configuration["JwtSettings:SecretKey"];
 if (string.IsNullOrWhiteSpace(jwtSecretKey) || Encoding.UTF8.GetByteCount(jwtSecretKey) < 32)
 {

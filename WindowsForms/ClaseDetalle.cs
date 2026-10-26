@@ -11,7 +11,6 @@ namespace WindowsFormsApp
     {
         private int? _idClase;
 
-        // Clase a editar; los combos se completan recién en Load (con la ventana ya creada)
         private ClaseMostrarDTO? _claseAEditar;
 
         public ClaseDetalle()

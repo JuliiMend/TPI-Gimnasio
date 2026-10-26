@@ -11,7 +11,6 @@ namespace WebAPI
     {
         public static void MapInscripcionEndpoints(this IEndpointRouteBuilder app)
         {
-            // Admin: todas. Profesor: solo consulta las de sus clases. Socio: consulta, se inscribe y cancela solo las suyas
             var grupo = app.MapGroup("/api/inscripciones").RequireAuthorization();
 
             grupo.MapGet("/", async (int? idClase, ClaimsPrincipal user, IInscripcionService inscripcionService,
@@ -54,7 +53,6 @@ namespace WebAPI
             grupo.MapPost("/", async (InscripcionCreaDTO dto, ClaimsPrincipal user, IInscripcionService inscripcionService,
                 ISocioService socioService) =>
             {
-                // Un socio solo puede inscribirse a sí mismo, sin importar qué IdSocio mande
                 if (user.EsSocio())
                 {
                     dto.IdSocio = await user.IdSocioAsync(socioService);

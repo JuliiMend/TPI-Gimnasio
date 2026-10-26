@@ -13,11 +13,11 @@ namespace WindowsFormsApp
         public HistoricoSueldoLista()
         {
             InitializeComponent();
+            colValor.DefaultCellStyle.FormatProvider = new System.Globalization.CultureInfo("es-AR");
         }
 
         private async void HistoricoSueldoLista_Load(object sender, EventArgs e)
         {
-            // El profesor ve solo su histórico (lo filtra la API), sin filtro ni alta
             if (!await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin))
             {
                 Text = lblTitulo.Text = "Mi histórico de sueldos";

@@ -11,13 +11,11 @@ namespace WebAPI
     {
         public static void MapHistoricoSueldoEndpoints(this IEndpointRouteBuilder app)
         {
-            // Consultar: Admin (todos) y Profesor (solo el suyo). Registrar: solo Admin
             var grupo = app.MapGroup("/api/historico-sueldos").RequireAuthorization(Politicas.AdminOProfesor);
 
             grupo.MapGet("/", async (int? idProfesor, ClaimsPrincipal user, IHistoricoSueldoService historicoSueldoService,
                 IProfesorService profesorService) =>
             {
-                // Un profesor solo ve su propio histórico, sin importar el filtro que mande
                 if (user.EsProfesor())
                 {
                     idProfesor = await user.IdProfesorAsync(profesorService);
@@ -27,7 +25,6 @@ namespace WebAPI
                 return Results.Ok(sueldos);
             });
 
-            // Solo alta: el histórico no se modifica ni se borra
             grupo.MapPost("/", async (HistoricoSueldoCreaDTO dto, IHistoricoSueldoService historicoSueldoService) =>
             {
                 var id = await historicoSueldoService.RegistrarAsync(dto);

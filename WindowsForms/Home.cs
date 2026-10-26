@@ -12,7 +12,6 @@ namespace WindowsFormsApp
         {
             InitializeComponent();
 
-            // Si la sesión se cierra (logout o token vencido) se cierra Home y LoginForm vuelve a mostrarse
             AuthServiceProvider.Instance.AuthenticationStateChanged += AlCambiarSesion;
             FormClosed += (s, e) => AuthServiceProvider.Instance.AuthenticationStateChanged -= AlCambiarSesion;
         }
@@ -34,7 +33,6 @@ namespace WindowsFormsApp
             }
         }
 
-        // LogoutAsync dispara AuthenticationStateChanged, que cierra Home
         private async void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await AuthServiceProvider.Instance.LogoutAsync();
@@ -59,10 +57,8 @@ namespace WindowsFormsApp
                 return;
             }
 
-            // Los reportes son solo para el Admin
             reportesToolStripMenuItem.Visible = false;
 
-            // Profesor y Socio solo ven sus opciones (misma matriz que valida la API)
             var visibles = rol == Roles.Profesor
                 ? new ToolStripMenuItem[] { clasesToolStripMenuItem, inscripcionesToolStripMenuItem, historicoSueldosToolStripMenuItem }
                 : new ToolStripMenuItem[] { planesToolStripMenuItem, clasesToolStripMenuItem, inscripcionesToolStripMenuItem, cuotasToolStripMenuItem };

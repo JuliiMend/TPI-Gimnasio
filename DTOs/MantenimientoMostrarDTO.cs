@@ -9,8 +9,6 @@ namespace DTOs
         public DateTime FechaFinEsperada { get; set; }
         public DateTime? FechaFinReal { get; set; }
         public string Descripcion { get; set; } = string.Empty;
-
-        // Calculados para el reporte
         public string Estado { get; set; } = string.Empty;
         public int DiasDemora { get; set; }
     }

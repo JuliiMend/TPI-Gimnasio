@@ -15,7 +15,6 @@ namespace WindowsFormsApp
 
         private async void ClaseLista_Load(object sender, EventArgs e)
         {
-            // Profesor (solo sus clases, lo filtra la API) y Socio: solo consulta
             var authService = AuthServiceProvider.Instance;
 
             if (!await authService.HasPermissionAsync(Roles.Admin))

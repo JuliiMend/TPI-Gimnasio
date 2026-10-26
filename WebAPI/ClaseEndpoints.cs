@@ -11,7 +11,6 @@ namespace WebAPI
     {
         public static void MapClaseEndpoints(this IEndpointRouteBuilder app)
         {
-            // Consultar: todos los roles (el Profesor solo ve las suyas). Modificar: solo Admin
             var grupo = app.MapGroup("/api/clases").RequireAuthorization();
 
             grupo.MapGet("/", async (ClaimsPrincipal user, IClaseService claseService, IProfesorService profesorService) =>

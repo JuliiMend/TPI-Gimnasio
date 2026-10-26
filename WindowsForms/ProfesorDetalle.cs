@@ -77,7 +77,6 @@ namespace WindowsFormsApp
                 FechaNac = dtpFechaNac.Value,
                 Cargo = txtCargo.Text,
                 Username = txtDni.Text.Trim(),
-                // Solo al crear: al editar, mandar el DNI pisaría la contraseña actual del profesor
                 Password = _idProfesor == null ? txtDni.Text.Trim() : string.Empty
             };
 

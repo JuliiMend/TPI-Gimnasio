@@ -11,27 +11,30 @@
 
             <h3 class="text-center mb-4">Iniciar sesión</h3>
 
-            <div class="mb-3">
-                <label>Usuario</label>
-                <input class="form-control" @bind="username" />
-            </div>
+            <form @onsubmit="IniciarSesion">
 
-            <div class="mb-3">
-                <label>Contraseña</label>
-                <input type="password" class="form-control" @bind="password" />
-            </div>
-
-            @if (!string.IsNullOrEmpty(mensaje))
-            {
-                <div class="alert alert-danger">
-                    @mensaje
+                <div class="mb-3">
+                    <label>Usuario</label>
+                    <input class="form-control" @bind="username" @bind:event="oninput" />
                 </div>
-            }
 
-            <button class="btn btn-primary w-100"
-                    @onclick="IniciarSesion">
-                Iniciar sesión
-            </button>
+                <div class="mb-3">
+                    <label>Contraseña</label>
+                    <input type="password" class="form-control" @bind="password" @bind:event="oninput" />
+                </div>
+
+                @if (!string.IsNullOrEmpty(mensaje))
+                {
+                    <div class="alert alert-danger">
+                        @mensaje
+                    </div>
+                }
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Iniciar sesión
+                </button>
+
+            </form>
 
         </div>
 

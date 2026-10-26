@@ -12,7 +12,6 @@ namespace WindowsFormsApp
 {
     public partial class ReporteMantenimientos : Form
     {
-        // Mismos estados que calcula MantenimientoService, con el mismo color que en el reporte web
         private static readonly (string Nombre, string Color)[] Estados =
         {
             ("En curso", "#0d6efd"),
@@ -21,7 +20,6 @@ namespace WindowsFormsApp
             ("Finalizado con demora", "#fd7e14")
         };
 
-        // Filas de las grillas: los DisplayName son los encabezados de las columnas
         private class FilaResumen
         {
             [DisplayName("Estado")] public string Estado { get; init; } = string.Empty;
@@ -126,7 +124,6 @@ namespace WindowsFormsApp
             }
         }
 
-        // Torta con la cantidad de mantenimientos por estado (solo los estados que tienen alguno)
         private void DibujarGrafico(List<MantenimientoMostrarDTO> mantenimientos)
         {
             var plot = formsPlot.Plot;
@@ -155,7 +152,6 @@ namespace WindowsFormsApp
 
             plot.Title(porciones.Count > 0 ? "Mantenimientos por estado" : "Sin mantenimientos");
 
-            // Sin ejes ni grilla (Frameless también ocultaría el título)
             plot.Axes.Left.IsVisible = false;
             plot.Axes.Right.IsVisible = false;
             plot.Axes.Bottom.IsVisible = false;

@@ -302,7 +302,6 @@
     private List<SocioMostrarDTO> socios = new();
 
 
-    // El socio ve solo sus cuotas (la API ya las filtra) y en modo lectura
     private bool esAdmin;
 
     protected override async Task OnInitializedAsync()
@@ -424,7 +423,6 @@
             valido = false;
         }
 
-        // MesAnio se guarda como AAAAMM (ej: 202601), igual que en WinForms
         int mes = cuotaActual.MesAnio % 100;
         int anio = cuotaActual.MesAnio / 100;
 
@@ -555,7 +553,6 @@
         }
         else
         {
-            // Id temporal negativo: así la API no lo confunde con un detalle que ya existe en la BD
             int nuevoId = Math.Min(0, cuotaActual.Detalles.Select(d => d.DetalleCuotaId).DefaultIfEmpty(0).Min()) - 1;
 
             cuotaActual.Detalles.Add(
@@ -626,7 +623,6 @@
 
     private void CambiarMesAnio(ChangeEventArgs e)
     {
-        // El input type="month" devuelve "AAAA-MM"
         var partes = e.Value?.ToString()?.Split('-');
 
         if (partes?.Length == 2 &&

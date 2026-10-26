@@ -25,7 +25,6 @@ namespace Application.Services
         {
             var sueldos = await _historicoSueldoRepository.ObtenerTodosAsync(idProfesor);
 
-            // El "hasta" de cada sueldo es el día anterior al siguiente sueldo del mismo profesor
             return sueldos
                 .GroupBy(s => s.IdProfesor)
                 .SelectMany(grupo =>
