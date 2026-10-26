@@ -36,7 +36,6 @@ namespace WindowsFormsApp
                     var homeForm = Program.ServiceProvider.GetRequiredService<Home>();
                     homeForm.FormClosed += async (s, args) =>
                     {
-                        // Si se cerró sesión, se vuelve al login; si se cerró la ventana, se sale de la app
                         if (await _authService.IsAuthenticatedAsync())
                         {
                             this.Close();

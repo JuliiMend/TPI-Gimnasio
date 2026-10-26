@@ -4,7 +4,6 @@ using System.Security.Claims;
 
 namespace WebAPI
 {
-    // Políticas de autorización por rol (ver matriz en el README)
     public static class Politicas
     {
         public const string SoloAdmin = "SoloAdmin";
@@ -12,10 +11,8 @@ namespace WebAPI
         public const string AdminOProfesor = "AdminOProfesor";
     }
 
-    // Datos del usuario logueado, tomados del token JWT
     public static class UsuarioActual
     {
-        // Id que no matchea con nada: un Socio/Profesor sin persona asociada no ve datos de nadie
         private const int SinPersona = -1;
 
         public static int? UsuarioId(this ClaimsPrincipal user)

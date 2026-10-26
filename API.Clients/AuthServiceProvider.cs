@@ -5,8 +5,6 @@
         private static IAuthService? _instance;
         private static readonly object _lock = new object();
 
-        // Sesión del flujo de ejecución actual (en Blazor Server, una por circuito/usuario).
-        // Si no hay una, se usa la instancia global registrada (WinForms).
         private static readonly AsyncLocal<IAuthService?> _actual = new AsyncLocal<IAuthService?>();
 
         public static IAuthService Instance

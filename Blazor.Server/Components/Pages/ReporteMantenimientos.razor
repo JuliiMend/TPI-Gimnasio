@@ -98,7 +98,6 @@
 @code {
     private record EstadoReporte(string Nombre, string Color);
 
-    // Mismos estados que calcula MantenimientoService, con un color fijo para el gráfico y las etiquetas
     private static readonly EstadoReporte[] Estados =
     {
         new("En curso", "#0d6efd"),
@@ -148,7 +147,6 @@
         await CargarMantenimientos();
     }
 
-    // El gráfico se dibuja con JS, así que tiene que ser después de renderizar el <canvas>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!graficoPendiente)

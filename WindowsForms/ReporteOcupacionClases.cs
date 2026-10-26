@@ -9,7 +9,6 @@ namespace WindowsFormsApp
 {
     public partial class ReporteOcupacionClases : Form
     {
-        // Fila de la grilla: los DisplayName son los encabezados de las columnas
         private class FilaOcupacion
         {
             [DisplayName("Clase")] public string Clase { get; init; } = string.Empty;
@@ -47,7 +46,6 @@ namespace WindowsFormsApp
 
                 dgvOcupacion.DataSource = filas;
 
-                // Las clases llenas se marcan en rojo
                 foreach (DataGridViewRow fila in dgvOcupacion.Rows)
                 {
                     if (fila.DataBoundItem is FilaOcupacion f && f.Disponibles == 0)
@@ -73,7 +71,6 @@ namespace WindowsFormsApp
             }
         }
 
-        // Barras agrupadas por clase: inscriptos (azul) al lado del cupo (gris)
         private void DibujarGrafico(System.Collections.Generic.List<FilaOcupacion> filas)
         {
             var plot = formsPlot.Plot;

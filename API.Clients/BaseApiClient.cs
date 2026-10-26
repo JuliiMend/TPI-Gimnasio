@@ -40,13 +40,11 @@ namespace API.Clients
             }
             catch
             {
-                // Si aún no se registró AuthServiceProvider, continúa sin token
             }
 
             return client;
         }
 
-        // Igual que EnsureSuccessStatusCode, pero usa el "mensaje" que devuelve la API cuando existe
         protected static async Task EnsureSuccessAsync(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
@@ -69,7 +67,6 @@ namespace API.Clients
             }
             catch (JsonException)
             {
-                // El cuerpo no es JSON: se usa el mensaje genérico
             }
 
             throw new HttpRequestException(mensaje, null, response.StatusCode);

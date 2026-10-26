@@ -1,5 +1,3 @@
-// Funciones que llaman los reportes de Blazor (JS interop) para dibujar con Chart.js.
-// Cada gráfico se identifica por el id del <canvas>; si ya existía se destruye y se vuelve a crear.
 window.graficos = {
     _instancias: {},
 
@@ -17,7 +15,6 @@ window.graficos = {
         this._instancias[idCanvas] = new Chart(canvas, config);
     },
 
-    // series: [{ nombre, valores, color }]
     barras: function (idCanvas, etiquetas, series, titulo) {
         this._crear(idCanvas, {
             type: 'bar',

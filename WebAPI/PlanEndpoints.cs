@@ -7,7 +7,6 @@ namespace WebAPI {
     {
         public static void MapPlanEndpoints(this IEndpointRouteBuilder app)
         {
-            // Consultar: Admin (todos) y Socio (solo su plan). Modificar: solo Admin
             var grupo = app.MapGroup("/api/planes").RequireAuthorization(Politicas.AdminOSocio);
     
             grupo.MapGet("/", async (ClaimsPrincipal user, IPlanService planService, ISocioService socioService) =>

@@ -12,8 +12,6 @@ namespace API.Clients
         private DateTime? _expiraUtc;
 
         public event Action<bool>? AuthenticationStateChanged;
-
-        // Un token vencido cuenta como sesión cerrada
         public Task<bool> IsAuthenticatedAsync() => Task.FromResult(!string.IsNullOrEmpty(_token) && !TokenVencido());
         public Task<string?> GetTokenAsync() => Task.FromResult(_token);
         public Task<string?> GetUsernameAsync() => Task.FromResult(_username);
@@ -47,8 +45,6 @@ namespace API.Clients
             AuthenticationStateChanged?.Invoke(false);
             return Task.CompletedTask;
         }
-
-        // Si el token venció, cierra la sesión (avisa con AuthenticationStateChanged)
         public async Task CheckTokenExpirationAsync()
         {
             if (!string.IsNullOrEmpty(_token) && TokenVencido())

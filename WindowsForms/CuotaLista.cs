@@ -17,7 +17,6 @@ namespace WindowsFormsApp
 
         private async void CuotaLista_Load(object sender, EventArgs e)
         {
-            // El socio ve solo sus cuotas (lo filtra la API) y no puede modificarlas
             if (!await AuthServiceProvider.Instance.HasPermissionAsync(Roles.Admin))
             {
                 Text = "Mis cuotas";

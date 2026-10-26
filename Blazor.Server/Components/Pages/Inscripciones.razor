@@ -148,8 +148,6 @@
     private List<ClaseMostrarDTO> clases = new();
     private List<SocioMostrarDTO> sociosActivos = new();
 
-    // Admin: todo. Socio: se inscribe a sí mismo y cancela las suyas. Profesor: solo consulta las de sus clases.
-    // Qué inscripciones y clases ve cada uno lo filtra la API.
     private bool esSocio;
     private bool esProfesor;
     private bool puedeInscribir;
@@ -167,7 +165,6 @@
             {
                 var socios = await SocioApiClient.GetAllAsync();
 
-                // Los socios dados de baja no pueden inscribirse
                 sociosActivos = socios
                     .Where(s => s.FechaBaja == null || s.FechaBaja.Value.Date > DateTime.Today)
                     .ToList();
@@ -269,7 +266,6 @@
         }
         catch (Exception ex)
         {
-            // Ej: la clase se quedó sin cupo o el socio ya estaba inscripto
             MostrarError($"No se pudo inscribir: {ex.Message}");
         }
     }

@@ -8,7 +8,6 @@ namespace WindowsFormsApp
 {
     public partial class InscripcionDetalle : Form
     {
-        // Clase preseleccionada (la del filtro de la lista), si hay
         private readonly int? _idClaseInicial;
 
         public InscripcionDetalle(int? idClaseInicial = null)
@@ -17,7 +16,6 @@ namespace WindowsFormsApp
             _idClaseInicial = idClaseInicial;
         }
 
-        // El socio se inscribe a sí mismo: no elige socio (la API usa el del token)
         private bool _esSocio;
 
         private async void InscripcionDetalle_Load(object? sender, EventArgs e)
@@ -36,7 +34,6 @@ namespace WindowsFormsApp
                 {
                     var socios = await SocioApiClient.GetAllAsync();
 
-                    // Los socios dados de baja no pueden inscribirse
                     cmbSocio.DisplayMember = "Texto";
                     cmbSocio.ValueMember = "Id";
                     cmbSocio.DataSource = socios
@@ -77,7 +74,6 @@ namespace WindowsFormsApp
 
         private async void btnInscribir_Click(object? sender, EventArgs e)
         {
-            // Para el socio el IdSocio no importa: la API lo reemplaza por el del usuario logueado
             int idSocio = 0;
 
             if ((!_esSocio && cmbSocio.SelectedValue is not int) ||
@@ -116,7 +112,6 @@ namespace WindowsFormsApp
             }
             catch (Exception ex)
             {
-                // Ej: la clase se quedó sin cupo o el socio ya estaba inscripto
                 MessageBox.Show(
                     $"No se pudo inscribir: {ex.Message}",
                     "Error",

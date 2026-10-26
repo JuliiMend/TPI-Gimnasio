@@ -8,7 +8,6 @@ namespace WindowsFormsApp
 {
     public partial class HistoricoSueldoDetalle : Form
     {
-        // Profesor preseleccionado (el del filtro de la lista), si hay
         private readonly int? _idProfesorInicial;
 
         public HistoricoSueldoDetalle(int? idProfesorInicial = null)

@@ -50,7 +50,6 @@ namespace Data
 
         public async Task ActualizarAsync(Clase clase)
         {
-            // Si viene del mismo contexto ya está trackeada y EF detecta solo los cambios
             if (_context.Entry(clase).State == EntityState.Detached)
             {
                 _context.Clases.Update(clase);

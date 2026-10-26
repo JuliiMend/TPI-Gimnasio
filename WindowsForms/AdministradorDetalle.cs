@@ -75,7 +75,6 @@ namespace WindowsFormsApp
                 Telefono = txtTelefono.Text,
                 FechaNac = dtpFechaNac.Value,
                 Username = txtDni.Text.Trim(),
-                // Solo al crear: al editar, mandar el DNI pisaría la contraseña actual del administrador
                 Password = _idAdministrador == null ? txtDni.Text.Trim() : string.Empty
             };
 

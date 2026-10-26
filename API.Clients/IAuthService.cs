@@ -11,7 +11,6 @@
         Task<bool> LoginAsync(string username, string password);
         Task LogoutAsync();
         Task CheckTokenExpirationAsync();
-        // true si el usuario logueado tiene alguno de los roles indicados
         Task<bool> HasPermissionAsync(params string[] roles);
     }
 }

@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 
 namespace Blazor.Server
 {
-    // Antes de procesar cada evento del circuito, deja disponible la sesión de ESE usuario
-    // para que los ApiClients (estáticos) usen su token y no el de otro navegador.
     public class AuthCircuitHandler : CircuitHandler
     {
         private readonly IAuthService _authService;

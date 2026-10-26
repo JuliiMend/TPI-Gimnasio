@@ -115,7 +115,6 @@ namespace WindowsFormsApp
                     FechaBaja = dtpFechaBaja.Checked ? dtpFechaBaja.Value : (DateTime?)null,
                     IdPlan = (int)cmbPlanes.SelectedValue,
                     Username = txtDni.Text.Trim(),
-                    // Solo al crear: al editar, mandar el DNI pisaría la contraseña actual del socio
                     Password = _idSocio == null ? txtDni.Text.Trim() : string.Empty
                 };
 

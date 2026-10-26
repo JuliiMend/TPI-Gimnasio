@@ -46,7 +46,6 @@ namespace Data
 
         public async Task ActualizarAsync(Mantenimiento mantenimiento)
         {
-            // Si viene del mismo contexto ya está trackeado y EF detecta solo los cambios
             if (_context.Entry(mantenimiento).State == EntityState.Detached)
             {
                 _context.Mantenimientos.Update(mantenimiento);

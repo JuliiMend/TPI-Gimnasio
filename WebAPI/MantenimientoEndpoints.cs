@@ -12,7 +12,6 @@ namespace WebAPI
         {
             var grupo = app.MapGroup("/api/mantenimientos").RequireAuthorization(Politicas.SoloAdmin);
 
-            // Sirve también como reporte: filtros opcionales por máquina y estado
             grupo.MapGet("/", async (int? idMaquina, string? estado, IMantenimientoService mantenimientoService) =>
             {
                 var mantenimientos = await mantenimientoService.ObtenerTodosAsync(idMaquina, estado);

@@ -12,7 +12,6 @@ namespace WebAPI.Endpoints
     {
         public static void MapCuotaEndpoints(this IEndpointRouteBuilder app)
         {
-            // Consultar: Admin (todas) y Socio (solo las suyas). Modificar: solo Admin
             var group = app.MapGroup("/api/cuotas").RequireAuthorization(Politicas.AdminOSocio);
 
             group.MapGet("/", async (ClaimsPrincipal user, ICuotaService cuotaService, ISocioService socioService) =>

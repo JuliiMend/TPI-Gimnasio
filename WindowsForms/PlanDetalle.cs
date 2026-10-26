@@ -33,7 +33,8 @@ namespace WindowsFormsApp
                 var actividades = await ActividadApiClient.GetAllAsync();
 
                 clbActividades.DisplayMember = "Tipo";
-                clbActividades.DataSource = actividades.ToList();
+                clbActividades.Items.Clear();
+                clbActividades.Items.AddRange(actividades.Cast<object>().ToArray());
             }
             catch (Exception ex)
             {
